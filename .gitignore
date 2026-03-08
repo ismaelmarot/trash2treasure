@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+
+# logs
+logs
+*.log
+npm-debug.log*
+
+# env
+.env
+
+# build
+dist
+build
+
+# system files
+.DS_Store
+
+# uploads (imagenes temporales)
+backend/uploads/*
