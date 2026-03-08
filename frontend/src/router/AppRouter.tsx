@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { MapPage } from '../pages/MapPage/MapPage'
+import { Layout } from '../components'
 // import { ItemDetailPage } from '../pages/ItemDetailPage/ItemDetailPage'
 // import { SearchPage } from '../pages/SearchPage/SearchPage'
 // import { AddItemPage } from '../pages/AddItemPage/AddItemPage'
@@ -11,7 +12,7 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<MapPage />} />
+        <Route path='/' element={<Layout><MapPage /></Layout>} />
         {/* <Route path='/item/:id' element={<ItemDetailPage />} />
         <Route path='/search' element={<SearchPage />} />
         <Route path='/add' element={<AddItemPage />} />
