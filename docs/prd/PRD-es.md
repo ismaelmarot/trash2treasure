@@ -1,6 +1,4 @@
-🇪🇸 Español
-
-DOCUMENTO DE REQUISITOS DEL PROYECTO (PRD) – Trash2Treasure
+🇪🇸 DOCUMENTO DE REQUISITOS DEL PROYECTO (PRD) – Trash2Treasure
 
 Versión: 1.0.0
 Fecha: 6 de marzo de 2026
@@ -110,15 +108,20 @@ Stakeholders internos: Equipo de producto, marketing y soporte, encargados de de
 
 Para lanzar el MVP en un plazo razonable, se propone:
 
-Mes 1: Diseño y prototipado (wireframes y estilo visual simple, móvil-friendly).
+    Mes 1:
+        Diseño y prototipado (wireframes y estilo visual simple, móvil-friendly).
 
-Mes 2: Desarrollo de funcionalidades básicas: publicación, mapa y búsqueda.
+    Mes 2:
+        Desarrollo de funcionalidades básicas: publicación, mapa y búsqueda.
 
-Mes 3: Implementación de scoring, notificaciones y sistema de usuarios.
+    Mes 3:
+        Implementación de scoring, notificaciones y sistema de usuarios.
 
-Mes 4: Pruebas piloto con usuarios reales y ajustes finales.
+    Mes 4:
+        Pruebas piloto con usuarios reales y ajustes finales.
 
-Mes 5: Lanzamiento oficial y monitorización de métricas iniciales.
+    Mes 5:
+        Lanzamiento oficial y monitorización de métricas iniciales.
 
 
 ---
