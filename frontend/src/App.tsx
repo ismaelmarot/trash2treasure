@@ -1,7 +1,13 @@
-import { AppRouter } from './router/AppRouter'
+import { MobileLayout } from './components/MobileLayout/MobileLayout'
+import { MapPage } from './pages/MapPage/MapPage'
 
-function App() {
-  return <AppRouter />
+
+export const App = () => {
+  return (
+    <MobileLayout>
+      <MapPage />
+    </MobileLayout>
+  )
 }
 
 export default App

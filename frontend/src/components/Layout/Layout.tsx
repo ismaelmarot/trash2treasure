@@ -1,8 +1,10 @@
-import { BottomNav } from '..'
+// import { BottomNav } from '..'
+import { Wrapper, Content } from './Layout.style'
 
-export const Layout = ({ children }: { children: React.ReactNode }) => (
-    <>
-        {children}
-        <BottomNav />
-    </>
-)
+export const MobileLayout = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <Wrapper>
+            <Content>{children}</Content>
+        </Wrapper>
+    )
+}
