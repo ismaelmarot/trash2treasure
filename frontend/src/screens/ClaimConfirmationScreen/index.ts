@@ -1,0 +1,1 @@
+export { ClaimConfirmationScreen } from './ClaimConfirmationScreen'
