@@ -3,9 +3,11 @@ import { BottomNav } from '../components/BottomNav'
 
 export function Layout() {
     return (
-        <div className='screen'>
-            <Outlet />
-            <BottomNav />
+        <div className="screen">
+            <div className="content">
+                <Outlet />
+                <BottomNav />
+            </div>
         </div>
     )
 }
