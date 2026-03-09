@@ -4,38 +4,45 @@ import {
     AddItemScreen,
     ClaimConfirmationScreen,
     ItemDetailScreen,
-    MapScreen,
+    MapScreen, 
     ProfileScreen,
     SearchScreen,
  } from '../screens'
+ import { Layout } from '../Layout'
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
         element: <MapScreen />,
-    },
-    {
-        path: '/search',
+      },
+      {
+        path: 'search',
         element: <SearchScreen />,
-    },
-    {
-    path: "/add",
-    element: <AddItemScreen />,
-  },
-  {
-    path: '/activity',
-    element: <ActivityScreen />,
-  },
-  {
-    path: '/profile',
-    element: <ProfileScreen />,
-  },
-  {
-    path: '/item',
-    element: <ItemDetailScreen />,
-  },
-  {
-    path: '/claimed',
-    element: <ClaimConfirmationScreen />,
+      },
+      {
+        path: 'add',
+        element: <AddItemScreen />,
+      },
+      {
+        path: 'activity',
+        element: <ActivityScreen />,
+      },
+      {
+        path: 'profile',
+        element: <ProfileScreen />,
+      },
+      {
+        path: 'item',
+        element: <ItemDetailScreen />,
+      },
+      {
+        path: 'claimed',
+        element: <ClaimConfirmationScreen />,
+      },
+    ],
   },
 ])
