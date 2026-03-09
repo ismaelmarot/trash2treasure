@@ -1,12 +1,8 @@
-import { MobileLayout } from './components/MobileLayout/MobileLayout'
-import { MapPage } from './pages/MapPage/MapPage'
-
-
-export const App = () => {
+function App() {
   return (
-    <MobileLayout>
-      <MapPage />
-    </MobileLayout>
+    <div>
+      APP FUNCIONA
+    </div>
   )
 }
 
