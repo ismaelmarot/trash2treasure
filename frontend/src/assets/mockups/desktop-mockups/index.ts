@@ -1,0 +1,7 @@
+export { default as mapMockup } from '01-desktop-map-mockup.png'
+export { default as desktopItem } from '02-desktop-item-detail-mockup.png'
+export { default as claimedItem } from '03-dektop-item-claimed-mockup.png'
+export { default as searchItem } from '04-desktop-item-search-mockup.png'
+export { default as addItem } from '05-desktop-add-item-mockup.png'
+export { default as activity } from '06-desktop-activity-mockup.png'
+export { default as profile } from '07-desktop-activity-mockup.png'
