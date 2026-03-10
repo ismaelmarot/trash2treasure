@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BottomNavContainer } from './BottomNav.style'
+import { BottomNavContainer } from './BottomNav.styles'
 
 export function BottomNav() {
     return (

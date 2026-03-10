@@ -1,1 +1,1 @@
-export { BottomNav } from './BottomBav'
+export { BottomNav } from './BottomNav'
