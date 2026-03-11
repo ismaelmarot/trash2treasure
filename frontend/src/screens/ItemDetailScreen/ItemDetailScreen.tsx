@@ -5,3 +5,16 @@ export function ItemDetailScreen() {
         </div>
     )
 }
+
+// import { useParams } from 'react-router-dom'
+
+// export const ItemDetailScreen = () => {
+
+//   const { id } = useParams()
+
+//   return (
+//     <div>
+//       Item ID: {id}
+//     </div>
+//   )
+// }

@@ -1,29 +1,28 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { navigationItems } from '../../layout/navigation'
-
+import { navigationItems } from '../../layout'
 import {
-  BottomNavContainer,
-  BottomNavItem,
-} from './BottomNav.styles'
+  SidebarContainer,
+  NavItem,
+} from './Sidebar.styles'
 
-export const BottomNav = () => {
+export const Sidebar = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
 
   return (
-    <BottomNavContainer>
+    <SidebarContainer>
 
       {navigationItems.map(item => (
-        <BottomNavItem
+        <NavItem
           key={item.path}
           active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
         >
           {item.label}
-        </BottomNavItem>
+        </NavItem>
       ))}
 
-    </BottomNavContainer>
+    </SidebarContainer>
   )
 }

@@ -2,16 +2,17 @@ import styled from 'styled-components'
 
 export const BottomNavContainer = styled.nav`
   height: 60px;
+  border-top: 1px solid #ddd;
+
   display: flex;
   justify-content: space-around;
   align-items: center;
+`
 
-  border-top: 1px solid #ddd;
-  background: white;
+export const BottomNavItem = styled.button<{ active: boolean }>`
+  border: none;
+  background: none;
+  cursor: pointer;
 
-  a {
-    text-decoration: none;
-    color: #444;
-    font-size: 14px;
-  }
+  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
 `
