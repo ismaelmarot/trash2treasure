@@ -269,20 +269,31 @@
 
 
 
+
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
+
 import { Container, Main, Content } from './Layout.styles'
-
-
-import { BottomNav } from '../BottomNav/BottomNav'
 import { Sidebar } from '..'
+import { BottomNav } from '..'
 
 export const Layout = () => {
+
+  const [collapsed, setCollapsed] = useState(false)
+
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed)
+  }
+
   return (
     <Container>
 
-      <Sidebar />
+      <Sidebar
+        collapsed={collapsed}
+        toggleSidebar={toggleSidebar}
+      />
 
-      <Main>
+      <Main collapsed={collapsed}>
         <Content>
           <Outlet />
         </Content>

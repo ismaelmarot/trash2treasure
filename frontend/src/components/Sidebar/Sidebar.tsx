@@ -1,17 +1,27 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { navigationItems } from '../../layout'
+import { navigationItems } from '../../navigation'
+
 import {
   SidebarContainer,
   NavItem,
 } from './Sidebar.styles'
 
-export const Sidebar = () => {
+type SidebarProps = {
+  collapsed: boolean
+  toggleSidebar: () => void
+}
+
+export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
 
   const navigate = useNavigate()
   const location = useLocation()
 
   return (
-    <SidebarContainer>
+    <SidebarContainer collapsed={collapsed}>
+
+      <button onClick={toggleSidebar}>
+        ☰
+      </button>
 
       {navigationItems.map(item => (
         <NavItem
@@ -19,7 +29,7 @@ export const Sidebar = () => {
           active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
         >
-          {item.label}
+          {!collapsed && item.label}
         </NavItem>
       ))}
 

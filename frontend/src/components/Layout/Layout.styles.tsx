@@ -5,10 +5,11 @@ export const Container = styled.div`
   height: 100vh;
 `
 
-export const Main = styled.main`
+export const Main = styled.main<{ collapsed: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
+  transition: margin 0.2s ease;
 `
 
 export const Content = styled.div`

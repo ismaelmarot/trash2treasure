@@ -1,6 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { navigationItems } from '../../layout/navigation'
-
+import { navigationItems } from '../../navigation/navigation'
 import {
   BottomNavContainer,
   BottomNavItem,

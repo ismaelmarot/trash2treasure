@@ -1,2 +1,3 @@
-export type { FlexDirection, JustifyContent, AlignItems } from './flexValue.type'
+export type { AlignItems, FlexDirection, JustifyContent } from './flexValue.type'
+export type { SidebarProps } from './sidebar.type'
 export type { SizeValue } from './sizeValue.type'
