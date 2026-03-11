@@ -20,4 +20,10 @@ export const NavItem = styled.button<{ active: boolean }>`
   cursor: pointer;
 
   background: ${({ active }) => (active ? '#ddd' : 'transparent')};
+
+  &:last-child {
+    margin-top: auto;
+    border: 3px solid black;
+    border-radius: 38px;
+  }
 `
