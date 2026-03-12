@@ -34,7 +34,6 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
             onClick={() => navigate(item.path)}
           >
             <Icon size={20} />
-
             {!collapsed && item.label}
 
           </NavItem>

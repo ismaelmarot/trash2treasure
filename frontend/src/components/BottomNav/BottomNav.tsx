@@ -13,15 +13,21 @@ export const BottomNav = () => {
   return (
     <BottomNavContainer>
 
-      {navigationItems.map(item => (
-        <BottomNavItem
-          key={item.path}
-          $active={location.pathname === item.path}
-          onClick={() => navigate(item.path)}
-        >
-          {item.label}
-        </BottomNavItem>
-      ))}
+      {navigationItems.map(item => {
+        const Icon = item.icon
+
+        return (
+
+          <BottomNavItem
+            key={item.path}
+            $active={location.pathname === item.path}
+            onClick={() => navigate(item.path)}
+          >
+            <Icon size={20} />
+            {item.label}
+          </BottomNavItem>
+        )
+      })}
 
     </BottomNavContainer>
   )
