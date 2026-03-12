@@ -23,7 +23,7 @@ export const Layout = () => {
         />
       )}
 
-      <Main collapsed={!isMobile ? collapsed : false}>
+      <Main $collapsed={!isMobile ? collapsed : false}>
         <Content>
           <Outlet />
         </Content>

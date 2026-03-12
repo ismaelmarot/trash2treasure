@@ -16,7 +16,7 @@ export const BottomNav = () => {
       {navigationItems.map(item => (
         <BottomNavItem
           key={item.path}
-          active={location.pathname === item.path}
+          $active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
         >
           {item.label}

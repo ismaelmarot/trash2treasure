@@ -17,7 +17,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
   const location = useLocation()
 
   return (
-    <SidebarContainer collapsed={collapsed}>
+    <SidebarContainer $collapsed={collapsed}>
 
       <button onClick={toggleSidebar}>
         ☰
@@ -26,7 +26,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
       {navigationItems.map(item => (
         <NavItem
           key={item.path}
-          active={location.pathname === item.path}
+         $active={location.pathname === item.path}
           onClick={() => navigate(item.path)}
         >
           {!collapsed && item.label}

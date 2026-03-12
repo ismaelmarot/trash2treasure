@@ -9,10 +9,10 @@ export const BottomNavContainer = styled.nav`
   align-items: center;
 `
 
-export const BottomNavItem = styled.button<{ active: boolean }>`
+export const BottomNavItem = styled.button<{ $active: boolean }>`
   border: none;
   background: none;
   cursor: pointer;
 
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
+  font-weight: ${({ $active }) => ($active ? 'bold' : 'normal')};
 `
