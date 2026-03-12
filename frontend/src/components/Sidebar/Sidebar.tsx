@@ -23,15 +23,23 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
         ☰
       </button>
 
-      {navigationItems.map(item => (
-        <NavItem
-          key={item.path}
-         $active={location.pathname === item.path}
-          onClick={() => navigate(item.path)}
-        >
-          {!collapsed && item.label}
-        </NavItem>
-      ))}
+      {navigationItems.map(item => {
+
+        const Icon = item.icon
+
+        return (
+          <NavItem
+            key={item.path}
+            $active={location.pathname === item.path}
+            onClick={() => navigate(item.path)}
+          >
+            <Icon size={20} />
+
+            {!collapsed && item.label}
+
+          </NavItem>
+        )
+      })}
 
     </SidebarContainer>
   )
