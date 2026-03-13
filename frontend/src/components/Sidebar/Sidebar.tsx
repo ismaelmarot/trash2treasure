@@ -1,6 +1,9 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { navigationItems } from '../../navigation'
 
+import { IoMdClose } from "react-icons/io";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
+
 import {
   SidebarContainer,
   NavItem,
@@ -20,7 +23,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
     <SidebarContainer $collapsed={collapsed}>
 
       <button onClick={toggleSidebar}>
-        ☰
+        { collapsed ? <FaArrowRightFromBracket size={20} /> : <IoMdClose size={20} /> }
       </button>
 
       {navigationItems.map(item => {
