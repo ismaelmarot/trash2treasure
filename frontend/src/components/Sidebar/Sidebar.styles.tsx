@@ -12,14 +12,9 @@ export const SidebarContainer = styled.aside<{ $collapsed: boolean }>`
   transition: width 0.2s ease;
 `
 
-export const NavItem = styled.button<{
-  $active: boolean
-  $collapsed: boolean
-}>`
+export const NavItem = styled.button<{ $active: boolean, $collapsed: boolean }>`
   ${flex('row','center','flex-start')}
-
   padding: ${({ $collapsed }) => ($collapsed ? '1rem' : '1rem 2rem')};
-
   cursor: pointer;
   border-radius: 38px;
   border: none;
