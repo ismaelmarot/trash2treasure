@@ -1,1 +1,2 @@
 export { APP_COLORS } from './APP_COLORS'
+export { ICONS } from './ICONS'
