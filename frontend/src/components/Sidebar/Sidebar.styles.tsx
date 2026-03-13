@@ -46,6 +46,7 @@ export const NavItem = styled.button<{ $active: boolean; $collapsed: boolean; $i
 
   &:last-child {
     margin-top: auto;
+    
   }
 `
 
