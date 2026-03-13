@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { flex } from '../../mixins'
 
 export const SidebarContainer = styled.aside<{ $collapsed: boolean }>`
   display: flex;
@@ -11,15 +12,24 @@ export const SidebarContainer = styled.aside<{ $collapsed: boolean }>`
 `
 
 export const NavItem = styled.button<{ $active: boolean }>`
-  border: none;
-  padding: 10px;
+  ${flex('row','center','flex-start')}
+  padding: 1rem 2rem;
   cursor: pointer;
-
-  background: ${({ $active }) => ($active ? '#ddd' : 'transparent')};
+  border-radius: 38px;
+  border: none;
+  font-size: 1.2rem;
+  color: black;
+  -webkit-tap-highlight-color: transparent;
+  
+  background: ${({ $active }) => ($active ? '#08a045' : 'transparent')};
+  color: ${({ $active }) => ($active ? '#ffffff' : 'black')};
 
   &:last-child {
+    ${flex('row','center','space-between')};
     margin-top: auto;
-    border: 3px solid black;
+    background-color: black;
     border-radius: 38px;
+    color: white;
+    padding: 1rem 2rem 1rem;
   }
 `

@@ -33,9 +33,8 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
             $active={location.pathname === item.path}
             onClick={() => navigate(item.path)}
           >
-            <Icon size={20} />
+            <Icon size={25} style={{ paddingRight:'.5rem' }} />
             {!collapsed && item.label}
-
           </NavItem>
         )
       })}
