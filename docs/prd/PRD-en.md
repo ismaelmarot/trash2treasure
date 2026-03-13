@@ -9,7 +9,7 @@ Author: Ismael Marot
 
 1. OVERVIEW
 
-ReciclaApp is an application designed to connect people who have recyclable materials or donations available with individuals who collect these resources. Currently, many useful materials such as boxes, cans, bottles, clothing, or furniture end up on streets or sidewalks, making it difficult and time-consuming for collectors to find them randomly.
+Trash2Treasure is an application designed to connect people who have recyclable materials or donations available with individuals who collect these resources. Currently, many useful materials such as boxes, cans, bottles, clothing, or furniture end up on streets or sidewalks, making it difficult and time-consuming for collectors to find them randomly.
 
 Our solution is a simple platform that allows any user to publish the exact location of these materials using GPS and interactive maps, making it easier for collectors to find them without wasting time. In addition, we encourage collaboration and gratitude between users to create a trustworthy and active community.
 

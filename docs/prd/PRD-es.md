@@ -9,7 +9,7 @@ Autor: Ismael Marot
 
 1. VISÓN GENERAL
 
-ReciclaApp es una aplicación diseñada para conectar a quienes tienen materiales reciclables o donaciones disponibles con aquellas personas que recolectan estos recursos. Actualmente, muchos materiales útiles como cajas, latas, botellas, ropa o muebles terminan en las calles o veredas, lo que dificulta y consume mucho tiempo de los recolectores al buscarlos de forma aleatoria.
+Trash2Treasure es una aplicación diseñada para conectar a quienes tienen materiales reciclables o donaciones disponibles con aquellas personas que recolectan estos recursos. Actualmente, muchos materiales útiles como cajas, latas, botellas, ropa o muebles terminan en las calles o veredas, lo que dificulta y consume mucho tiempo de los recolectores al buscarlos de forma aleatoria.
 
 Nuestra solución es una plataforma sencilla que permite a cualquier usuario publicar la ubicación exacta de estos materiales usando GPS y mapas interactivos, facilitando así que quienes los recolectan los encuentren sin perder tiempo. Además, fomentamos la colaboración y el agradecimiento entre usuarios para crear una comunidad confiable y activa.
 
