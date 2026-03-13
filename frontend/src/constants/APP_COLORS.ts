@@ -6,6 +6,7 @@ export const APP_COLORS = {
 
     black: 'rgba(26, 26, 26, 1)',
     white: 'rgba(245, 245, 245, 1)',
+    grey: 'rgba(216, 219, 226, 1)',
 
 }
 

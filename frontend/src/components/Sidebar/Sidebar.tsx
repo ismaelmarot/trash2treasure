@@ -7,6 +7,7 @@ import { FaArrowRightFromBracket } from "react-icons/fa6";
 import {
   SidebarContainer,
   NavItem,
+  CollapseButton,
 } from './Sidebar.styles'
 
 type SidebarProps = {
@@ -22,9 +23,11 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
   return (
     <SidebarContainer $collapsed={collapsed}>
 
-      <button onClick={toggleSidebar}>
+      <CollapseButton
+        onClick={toggleSidebar}
+        $collapsed={collapsed}>
         { collapsed ? <FaArrowRightFromBracket size={20} /> : <IoMdClose size={20} /> }
-      </button>
+      </CollapseButton>
 
       {navigationItems.map(item => {
 
