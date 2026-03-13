@@ -7,41 +7,83 @@ import {
   MapScreen,
   ProfileScreen,
   SearchScreen,
+  LoginScreen,
+  RegisterScreen,
+  WelcomeScreen,
+  VerificationScreen,
+  AboutScreen,
+  LegalScreen,
+  SiteMapScreen,
 } from '../screens'
 import { Layout } from '../components'
+import { ProtectedRoute } from '../components/ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Layout />,
+    path: '/welcome',
+    element: <WelcomeScreen />,
+  },
+  {
+    path: '/login',
+    element: <LoginScreen />,
+  },
+  {
+    path: '/register',
+    element: <RegisterScreen />,
+  },
+  {
+    path: '/verify',
+    element: <VerificationScreen />,
+  },
+
+  {
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <MapScreen />,
-      },
-      {
-        path: 'search',
-        element: <SearchScreen />,
-      },
-      {
-        path: 'add',
-        element: <AddItemScreen />,
-      },
-      {
-        path: 'activity',
-        element: <ActivityScreen />,
-      },
-      {
-        path: 'profile',
-        element: <ProfileScreen />,
-      },
-      {
-        path: 'item/:id',
-        element: <ItemDetailScreen />,
-      },
-      {
-        path: 'claimed/:id',
-        element: <ClaimConfirmationScreen />,
+        path: '/',
+        element: <Layout />,
+        children: [
+          {
+            index: true,
+            element: <MapScreen />,
+          },
+          {
+            path: 'search',
+            element: <SearchScreen />,
+          },
+          {
+            path: 'add',
+            element: <AddItemScreen />,
+          },
+          {
+            path: 'activity',
+            element: <ActivityScreen />,
+          },
+          {
+            path: 'profile',
+            element: <ProfileScreen />,
+          },
+          {
+            path: 'about',
+            element: <AboutScreen />,
+          },
+          {
+            path: 'legal/:documentType',
+            element: <LegalScreen />,
+          },
+          {
+            path: 'sitemap',
+            element: <SiteMapScreen />,
+          },
+          {
+            path: 'item/:id',
+            element: <ItemDetailScreen />,
+          },
+          {
+            path: 'claimed/:id',
+            element: <ClaimConfirmationScreen />,
+          },
+        ],
       },
     ],
   },

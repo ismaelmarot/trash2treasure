@@ -7,4 +7,8 @@ export const routes = {
 
     item: (id: string | number) => `/item/${id}`,
     claimed: (id: string | number) => `/claimed/${id}`,
+    login: () => '/login',
+    register: () => '/register',
+    welcome: () => '/welcome',
+    verify: () => '/verify',
 }

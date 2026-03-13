@@ -23,8 +23,8 @@ export const BottomNav = () => {
             $active={location.pathname === item.path}
             onClick={() => navigate(item.path)}
           >
-            <Icon size={20} />
-            {item.label}
+            <Icon size={24} />
+            <span>{item.label}</span>
           </BottomNavItem>
         )
       })}
