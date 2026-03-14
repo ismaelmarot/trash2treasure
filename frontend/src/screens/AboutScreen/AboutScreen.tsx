@@ -1,6 +1,5 @@
 
 import { useNavigate } from 'react-router-dom'
-import { FaChevronLeft, FaGithub, FaExternalLinkAlt, FaHeart, FaShieldAlt, FaLeaf } from 'react-icons/fa'
 import {
   AppName,
   AppVersion,
@@ -28,8 +27,10 @@ import {
   SectionTitle,
   TextStyled,
   Title,
-  USP
+  USP,
+  Span,
 } from './AboutScreen.style'
+import { ICONS } from '../../constants'
 
 export function AboutScreen() {
   const navigate = useNavigate()
@@ -38,7 +39,7 @@ export function AboutScreen() {
     <Container>
       <Header>
         <BackButton onClick={() => navigate(-1)}>
-          <FaChevronLeft />
+          <ICONS.arrowLeft />
           <span>Volver</span>
         </BackButton>
         <Title>Acerca del Proyecto</Title>
@@ -54,12 +55,12 @@ export function AboutScreen() {
 
         <Section>
           <SectionTitle>
-            <FaLeaf color="#34c759" /> Nuestra Misión
+            <ICONS.leafIcon color='#34c759' /> Nuestra Misión
           </SectionTitle>
           <TextStyled>
-            Trash2Treasure es una plataforma pionera de economía circular diseñada para transformar 
+            Trash2Treasure es una plataforma de economía circular diseñada para transformar 
             la forma en que nuestras comunidades manejan los excedentes. Nuestra misión es simple 
-            pero ambiciosa: **eliminar el concepto de 'basura'** conectando objetos infrautilizados 
+            pero ambiciosa: <Span>eliminar el concepto de 'basura'</Span> conectando objetos infrautilizados 
             con personas que pueden renovarlos, reutilizarlos o reciclarlos.
           </TextStyled>
           <TextStyled>
@@ -70,7 +71,7 @@ export function AboutScreen() {
 
         <Section>
           <SectionTitle>
-            <FaShieldAlt color="#0071e3" /> Propiedad Intelectual
+            <ICONS.shielIcon color='#0071e3' /> Propiedad Intelectual
           </SectionTitle>
           <CopyrightBox>
             <CopyrightText>
@@ -78,7 +79,7 @@ export function AboutScreen() {
             </CopyrightText>
             <LegalNotice>
               Este software y su metodología de "matching" geolocalizado son propiedad intelectual 
-              de Ismael Marot y iM Projects. Prohibida la reproducción total o parcial del código, 
+              de <Span>Ismael Marot</Span> y <Span>iM Projects</Span>. Prohibida la reproducción total o parcial del código, 
               diseño UX/UI o arquitectura del sistema sin autorización expresa por escrito.
             </LegalNotice>
           </CopyrightBox>
@@ -86,17 +87,17 @@ export function AboutScreen() {
 
         <Section>
           <SectionTitle>
-            <FaHeart color="#ff2d55" /> Desarrollo y Créditos
+            <ICONS.hartIcon color='#ff2d55' /> Desarrollo y Créditos
           </SectionTitle>
           <TextStyled>
-            Conceptualizado y desarrollado íntegramente por **Ismael Marot** bajo el sello de **iM Projects**.
+            Conceptualizado y desarrollado íntegramente por <Span>Ismael Marot</Span> bajo el sello de <Span>iM Projects</Span>.
           </TextStyled>
           <LinkGroup>
-            <ExternalLink href="https://github.com/ismaelmarot" target="_blank" rel="noopener noreferrer">
-              <FaGithub /> Perfil de GitHub
+            <ExternalLink href='https://github.com/ismaelmarot' target='_blank' rel="noopener noreferrer">
+              <ICONS.gitHub /> Perfil de GitHub
             </ExternalLink>
-            <ExternalLink href="#" target="_blank" rel="noopener noreferrer">
-              <FaExternalLinkAlt /> Portfolio Profesional
+            <ExternalLink href='#' target='_blank' rel="noopener noreferrer">
+              <ICONS.externalLink /> Portfolio Profesional
             </ExternalLink>
           </LinkGroup>
         </Section>

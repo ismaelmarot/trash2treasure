@@ -237,3 +237,8 @@ export const FooterLink = styled.button`
         font-size: 12px;
     }
 `
+
+export const Span = styled.span`
+    font-weight: 600;
+    font-style: italic;
+`
