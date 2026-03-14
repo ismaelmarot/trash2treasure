@@ -1,0 +1,325 @@
+import styled from 'styled-components'
+import { flex, size } from '../../mixins'
+import { COLORS, SPACING } from '../../constants'
+
+export const Container = styled.div`
+    ${flex('column','center','center')}
+    padding: 20px;
+    background: ${COLORS.white};
+    min-height: calc(100vh - 80px);
+`
+
+export const Card = styled.div`
+    background: ${COLORS.allWhite};
+    padding: 32px;
+    border-radius: 28px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px ${COLORS.shadow};
+`
+
+export const Title = styled.h1`
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: ${COLORS.black};
+`
+
+export const Subtitle = styled.p`
+    color: ${COLORS.greyDark};
+    margin-bottom: 32px;
+    font-size: 15px;
+`
+
+export const SuccessView = styled.div`
+    ${flex('column','center','center')}
+    padding: 40px 0;
+    text-align: center;
+`
+
+export const SuccessIcon = styled.div`
+    font-size: 64px;
+    margin-bottom: 24px;
+    animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    @keyframes pop {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+`
+
+export const SuccessText = styled.p`
+    margin-top: 20px;
+    font-size: 14px;
+    color: ${COLORS.info};
+    font-weight: 500;
+`
+
+export const Form = styled.form`
+    ${flex('column','center','center')}
+    gap: 24px;
+`
+
+export const InputGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`
+
+export const Label = styled.label`
+    font-size: 14px;
+    font-weight: 600;
+    padding-left: 4px;
+    margin-top: 1rem;
+    color: ${COLORS.black};
+`;
+
+export const Input = styled.input`
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid ${COLORS.grey};
+    font-size: 16px;
+    background: #fbfbfd;
+    transition: all 0.2s ease;
+    
+    &:focus {
+        border-color: ${COLORS.info};
+        outline: none;
+        box-shadow: 0 0 0 4px ${COLORS.shadow};
+    }
+`
+
+export const TextArea = styled.textarea`
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid ${COLORS.grey};
+    font-size: 16px;
+    background: #fbfbfd;
+    resize: none;
+    
+    &:focus {
+        border-color: ${COLORS.info};
+        outline: none;
+        box-shadow: 0 0 0 4px ${COLORS.shadow};
+  }
+`
+
+export const Select = styled.select`
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid ${COLORS.grey};
+    font-size: 16px;
+    background: #fbfbfd;
+    cursor: pointer;
+`
+
+export const ImageContainer = styled.div`
+    ${size('100%','220px')}
+    border-radius: 18px;
+    border: 1px solid ${COLORS.grey};
+    background: #f5f5f7;
+    overflow: hidden;
+    position: relative;
+`
+
+export const OptionsContainer = styled.div`
+    ${flex('row','center','center')}
+    ${size('100%','100%')}
+`
+
+export const OptionButton = styled.button`
+    ${flex('column','center','center')}
+    flex: 1;
+    gap: 12px;
+    height: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: ${COLORS.greyDark};
+    font-size: 14px;
+    font-family: inherit;
+    transition: background 0.2s ease;
+    
+    &:hover {
+        background: ${COLORS.grey};
+        color: ${COLORS.info};
+    }
+`
+
+export const IconText = styled.span`
+    font-size: 32px;
+`
+
+export const DividerVertical = styled.div`
+    ${size('1px','80%')}
+    background: ${COLORS.grey};
+`
+
+export const PreviewWrapper = styled.div`
+    ${size('100%','100%')}
+    position: relative;
+`
+
+export const PreviewImage = styled.img`
+    ${size('100%','100%')}
+    display: block;
+    object-fit: cover;
+`
+
+export const RemoveImage = styled.button`
+    ${flex('column','center','center')}
+    ${size('30px','30px')}
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 15px;
+    background: ${COLORS.greyDark};
+    color: ${COLORS.allWhite};
+`
+
+export const MapWrapper = styled.div`
+    ${size('100%','240px')}
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid ${COLORS.grey};
+    position: relative;
+    z-index: 1;
+`
+
+export const LocateMeButton = styled.button`
+    ${flex('column','center','center')}
+    ${size('40px','40px')}
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    border-radius: 10px;
+    background: ${COLORS.allWhite};
+    border: 1px solid ${COLORS.allWhite};
+    box-shadow: 0 2px 8px ${COLORS.shadow};
+    font-size: 20px;
+    cursor: pointer;
+    
+    &:hover {
+        background: ${COLORS.grey};
+        border: 1px solid ${COLORS.grey};
+    }
+`
+
+export const CoordsText = styled.p`
+    font-size: 11px;
+    color: ${COLORS.greyDark};
+    text-align: right;
+    margin-top: 4px;
+`
+
+export const HiddenInput = styled.input`
+    display: none;
+`
+
+export const ErrorMessage = styled.p`
+    color: ${COLORS.danger};
+    font-size: 14px;
+    background: ${COLORS.allWhite};
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid ${COLORS.shadow};
+`
+
+export const SubmitButton = styled.button`
+    background: ${COLORS.info};
+    color: ${COLORS.allWhite};
+    border: none;
+    padding: 18px;
+    border-radius: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: ${COLORS.info};
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px ${COLORS.shadow};
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+    
+    &:disabled {
+        background: #d2d2d7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+`
+
+export const CameraModal = styled.div`
+    ${flex('column','center','center')}
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${COLORS.black};
+    z-index: 1000;
+`
+
+export const CameraViewWrapper = styled.div`
+    ${flex('column','center','center')}
+    position: relative;
+    ${size('100%','100%')}
+    max-width: 500px;
+`
+
+export const VideoFeed = styled.video`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+`
+
+export const CameraControls = styled.div`
+    ${flex('row','center','space-between')}
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    padding: 0 40px;
+`
+
+export const CaptureButton = styled.button`
+    ${flex('column','center','center')}
+    ${size('70px','70px')}
+    border-radius: 50%;
+    border: 4px solid white;
+    background: none;
+    padding: 4px;
+    cursor: pointer;
+    
+    &:active {
+        transform: scale(0.92);
+    }
+`
+
+export const CaptureInner = styled.div`
+    ${size('100%','100%')}
+    border-radius: 50%;
+    background: ${COLORS.allWhite};
+    `
+
+export const CancelCapture = styled.button`
+    background: none;
+    border: none;
+    color: ${COLORS.allWhite};
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+`
