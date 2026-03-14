@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { API_BASE_URL } from '../../constants/api';
+import { API_BASE_URL } from '../../constants'
 
 export function VerificationScreen() {
   const [code, setCode] = useState('');

@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { API_BASE_URL } from '../../constants/api';
-import { useAuth } from '../../hooks/useAuth';
+import { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import { API_BASE_URL } from '../../constants'
+import { useAuth } from '../../hooks/useAuth'
 
 // Fix for default marker icons in Leaflet with React
 // @ts-ignore

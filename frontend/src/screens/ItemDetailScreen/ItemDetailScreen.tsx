@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { API_BASE_URL } from '../../constants/api';
+import { API_BASE_URL } from '../../constants';
 import { useAuth } from '../../hooks/useAuth';
 import { ConfirmationModal } from '../../components/ConfirmationModal/ConfirmationModal';
 import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown';

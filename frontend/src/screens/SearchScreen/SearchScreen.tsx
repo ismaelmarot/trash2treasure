@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../constants/api';
-import { FaSearch } from 'react-icons/fa';
-import { useAuth } from '../../hooks/useAuth';
-import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown';
+import { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../../constants'
+import { FaSearch } from 'react-icons/fa'
+import { useAuth } from '../../hooks/useAuth'
+import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown'
 
 
 interface Item {
@@ -27,75 +27,75 @@ const CATEGORIES = [
   { id: 'metal', label: 'Metal', icon: '🔩' },
   { id: 'mixto', label: 'Mixed', icon: '♻️' },
   { id: 'otros', label: 'Others', icon: '✨' },
-];
+]
 
 
 export function SearchScreen() {
-  const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('todos');
-  const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null);
-  const navigate = useNavigate();
-  const { token, user } = useAuth();
+  const [items, setItems] = useState<Item[]>([])
+  const [loading, setLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('todos')
+  const [userLocation, setUserLocation] = useState<{ lat: number, lng: number } | null>(null)
+  const navigate = useNavigate()
+  const { token, user } = useAuth()
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
         (err) => console.log('Location not available for distance', err)
-      );
+      )
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController()
     const timer = setTimeout(() => {
-      fetchItems(searchQuery, controller.signal);
+      fetchItems(searchQuery, controller.signal)
     }, 300);
     return () => {
-      clearTimeout(timer);
-      controller.abort();
+      clearTimeout(timer)
+      controller.abort()
     };
-  }, [selectedCategory, searchQuery, token]);
+  }, [selectedCategory, searchQuery, token])
 
   const fetchItems = async (query = searchQuery, signal?: AbortSignal) => {
-    const trimmedQuery = query.trim();
-    setLoading(true);
+    const trimmedQuery = query.trim()
+    setLoading(true)
     try {
-      const url = new URL(`${API_BASE_URL}/items`);
+      const url = new URL(`${API_BASE_URL}/items`)
       if (selectedCategory === 'reclamados') {
-        url.searchParams.append('type', 'claimed');
+        url.searchParams.append('type', 'claimed')
       } else if (selectedCategory !== 'todos') {
-        url.searchParams.append('category', selectedCategory);
+        url.searchParams.append('category', selectedCategory)
       }
-      if (trimmedQuery) url.searchParams.append('search', trimmedQuery);
+      if (trimmedQuery) url.searchParams.append('search', trimmedQuery)
       
       const response = await fetch(url.toString(), {
         signal,
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      const data = await response.json();
-      setItems(data);
+      const data = await response.json()
+      setItems(data)
     } catch (error: any) {
       if (error.name === 'AbortError') return;
-      console.error('Error fetching search results:', error);
+      console.error('Error fetching search results:', error)
     } finally {
-      if (!signal?.aborted) setLoading(false);
+      if (!signal?.aborted) setLoading(false)
     }
-  };
+  }
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchItems();
-  };
+    e.preventDefault()
+    fetchItems()
+  }
 
-  const deg2rad = (deg: number) => deg * (Math.PI/180);
+  const deg2rad = (deg: number) => deg * (Math.PI/180)
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371;
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
+    const R = 6371
+    const dLat = deg2rad(lat2 - lat1)
+    const dLon = deg2rad(lon2 - lon1)
     const a = 
       Math.sin(dLat/2) * Math.sin(dLat/2) +
       Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
@@ -103,7 +103,7 @@ export function SearchScreen() {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
     const d = R * c;
     return d < 1 ? `${(d * 1000).toFixed(0)} m` : `${d.toFixed(1)} km`;
-  };
+  }
 
   const filteredItems = items.filter(item => {
     const q = searchQuery.toLowerCase().trim();
@@ -112,8 +112,8 @@ export function SearchScreen() {
       item.title.toLowerCase().includes(q) || 
       item.description.toLowerCase().includes(q) ||
       item.category.toLowerCase().includes(q)
-    );
-  });
+    )
+  })
 
   return (
     <Container>

@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate, Link } from 'react-router-dom';
-import { API_BASE_URL } from '../../constants/api';
-import { useAuth } from '../../hooks/useAuth';
+import { useState } from 'react'
+import styled from 'styled-components'
+import { useNavigate, Link } from 'react-router-dom'
+import { API_BASE_URL } from '../../constants'
+import { useAuth } from '../../hooks/useAuth'
 
 export function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
 
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError('')
 
     try {
       const response = await fetch(`${API_BASE_URL}/users/login`, {
@@ -24,13 +24,13 @@ export function LoginScreen() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (response.ok) {
-        login(data.token, data.user);
+        login(data.token, data.user)
         navigate('/');
       } else {
-        setError(data.error || 'Login failed');
+        setError(data.error || 'Login failed')
       }
     } catch (err) {
       setError('Connection error');

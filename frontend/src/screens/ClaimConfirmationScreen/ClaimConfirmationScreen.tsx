@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { API_BASE_URL } from '../../constants/api';
+import { API_BASE_URL } from '../../constants'
 import { useAuth } from '../../hooks/useAuth';
 
 export function ClaimConfirmationScreen() {

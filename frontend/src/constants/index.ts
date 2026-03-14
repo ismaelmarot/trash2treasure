@@ -1,3 +1,4 @@
+export { API_BASE_URL } from './api.const'
 export { COLORS } from './APP_COLORS'
 export { FONT_SIZES } from './fontSize.const'
 export { ICONS } from './ICONS'

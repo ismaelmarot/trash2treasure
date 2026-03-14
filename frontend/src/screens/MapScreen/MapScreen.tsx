@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet';
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet'
 import L from 'leaflet';
-import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../constants/api';
-import { useAuth } from '../../hooks/useAuth';
-import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown';
-import { FaCrosshairs, FaCheck, FaTimes, FaSearch, FaMapMarkerAlt, FaChevronRight, FaBars, FaPlus } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../../constants'
+import { useAuth } from '../../hooks/useAuth'
+import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown'
+import { FaCrosshairs, FaCheck, FaTimes, FaSearch, FaMapMarkerAlt, FaChevronRight, FaBars, FaPlus } from 'react-icons/fa'
 
 // Fix for default Leaflet icons in React
-import 'leaflet/dist/leaflet.css';
+import 'leaflet/dist/leaflet.css'
 
 interface Item {
   id: number;
@@ -23,18 +22,16 @@ interface Item {
   main_image: string | null;
 }
 
-
-
 const getCategoryEmoji = (category: string) => {
   switch (category) {
-    case 'carton': return '📦';
-    case 'botellas': return '🍾';
-    case 'metal': return '🔩';
-    case 'mixto': return '♻️';
-    case 'otros': return '✨';
-    default: return '📍';
+    case 'carton': return '📦'
+    case 'botellas': return '🍾'
+    case 'metal': return '🔩'
+    case 'mixto': return '♻️'
+    case 'otros': return '✨'
+    default: return '📍'
   }
-};
+}
 
 const getCategoryIcon = (category: string) => {
   return L.divIcon({
@@ -43,8 +40,8 @@ const getCategoryIcon = (category: string) => {
     iconSize: [32, 32],
     iconAnchor: [16, 16],
     popupAnchor: [0, -16]
-  });
-};
+  })
+}
 
 const userIcon = L.divIcon({
   html: `<div style="
@@ -66,7 +63,7 @@ const userIcon = L.divIcon({
   className: 'user-location-icon',
   iconSize: [20, 20],
   iconAnchor: [10, 10]
-});
+})
 
 // Component to recenter map when location changes
 function ChangeView({ center, trigger }: { center: L.LatLngExpression, trigger?: number }) {
@@ -92,44 +89,44 @@ function ManualModeHandler({ isActive, onConfirm }: { isActive: boolean, onConfi
         </ConfirmFab>
       </CrosshairContainer>
     </div>
-  );
+  )
 }
 
 
 export function MapScreen() {
   const [items, setItems] = useState<Item[]>([]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(() => {
-    const saved = localStorage.getItem('manually_set_location');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [accuracy, setAccuracy] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { token } = useAuth();
-  const navigate = useNavigate();
+    const saved = localStorage.getItem('manually_set_location')
+    return saved ? JSON.parse(saved) : null
+  })
+  const [accuracy, setAccuracy] = useState<number | null>(null)
+  const [loading, setLoading] = useState(true)
+  const { token } = useAuth()
+  const navigate = useNavigate()
 
-  const [shouldRecenter, setShouldRecenter] = useState(0);
-  const [isRefreshingLocation, setIsRefreshingLocation] = useState(false);
-  const [isManualMode, setIsManualMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
+  const [shouldRecenter, setShouldRecenter] = useState(0)
+  const [isRefreshingLocation, setIsRefreshingLocation] = useState(false)
+  const [isManualMode, setIsManualMode] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [maxDistance, setMaxDistance] = useState<number>(3000); // Default 3km
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371e3; // Earth radius in meters
-    const phi1 = (lat1 * Math.PI) / 180;
-    const phi2 = (lat2 * Math.PI) / 180;
-    const deltaPhi = ((lat2 - lat1) * Math.PI) / 180;
-    const deltaLambda = ((lon2 - lon1) * Math.PI) / 180;
+    const phi1 = (lat1 * Math.PI) / 180
+    const phi2 = (lat2 * Math.PI) / 180
+    const deltaPhi = ((lat2 - lat1) * Math.PI) / 180
+    const deltaLambda = ((lon2 - lon1) * Math.PI) / 180
 
     const a =
       Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
-      Math.cos(phi1) * Math.cos(phi2) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      Math.cos(phi1) * Math.cos(phi2) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
-    return R * c; // in meters
+    return R * c // in meters
   };
 
   const filteredItems = items
@@ -140,61 +137,61 @@ export function MapScreen() {
         : Infinity
     }))
     .filter(item => {
-      const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory;
-      const distanceMatch = item.distance <= maxDistance;
-      return categoryMatch && distanceMatch;
+      const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory
+      const distanceMatch = item.distance <= maxDistance
+      return categoryMatch && distanceMatch
     })
-    .sort((a, b) => a.distance - b.distance);
+    .sort((a, b) => a.distance - b.distance)
 
   const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+    e.preventDefault()
+    if (!searchQuery.trim()) return
     
-    setIsSearching(true);
+    setIsSearching(true)
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
-      const data = await response.json();
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`)
+      const data = await response.json()
       if (data && data.length > 0) {
-        const { lat, lon } = data[0];
-        const newPos: [number, number] = [parseFloat(lat), parseFloat(lon)];
-        setUserLocation(newPos);
+        const { lat, lon } = data[0]
+        const newPos: [number, number] = [parseFloat(lat), parseFloat(lon)]
+        setUserLocation(newPos)
         setAccuracy(null); // Search location doesn't have GPS accuracy
-        setShouldRecenter(prev => prev + 1);
+        setShouldRecenter(prev => prev + 1)
         // If they search, they probably want to confirm this as their home base
-        setIsManualMode(true);
+        setIsManualMode(true)
       }
     } catch (err) {
       console.error('Search error:', err);
     } finally {
       setIsSearching(false);
     }
-  };
+  }
 
   const handleConfirmManualLocation = (map: L.Map) => {
-    const center = map.getCenter();
-    const newPos: [number, number] = [center.lat, center.lng];
-    setUserLocation(newPos);
+    const center = map.getCenter()
+    const newPos: [number, number] = [center.lat, center.lng]
+    setUserLocation(newPos)
     setAccuracy(null);
-    localStorage.setItem('manually_set_location', JSON.stringify(newPos));
-    setIsManualMode(false);
-  };
+    localStorage.setItem('manually_set_location', JSON.stringify(newPos))
+    setIsManualMode(false)
+  }
 
   // Fallback to IP location if GPS fails/is slow
   const getIPLocation = async () => {
     try {
-      const response = await fetch('https://ipapi.co/json/');
-      const data = await response.json();
+      const response = await fetch('https://ipapi.co/json/')
+      const data = await response.json()
       if (data.latitude && data.longitude) {
-        return [data.latitude, data.longitude] as [number, number];
+        return [data.latitude, data.longitude] as [number, number]
       }
     } catch (error) {
-      console.error('Error getting IP location:', error);
+      console.error('Error getting IP location:', error)
     }
-    return [-34.6037, -58.3816] as [number, number]; // Ultimate fallback
-  };
+    return [-34.6037, -58.3816] as [number, number] // Ultimate fallback
+  }
 
   useEffect(() => {
-    let watchId: number;
+    let watchId: number
     
     const startTracking = async () => {
       // If we have a saved location, don't show loading overlay for too long
@@ -216,39 +213,39 @@ export function MapScreen() {
             }
           },
           { timeout: 5000, enableHighAccuracy: false }
-        );
+        )
 
         // Start watching for high accuracy fixes
         watchId = navigator.geolocation.watchPosition(
           (pos) => {
-            const newPos: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-            setUserLocation(newPos);
-            setAccuracy(pos.coords.accuracy);
-            setLoading(false);
+            const newPos: [number, number] = [pos.coords.latitude, pos.coords.longitude]
+            setUserLocation(newPos)
+            setAccuracy(pos.coords.accuracy)
+            setLoading(false)
           },
           (err) => {
-            console.error('Error watching location:', err);
+            console.error('Error watching location:', err)
           },
           {
             enableHighAccuracy: true,
             timeout: 15000,
             maximumAge: 0
           }
-        );
+        )
       } else {
-        const ipLoc = await getIPLocation();
-        setUserLocation(ipLoc);
-        setLoading(false);
+        const ipLoc = await getIPLocation()
+        setUserLocation(ipLoc)
+        setLoading(false)
       }
-    };
+    }
 
-    startTracking();
-    fetchItems();
+    startTracking()
+    fetchItems()
 
     return () => {
-      if (watchId) navigator.geolocation.clearWatch(watchId);
-    };
-  }, []);
+      if (watchId) navigator.geolocation.clearWatch(watchId)
+    }
+  }, [])
 
   const handleRecenter = () => {
     setIsRefreshingLocation(true);
@@ -256,16 +253,16 @@ export function MapScreen() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          const newPos: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-          setUserLocation(newPos);
-          setAccuracy(pos.coords.accuracy);
-          setShouldRecenter(prev => prev + 1);
-          setIsRefreshingLocation(false);
+          const newPos: [number, number] = [pos.coords.latitude, pos.coords.longitude]
+          setUserLocation(newPos)
+          setAccuracy(pos.coords.accuracy)
+          setShouldRecenter(prev => prev + 1)
+          setIsRefreshingLocation(false)
         },
         (err) => {
-          console.error('Error forcing location update:', err);
-          setIsRefreshingLocation(false);
-          setShouldRecenter(prev => prev + 1);
+          console.error('Error forcing location update:', err)
+          setIsRefreshingLocation(false)
+          setShouldRecenter(prev => prev + 1)
         },
         {
           enableHighAccuracy: true,
@@ -274,26 +271,24 @@ export function MapScreen() {
         }
       );
     } else {
-      setIsRefreshingLocation(false);
-      setShouldRecenter(prev => prev + 1);
+      setIsRefreshingLocation(false)
+      setShouldRecenter(prev => prev + 1)
     }
-  };
-
-
+  }
 
   const fetchItems = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/items`, {
         headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
+      })
+      const data = await response.json()
       setItems(data);
     } catch (error) {
-      console.error('Error fetching items for map:', error);
+      console.error('Error fetching items for map:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Container>

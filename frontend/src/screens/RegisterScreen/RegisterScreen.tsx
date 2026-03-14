@@ -1,33 +1,33 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate, Link } from 'react-router-dom';
-import { API_BASE_URL } from '../../constants/api';
+import { useState } from 'react'
+import styled from 'styled-components'
+import { useNavigate, Link } from 'react-router-dom'
+import { API_BASE_URL } from '../../constants'
 
 export function RegisterScreen() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const validations = {
     length: password.length >= 8,
     uppercase: /[A-Z]/.test(password),
     lowercase: /[a-z]/.test(password),
     number: /[0-9]/.test(password),
-  };
+  }
 
-  const isPasswordValid = Object.values(validations).every(v => v);
+  const isPasswordValid = Object.values(validations).every(v => v)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!isPasswordValid) {
-      setError('La contraseña no cumple con los requisitos de seguridad');
-      return;
+      setError('La contraseña no cumple con los requisitos de seguridad')
+      return
     }
-    setError('');
+    setError('')
 
     try {
 
@@ -35,20 +35,20 @@ export function RegisterScreen() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (response.ok) {
-        navigate('/verify', { state: { email } });
+        navigate('/verify', { state: { email } })
       } else {
 
-        setError(data.error || 'Registration failed');
+        setError(data.error || 'Registration failed')
       }
     } catch (err) {
-      setError('Connection error');
+      setError('Connection error')
     }
-  };
+  }
 
   return (
     <Container>
