@@ -1,26 +1,63 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
 import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet'
-import L from 'leaflet';
-import { useNavigate } from 'react-router-dom'
-import { API_BASE_URL } from '../../constants'
-import { useAuth } from '../../hooks/useAuth'
-import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown'
-import { FaCrosshairs, FaCheck, FaTimes, FaSearch, FaMapMarkerAlt, FaChevronRight, FaBars, FaPlus } from 'react-icons/fa'
-
-// Fix for default Leaflet icons in React
 import 'leaflet/dist/leaflet.css'
-
-interface Item {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  latitude: number;
-  longitude: number;
-  created_at: string;
-  main_image: string | null;
-}
+import L from 'leaflet'
+import { useNavigate } from 'react-router-dom'
+import { API_BASE_URL, ICONS } from '../../constants'
+import { useAuth } from '../../hooks'
+import { ItemCountdown } from '../../components'
+import {
+  ActionGroup,
+  CategoryChip,
+  CategoryScroll,
+  ConfirmButton,
+  ConfirmFab,
+  Container,
+  CountdownWrapper,
+  CrosshairContainer,
+  DistanceGrid,
+  DotDivider,
+  DragHandle,
+  DragHandleContainer,
+  EmptyIcon,
+  EmptyState,
+  ExploreSegment,
+  FilterChip,
+  FilterSection,
+  ItemCard,
+  ItemDescription,
+  ItemInfo,
+  ItemMeta,
+  ItemName,
+  ItemsList,
+  ItemThumbnail,
+  LocationStatus,
+  Overlay,
+  PopupContent,
+  PopupImage,
+  PopupTitle,
+  SearchButton,
+  SearchForm,
+  SearchInput,
+  SectionLabel,
+  SidebarContainer,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarOverlay,
+  SidebarTitle,
+  SmallIconButton,
+  Spinner,
+  StatusDot,
+  StatusText,
+  TitleRow,
+  ToggleButton,
+  TopBar,
+  TopBarSegment,
+  VerticalDivider,
+  ViewButton,
+  ViewDetailButton
+} from './MapScreen.styles'
+import type { ItemProps } from '../../interface'
 
 const getCategoryEmoji = (category: string) => {
   switch (category) {
@@ -82,9 +119,9 @@ function ManualModeHandler({ isActive, onConfirm }: { isActive: boolean, onConfi
   return (
     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 2000, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <CrosshairContainer>
-        <FaPlus size={30} color="#0071e3" />
+        <ICONS.plus size={30} color="#0071e3" />
         <ConfirmFab onClick={() => onConfirm(map)} style={{ pointerEvents: 'auto' }}>
-          <FaCheck size={20} />
+          <ICONS.check size={20} />
           Confirmar aquí
         </ConfirmFab>
       </CrosshairContainer>
@@ -94,7 +131,7 @@ function ManualModeHandler({ isActive, onConfirm }: { isActive: boolean, onConfi
 
 
 export function MapScreen() {
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<ItemProps[]>([]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(() => {
     const saved = localStorage.getItem('manually_set_location')
     return saved ? JSON.parse(saved) : null
@@ -308,11 +345,11 @@ export function MapScreen() {
                 onClick={() => setIsManualMode(true)} 
                 title="Ajustar ubicación manualmente"
               >
-                <FaMapMarkerAlt size={14} />
+                <ICONS.mapMark size={14} />
               </SmallIconButton>
             ) : (
               <ConfirmButton onClick={() => setIsManualMode(false)} title="Cancelar">
-                <FaTimes size={14} />
+                <ICONS.time size={14} />
               </ConfirmButton>
             )}
             <SmallIconButton 
@@ -320,7 +357,7 @@ export function MapScreen() {
               disabled={isRefreshingLocation}
               $isRefreshing={isRefreshingLocation}
             >
-              <FaCrosshairs size={14} />
+              <ICONS.cross size={14} />
             </SmallIconButton>
           </ActionGroup>
         </TopBarSegment>
@@ -331,7 +368,7 @@ export function MapScreen() {
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           $active={isSidebarOpen}
         >
-          <FaBars size={14} />
+          <ICONS.bars size={14} />
           <span>Explorar</span>
         </ExploreSegment>
       </TopBar>
@@ -414,7 +451,7 @@ export function MapScreen() {
           <TitleRow>
             <SidebarTitle>Explorar Tesoros</SidebarTitle>
             <ToggleButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-              {isSidebarOpen ? <FaChevronRight /> : <FaBars />}
+              {isSidebarOpen ? <ICONS.arrowRight /> : <ICONS.bars />}
             </ToggleButton>
           </TitleRow>
 
@@ -505,13 +542,11 @@ export function MapScreen() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <SearchButton type="submit" disabled={isSearching}>
-              {isSearching ? <div className="spinner-small" /> : <FaSearch />}
+              {isSearching ? <div className="spinner-small" /> : <ICONS.search />}
             </SearchButton>
           </SearchForm>
         </SidebarFooter>
       </SidebarContainer>
-
-      
 
       {loading && (
         <Overlay>
@@ -519,624 +554,6 @@ export function MapScreen() {
           <p>Cargando tesoros...</p>
         </Overlay>
       )}
-
     </Container>
-
-
-  );
+  )
 }
-
-const Container = styled.div`
-  display: flex;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  background: #f5f5f7;
-  overflow: hidden;
-`;
-
-const SidebarContainer = styled.div<{ $isOpen: boolean }>`
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 380px;
-  background: white;
-  z-index: 1500;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(${props => props.$isOpen ? '0' : '100%'});
-
-  @media (max-width: 768px) {
-    width: 100%;
-    height: 80%; /* Takes up 80% of screen */
-    top: auto;
-    bottom: 0;
-    transform: translateY(${props => props.$isOpen ? '0' : '100%'});
-    border-radius: 32px 32px 0 0;
-    background: rgba(255, 255, 255, 0.9); /* Glassmorphism */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15); /* Stronger shadow to lift it */
-  }
-`;
-
-const DragHandleContainer = styled.div`
-  display: none;
-  width: 100%;
-  padding: 12px 0 8px 0;
-  justify-content: center;
-  align-items: center;
-  cursor: grab;
-
-  @media (max-width: 768px) {
-    display: flex;
-  }
-`;
-
-const DragHandle = styled.div`
-  width: 40px;
-  height: 5px;
-  background: #c7c7cc;
-  border-radius: 10px;
-`;
-
-const SidebarOverlay = styled.div<{ $isOpen: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.3); /* Slightly darker */
-  backdrop-filter: blur(3px);
-  z-index: 1400;
-  opacity: ${props => props.$isOpen ? 1 : 0};
-  pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: none;
-
-  @media (max-width: 768px) {
-    display: block;
-  }
-`;
-
-const SidebarHeader = styled.div`
-  padding: 0 24px 24px 24px;
-  border-bottom: 1px solid rgba(0,0,0,0.05); /* Softer border */
-  background: transparent;
-  
-  @media (min-width: 769px) {
-    padding-top: 24px; /* Maintain padding on desktop */
-  }
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-`;
-
-const SidebarTitle = styled.h2`
-  font-size: 22px;
-  font-weight: 700;
-  color: #1d1d1f;
-  margin: 0;
-`;
-
-const ToggleButton = styled.button`
-  background: #f2f2f7;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #86868b;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #e5e5ea;
-    color: #1d1d1f;
-  }
-`;
-
-const FilterSection = styled.div`
-  margin-bottom: 20px;
-  &:last-child { margin-bottom: 0; }
-`;
-
-const SectionLabel = styled.p`
-  font-size: 13px;
-  font-weight: 600;
-  color: #86868b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 12px 0;
-`;
-
-const DistanceGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-`;
-
-const FilterChip = styled.button<{ $active: boolean }>`
-  padding: 8px 4px;
-  border-radius: 10px;
-  border: 1px solid ${props => props.$active ? '#0071e3' : '#d2d2d7'};
-  background: ${props => props.$active ? '#0071e3' : 'transparent'};
-  color: ${props => props.$active ? 'white' : '#1d1d1f'};
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: #0071e3;
-    color: ${props => props.$active ? 'white' : '#0071e3'};
-  }
-`;
-
-const CategoryScroll = styled.div`
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
-`;
-
-const CategoryChip = styled.button<{ $active: boolean }>`
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  background: ${props => props.$active ? '#f2f2f7' : 'transparent'};
-  color: ${props => props.$active ? '#0071e3' : '#86868b'};
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    color: #0071e3;
-  }
-`;
-
-const ItemsList = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  background: transparent;
-`;
-
-const ItemCard = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.95); /* A bit opaque to contrast with glass background */
-  border-radius: 20px; /* Apple uses generous border radius */
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-
-  &:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-
-  &:active {
-    transform: translateY(0) scale(0.98);
-  }
-`;
-
-const ItemThumbnail = styled.img`
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
-  object-fit: cover;
-`;
-
-const ItemInfo = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const ItemName = styled.h4`
-  font-size: 15px;
-  font-weight: 600;
-  color: #1d1d1f;
-  margin: 0;
-`;
-
-const ItemDescription = styled.p`
-  font-size: 12px;
-  color: #86868b;
-  margin: 2px 0 4px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
-`;
-
-const ItemMeta = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #86868b;
-`;
-
-const DotDivider = styled.span`
-  width: 3px;
-  height: 3px;
-  background: #d2d2d7;
-  border-radius: 50%;
-`;
-
-const ViewDetailButton = styled.button`
-  background: #f2f2f7;
-  color: #0071e3;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  
-  &:hover {
-    background: #0071e3;
-    color: white;
-    transform: scale(1.05);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-`;
-
-const EmptyState = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 24px;
-  text-align: center;
-  color: #86868b;
-
-  p {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 16px 0 8px 0;
-    color: #1d1d1f;
-  }
-
-  small {
-    font-size: 14px;
-  }
-`;
-
-const EmptyIcon = styled.div`
-  font-size: 40px;
-`;
-
-
-const TopBar = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(25px) saturate(200%);
-  -webkit-backdrop-filter: blur(25px) saturate(200%);
-  padding: 4px;
-  border-radius: 40px;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-  z-index: 9999; /* Super high z-index */
-  border: 1px solid rgba(255,255,255,0.5);
-  width: auto;
-  pointer-events: auto;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  @media (max-width: 768px) {
-    width: 95%;
-    justify-content: space-between;
-  }
-`;
-
-const TopBarSegment = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 10px 0 14px;
-`;
-
-const VerticalDivider = styled.div`
-  width: 1px;
-  height: 24px;
-  background: rgba(0,0,0,0.08);
-  margin: 0 2px;
-`;
-
-const ExploreSegment = styled.button<{ $active: boolean }>`
-  border: none;
-  background: ${props => props.$active ? '#0071e3' : 'transparent'};
-  color: ${props => props.$active ? 'white' : '#1d1d1f'};
-  padding: 10px 22px;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-
-  &:hover {
-    background: ${props => props.$active ? '#0077ed' : 'rgba(0,0,0,0.04)'};
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`;
-
-const IconButton = styled.button<{ $isRefreshing?: boolean }>`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: #0071e3;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #0077ed;
-    transform: scale(1.05);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  &:disabled {
-    background: #d2d2d7;
-    cursor: not-allowed;
-  }
-
-  svg {
-    animation: ${props => props.$isRefreshing ? 'spin 1.5s linear infinite' : 'none'};
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-
-const SmallIconButton = styled(IconButton)`
-  width: 30px;
-  height: 30px;
-  background: #f2f2f7;
-  color: #1d1d1f;
-  
-  &:hover {
-    background: #e5e5ea;
-  }
-`;
-
-const ActionGroup = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const SidebarFooter = styled.div`
-  padding: 16px;
-  border-top: 1px solid #f2f2f7;
-  background: white;
-`;
-
-
-const SearchForm = styled.form`
-  display: flex;
-  background: white;
-  padding: 4px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  overflow: hidden;
-`;
-
-const SearchInput = styled.input`
-  flex: 1;
-  border: none;
-  padding: 10px 16px;
-  font-size: 14px;
-  outline: none;
-  background: transparent;
-
-  &::placeholder {
-    color: #86868b;
-  }
-`;
-
-const SearchButton = styled.button`
-  background: #0071e3;
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #0077ed;
-  }
-
-  &:disabled {
-    background: #d2d2d7;
-  }
-`;
-
-
-const ConfirmButton = styled(IconButton)`
-  background: #ff3b30;
-  &:hover { background: #ff453a; }
-`;
-
-const CrosshairContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-`;
-
-const ConfirmFab = styled.button`
-  background: #0071e3;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 8px 16px rgba(0, 113, 227, 0.3);
-  cursor: pointer;
-  font-size: 14px;
-  
-  &:hover {
-    background: #0077ed;
-    transform: translateY(-2px);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-`;
-
-const LocationStatus = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const StatusDot = styled.div<{ $active: boolean; $isRefreshing: boolean }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: ${props => props.$isRefreshing ? '#ff9500' : props.$active ? '#34c759' : '#ff3b30'};
-  box-shadow: 0 0 8px ${props => props.$isRefreshing ? 'rgba(255,149,0,0.5)' : props.$active ? 'rgba(52,199,89,0.5)' : 'rgba(255,59,48,0.5)'};
-  animation: ${props => (props.$isRefreshing || !props.$active) ? 'pulse-dot 1.5s infinite' : 'none'};
-
-  @keyframes pulse-dot {
-    0% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-`;
-
-const StatusText = styled.span`
-  font-size: 13px;
-  font-weight: 600;
-  color: #1d1d1f;
-  white-space: nowrap;
-`;
-
-
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(4px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const Spinner = styled.div`
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #0071e3;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 12px;
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-
-const PopupContent = styled.div`
-  min-width: 180px;
-  max-width: 220px;
-  padding: 4px;
-`;
-
-const PopupImage = styled.img`
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 8px;
-`;
-
-const PopupTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 700;
-  color: #1d1d1f;
-  margin: 0 0 8px 0;
-`;
-
-const CountdownWrapper = styled.div`
-  margin-bottom: 12px;
-`;
-
-const ViewButton = styled.button`
-  width: 100%;
-  background: #0071e3;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #0077ed;
-  }
-`;

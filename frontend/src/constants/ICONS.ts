@@ -1,5 +1,12 @@
 import { IoMdClose } from 'react-icons/io'
 import {
+    FaCheck,
+    FaCrosshairs,
+    FaTimes,
+    FaSearch,
+    FaMapMarkerAlt,
+    FaBars,
+    FaPlus,
     FaAngleRight,
     FaInfoCircle,
     FaChevronLeft,
@@ -13,6 +20,13 @@ import {
 import { IoLogOutOutline } from 'react-icons/io5'
 
 export const ICONS = {
+    check: FaCheck,
+    cross: FaCrosshairs,
+    time: FaTimes,
+    search: FaSearch,
+    mapMark: FaMapMarkerAlt,
+    bars: FaBars,
+    plus: FaPlus,
     closeIcon: IoMdClose,
     arrowLeft: FaChevronLeft,
     arrowRight: FaAngleRight,
@@ -25,4 +39,3 @@ export const ICONS = {
     shielIcon: FaShieldAlt,
     leafIcon: FaLeaf,
 }
-
