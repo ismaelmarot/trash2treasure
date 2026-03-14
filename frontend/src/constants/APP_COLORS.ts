@@ -6,8 +6,10 @@ export const COLORS = {
     black: 'rgba(26, 26, 26, 1)',
     white: 'rgba(245, 245, 245, 1)',
     allWhite: 'rgba(255, 255, 255, 1)',
-    grey: 'rgba(216, 219, 226, 1)',
     shadow: 'rgba(0, 0, 0, .08)',
+    
+    grey: 'rgba(216, 219, 226, 1)',
+    greyDark: 'rgba(155, 159, 181, 1)',
 
     danger: 'rgba(255, 59, 48, 1)',
     dangerBg: 'rgba(255, 59, 48, 0.1)',

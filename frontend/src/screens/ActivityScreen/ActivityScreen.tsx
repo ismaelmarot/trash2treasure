@@ -194,11 +194,10 @@ export function ActivityScreen() {
 
               <ItemContent>
                 <ItemHeader>
-                  <ItemTitle>{item.title}</ItemTitle>
                   <ItemCountdown createdAt={item.created_at} />
                 </ItemHeader>
+                <ItemTitle>{item.title}</ItemTitle>
                 <ItemDescription>{item.description || 'Sin descripción'}</ItemDescription>
-                
                 <CardFooter>
                   <div />
                   <ButtonGroup>
