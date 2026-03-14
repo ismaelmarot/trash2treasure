@@ -43,26 +43,25 @@ export function ProfileScreen() {
       <Card>
         <Avatar>{user?.name?.[0] || 'U'}</Avatar>
         <Name>{user?.name}</Name>
-        <Email>{user?.email}</Email>
-        
+        <Email>{user?.email}</Email> 
         <Section>
           <SectionTitle>Actividad</SectionTitle>
           <p>Aún no tienes publicaciones.</p>
         </Section>
-
-        <Section>
-          <SectionTitle>Aplicación</SectionTitle>
-          <MenuItem onClick={() => navigate('/about')}>
-            <MenuIconWrapper>
-              <ICONS.iconCircle size={18} />
-            </MenuIconWrapper>
-            <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
-            <ICONS.chevronRight size={14} color="#d2d2d7" />
-          </MenuItem>
-        </Section>
-
         <LogoutButton onClick={logout}>Cerrar Sesión</LogoutButton>
       </Card>
+
+      <Section>
+        <SectionTitle>Aplicación</SectionTitle>
+        <MenuItem onClick={() => navigate('/about')}>
+          <MenuIconWrapper>
+            <ICONS.iconCircle size={18} />
+          </MenuIconWrapper>
+          <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
+            <ICONS.chevronRight size={14} color="#d2d2d7" />
+          </MenuItem>
+      </Section>
+
     </Container>
   )
 }

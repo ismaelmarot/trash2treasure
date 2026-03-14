@@ -1,3 +1,4 @@
 export { COLORS } from './APP_COLORS'
+export { FONT_SIZES } from './fontSize.const'
 export { ICONS } from './ICONS'
 export { SPACING } from './spacing.const'

@@ -3,7 +3,7 @@ import { COLORS, SPACING } from '../../constants'
 import { flex, size } from '../../mixins'
 
 export const Container = styled.div`
-    ${flex('column','center','flex-start')}
+    ${flex('column','center','space-between')}
     min-height: calc(100vh - 5rem);
     padding: ${SPACING.lg};
     background: ${COLORS.white};
@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 export const Card = styled.div`
     width: 100%;
-    max-width: 31.25rem;
+    max-width: 40rem;
     text-align: center;
     padding: ${SPACING.xxl};
     border-radius: ${SPACING.lg};
@@ -20,101 +20,90 @@ export const Card = styled.div`
 `
 
 export const Avatar = styled.div`
+    ${flex('column','center','center')}
     ${size('5rem','5rem')}
-  background: ${COLORS.primary};
-  color: ${COLORS.white};
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0 auto ${SPACING.lg};
+    border-radius: 50%;
+    margin: 0 auto ${SPACING.lg};
+    font-size: 2rem;
+    font-weight: 600;
+    color: ${COLORS.white};
+    background: ${COLORS.primary};
 `
 
 export const Name = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: ${SPACING.xs};
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: ${SPACING.xs};
 `
 
 export const Email = styled.p`
-  color: #86868b;
-  margin-bottom: ${SPACING.xxl};
+    margin-bottom: ${SPACING.xxl};
+    color: ${COLORS.primaryDark};
 `
 
 export const Section = styled.div`
-  text-align: left;
-  border-top: 1px solid #d2d2d7;
-  padding-top: ${SPACING.lg};
-  margin-bottom: ${SPACING.xxl};
+    width: 100%;
+    max-width: 40rem;
+    margin-bottom: ${SPACING.xxl};
+    padding: ${SPACING.xxl};
+    border-radius: ${SPACING.lg};
+    text-align: center;
+    box-shadow: 0 0.25rem 0.75rem ${COLORS.shadow};
+    background: ${COLORS.allWhite};
 `
 
 export const SectionTitle = styled.h3`
-  font-size: 1.125rem;
-  margin-bottom: ${SPACING.md};
+    font-size: 1.1rem;
+    margin-bottom: ${SPACING.md};
 `
 
 export const Button = styled.button`
-  background: ${COLORS.primary};
-  color: ${COLORS.white};
-  border: none;
-  padding: ${SPACING.sm} ${SPACING.lg};
-  border-radius: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
+    background: ${COLORS.primary};
+    color: ${COLORS.white};
+    border: none;
+    padding: ${SPACING.sm} ${SPACING.lg};
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
 
-  &:hover {
-    background: ${COLORS.primaryDark};
-  }
+    &:hover {
+        background: ${COLORS.primaryDark};
+    }
 `
 
 export const LogoutButton = styled.button`
-  background: transparent;
-  color: #ff3b30;
-  border: 1px solid #ff3b30;
-  padding: ${SPACING.sm} ${SPACING.lg};
-  border-radius: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #ff3b30;
-    color: ${COLORS.white};
-  }
+    background: transparent;
+    color: #ff3b30;
+    border: 1px solid #ff3b30;
+    padding: ${SPACING.sm} ${SPACING.lg};
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
 `
 
 export const MenuItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: ${SPACING.sm} ${SPACING.md};
-  background: #f5f5f7;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: #eaeaeb;
-  }
+    ${flex('row','center','center')}
+    padding: ${SPACING.sm} ${SPACING.md};
+    border-radius: ${SPACING.md};
+    background: ${COLORS.white};
+    cursor: pointer;
+    transition: background 0.2s ease;
 `
 
 export const MenuIconWrapper = styled.div`
-  width: 2rem;
-  height: 2rem;
-  background: ${COLORS.white};
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${COLORS.primary};
-  margin-right: ${SPACING.md};
+    ${flex('column','center','center')}
+    ${size('2rem','2rem')}
+    border-radius: ${SPACING.sm};
+    margin-right: ${SPACING.md};
+    color: ${COLORS.primary};
+    background: ${COLORS.white};
 `
 
 export const MenuLabel = styled.span`
-  flex: 1;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: #1d1d1f;
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    color: ${COLORS.black};
 `

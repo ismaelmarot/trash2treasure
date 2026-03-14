@@ -49,12 +49,12 @@ export const NavItem = styled.button<{ $active: boolean; $collapsed: boolean; $i
 export const CollapseButton = styled.button<{ $collapsed: boolean }>`
   width: 100%;
   border: none;
-  background: transparent;
   cursor: pointer;
   text-align: ${({ $collapsed }) => ($collapsed ? 'center' : 'end')};
-  padding: 8px;
+  padding: ${SPACING.sm};
   font-size: 1rem;
   border-radius: ${SPACING.sm};
+  background: transparent;
   transition: background 0.2s ease;
 `
 
