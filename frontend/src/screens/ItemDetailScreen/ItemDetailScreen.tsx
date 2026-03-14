@@ -1,17 +1,33 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { API_BASE_URL } from '../../constants';
-import { useAuth } from '../../hooks/useAuth';
-import { ConfirmationModal } from '../../components/ConfirmationModal/ConfirmationModal';
-import { ItemCountdown } from '../../components/ItemCountdown/ItemCountdown';
-import { BackButton, CategoryBadge, ClaimButton, ClaimStatusBadge, Container, ContentCard, Description, ErrorState, Header, ImageSection, Loading, MainImage, MapWrapper, OwnerBadge, PlaceholderImage, SectionTitle, TagGroup, Title, UnclaimButton } from './ItemDetailScreen.style';
-
-
-
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import type { ItemProps } from '../../interface'
+import { API_BASE_URL } from '../../constants'
+import { useAuth } from '../../hooks'
+import { ConfirmationModal, ItemCountdown } from '../../components'
+import {
+  BackButton,
+  CategoryBadge,
+  ClaimButton,
+  ClaimStatusBadge,
+  Container,
+  ContentCard,
+  Description,
+  ErrorState,
+  Header,
+  ImageSection,
+  Loading,
+  MainImage,
+  MapWrapper,
+  OwnerBadge,
+  PlaceholderImage,
+  SectionTitle,
+  TagGroup,
+  Title,
+  UnclaimButton
+} from './ItemDetailScreen.style'
 
 // Leaflet icon fix
 // @ts-ignore
@@ -20,57 +36,36 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-interface Photo {
-  id: number;
-  image_url: string;
-}
-
-interface Item {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  latitude: number;
-  longitude: number;
-  created_at: string;
-  user_id: number;
-  claimed_by: number | null;
-  photos?: Photo[];
-}
-
+})
 
 export function ItemDetailScreen() {
-  const { id } = useParams();
-  const [item, setItem] = useState<Item | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const { id } = useParams()
+  const [item, setItem] = useState<ItemProps | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const navigate = useNavigate()
 
-  const { user, token } = useAuth();
-
-
+  const { user, token } = useAuth()
 
   useEffect(() => {
     const fetchItemDetail = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/items/${id}`);
-        const data = await response.json();
-        setItem(data);
+        const response = await fetch(`${API_BASE_URL}/items/${id}`)
+        const data = await response.json()
+        setItem(data)
       } catch (error) {
-        console.error('Error fetching item details:', error);
+        console.error("Error fetching item details:", error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
-    fetchItemDetail();
-  }, [id]);
+    fetchItemDetail()
+  }, [id])
 
   const handleUnclaimClick = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
 
   const handleConfirmUnclaim = async () => {
     setIsModalOpen(false);
@@ -81,25 +76,23 @@ export function ItemDetailScreen() {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      });
+      })
 
-      if (!response.ok) throw new Error('Error al liberar el item');
+      if (!response.ok) throw new Error('Error al liberar el item')
       
       // Refresh item details
-      const updatedResponse = await fetch(`${API_BASE_URL}/items/${id}`);
-      const updatedData = await updatedResponse.json();
-      setItem(updatedData);
+      const updatedResponse = await fetch(`${API_BASE_URL}/items/${id}`)
+      const updatedData = await updatedResponse.json()
+      setItem(updatedData)
     } catch (error) {
       console.error('Error unclaiming item:', error);
-      alert('No se pudo liberar el item. Inténtalo de nuevo.');
+      alert('No se pudo liberar el item. Inténtalo de nuevo.')
     }
-  };
-
+  }
 
   if (loading) return <Loading>Cargando detalles...</Loading>;
 
   if (!item) return <ErrorState>Tesoro no encontrado.</ErrorState>;
-
 
   return (
     <Container>
@@ -119,9 +112,7 @@ export function ItemDetailScreen() {
           {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
         </TagGroup>
 
-
       </ImageSection>
-
 
       <ContentCard>
         <Header>
@@ -178,6 +169,5 @@ export function ItemDetailScreen() {
         onCancel={() => setIsModalOpen(false)}
       />
     </Container>
-
-  );
+  )
 }

@@ -1,3 +1,5 @@
+import type { PhotoProps } from '.'
+
 export interface ItemProps {
     id: number;
     title: string;
@@ -9,4 +11,5 @@ export interface ItemProps {
     user_id: number;
     claimed_by: number | null;
     main_image: string | null;
+    photos?: PhotoProps[];
 }
