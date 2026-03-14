@@ -27,7 +27,7 @@ import {
   TagGroup,
   Title,
   UnclaimButton
-} from './ItemDetailScreen.style'
+} from './ItemDetailScreen.styles'
 
 // Leaflet icon fix
 // @ts-ignore

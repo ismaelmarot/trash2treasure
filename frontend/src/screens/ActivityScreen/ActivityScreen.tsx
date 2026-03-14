@@ -33,7 +33,7 @@ import {
   TagGroup,
   Title,
   UnclaimButton
-} from './ActivityScreen.style'
+} from './ActivityScreen.styles'
 
 export function ActivityScreen() {
   const [items, setItems] = useState<ItemProps[]>([])

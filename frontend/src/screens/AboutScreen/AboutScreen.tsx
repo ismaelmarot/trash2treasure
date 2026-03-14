@@ -29,7 +29,7 @@ import {
   Title,
   USP,
   Span,
-} from './AboutScreen.style'
+} from './AboutScreen.styles'
 import { ICONS } from '../../constants'
 
 export function AboutScreen() {

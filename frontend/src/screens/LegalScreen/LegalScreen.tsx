@@ -1,7 +1,24 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import type { DocumentType } from '../../types'
 import { ICONS } from '../../constants'
-import { BackButton, CategoryItem, CategoryList, CategorySection, CategoryTitle, Container, ContentBody, DocTitle, DocumentContainer, Header, HubContainer, HubTitle, Paragraph, ScrollContent, SectionTitle, Title } from './LegalScreen.style';
+import {
+  BackButton,
+  CategoryItem,
+  CategoryList,
+  CategorySection,
+  CategoryTitle,
+  Container,
+  ContentBody,
+  DocTitle,
+  DocumentContainer,
+  Header,
+  HubContainer,
+  HubTitle,
+  Paragraph,
+  ScrollContent,
+  SectionTitle,
+  Title
+} from './LegalScreen.styles'
 
 const documentData: Record<DocumentType, { title: string; content: () => React.ReactNode }> = {
   privacy: {
