@@ -209,10 +209,8 @@ export function SearchScreen() {
 }
 
 const Container = styled.div`
-  padding: 24px;
   background: #f5f5f7;
   min-height: calc(100vh - 80px);
-  padding-bottom: 120px;
   max-width: 100%;
   overflow-x: hidden;
 `;
