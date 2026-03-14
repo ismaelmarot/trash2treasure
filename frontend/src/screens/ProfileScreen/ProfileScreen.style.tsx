@@ -1,9 +1,10 @@
 import styled from 'styled-components'
-import { COLORS, SPACING } from '../../constants'
+import { COLORS, ICONS, SPACING } from '../../constants'
 import { flex, size } from '../../mixins'
 
 export const Container = styled.div`
-    ${flex('column','center','space-between')}
+    ${flex('column','center','flex-start')}
+    gap: ${SPACING.xl};
     min-height: calc(100vh - 5rem);
     padding: ${SPACING.lg};
     background: ${COLORS.white};
@@ -27,7 +28,7 @@ export const Avatar = styled.div`
     font-size: 2rem;
     font-weight: 600;
     color: ${COLORS.white};
-    background: ${COLORS.primary};
+    background: ${COLORS.info};
 `
 
 export const Name = styled.h2`
@@ -73,27 +74,24 @@ export const Button = styled.button`
 `
 
 export const LogoutButton = styled.button`
-    background: transparent;
-    color: #ff3b30;
-    border: 1px solid #ff3b30;
     padding: ${SPACING.sm} ${SPACING.lg};
-    border-radius: 0.75rem;
+    border: none;
+    border-radius: 1rem;
+    background-color: ${COLORS.danger};
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
 `
 
 export const MenuItem = styled.div`
-    ${flex('row','center','center')}
+    ${flex('row','center','space-between')}
     padding: ${SPACING.sm} ${SPACING.md};
     border-radius: ${SPACING.md};
     background: ${COLORS.white};
     cursor: pointer;
-    transition: background 0.2s ease;
 `
 
 export const MenuIconWrapper = styled.div`
-    ${flex('column','center','center')}
+    ${flex('row','center','center')}
     ${size('2rem','2rem')}
     border-radius: ${SPACING.sm};
     margin-right: ${SPACING.md};
@@ -106,4 +104,22 @@ export const MenuLabel = styled.span`
     font-size: 1rem;
     font-weight: 500;
     color: ${COLORS.black};
+`
+
+export const ExitText = styled.span`
+    color: ${COLORS.black};
+    font-weight: 600;
+`
+
+export const IconCircle = styled(ICONS.iconCircle)`
+    color: ${COLORS.advertencia};
+`
+
+export const IconChevron = styled(ICONS.chevronRight)`
+    color: ${COLORS.grey};
+`
+
+export const GoOut = styled(ICONS.goOut)`
+    font-size: 1.5rem;
+    color: ${COLORS.allWhite}
 `

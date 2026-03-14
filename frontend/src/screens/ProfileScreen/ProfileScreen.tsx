@@ -1,20 +1,22 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import { ICONS } from '../../constants'
-
 import {
   Avatar,
   Button,
   Card,
   Container,
   Email,
+  GoOut,
+  IconChevron,
+  IconCircle,
   LogoutButton,
   MenuIconWrapper,
   MenuItem,
   MenuLabel,
   Name,
   Section,
-  SectionTitle
+  SectionTitle,
+  ExitText,
 } from './ProfileScreen.style'
 
 export function ProfileScreen() {
@@ -44,21 +46,32 @@ export function ProfileScreen() {
         <Avatar>{user?.name?.[0] || 'U'}</Avatar>
         <Name>{user?.name}</Name>
         <Email>{user?.email}</Email> 
-        <Section>
-          <SectionTitle>Actividad</SectionTitle>
-          <p>Aún no tienes publicaciones.</p>
-        </Section>
-        <LogoutButton onClick={logout}>Cerrar Sesión</LogoutButton>
       </Card>
 
       <Section>
-        <SectionTitle>Aplicación</SectionTitle>
+        <SectionTitle>Actividad</SectionTitle>
+          <p>Aún no tienes publicaciones.</p>
+        </Section>
+      <Section>
+      <SectionTitle>Aplicación</SectionTitle>
         <MenuItem onClick={() => navigate('/about')}>
           <MenuIconWrapper>
-            <ICONS.iconCircle size={18} />
+            <IconCircle />
           </MenuIconWrapper>
           <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
-            <ICONS.chevronRight size={14} color="#d2d2d7" />
+            <IconChevron />
+          </MenuItem>
+      </Section>
+
+      <Section>
+        <SectionTitle>Configuración</SectionTitle>
+        <MenuItem onClick={() => navigate('/about')}>
+            <ExitText>Cerrar Sesión</ExitText>
+          <MenuIconWrapper>
+            <LogoutButton onClick={logout}>
+              <GoOut />
+            </LogoutButton>
+          </MenuIconWrapper>
           </MenuItem>
       </Section>
 
