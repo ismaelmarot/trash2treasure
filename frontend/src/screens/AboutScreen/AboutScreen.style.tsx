@@ -93,7 +93,7 @@ export const Section = styled.section`
     margin-bottom: ${SPACING.md};
     border-radius: ${SPACING.lg};
     background: ${COLORS.allWhite};
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    box-shadow: 0 2px 10px ${COLORS.shadow};
 `
 
 export const SectionTitle = styled.h3`
@@ -141,8 +141,8 @@ export const LegalNotice = styled.p`
 
 export const LinkGroup = styled.div`
     ${flex('column','flex-start','center')}
-    gap: 12px;
-    margin: ${SPACING.lg};
+    gap: ${SPACING.md};
+    margin: ${SPACING.md};
 `
 
 export const ExternalLink = styled.a`
@@ -196,18 +196,16 @@ export const FooterBottom = styled.div`
 
 export const FooterText = styled.p`
     font-size: 13px;
-    color: #86868b;
+    color: ${COLORS.primaryDark};
     margin: 0;
     line-height: 1.5;
 `
 
 export const FooterLinks = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${flex('row','center','center')}
     flex-wrap: wrap;
     row-gap: 12px;
-    column-gap: 0; /* Handled by padding on the links */
+    column-gap: 0;
     width: 100%;
 `
 
