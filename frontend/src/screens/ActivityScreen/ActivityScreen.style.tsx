@@ -232,18 +232,18 @@ export const DeleteButton = styled.button`
 `
 
 export const UnclaimButton = styled.button`
-    background: ${COLORS.allWhite};
-    border: 1px solid ${COLORS.info};
-    color: ${COLORS.info};
+    background: ${COLORS.info};
+    color: ${COLORS.allWhite};
     padding: ${SPACING.sm} ${SPACING.md};
     border-radius: 8px;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
+    border: none;
   
     &:hover {
-        background: ${COLORS.info};
+        background: ${COLORS.danger};
         color: ${COLORS.allWhite};
     }
 `
