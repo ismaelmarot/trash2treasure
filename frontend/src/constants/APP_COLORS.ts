@@ -10,7 +10,16 @@ export const COLORS = {
     shadow: 'rgba(0, 0, 0, .05)',
 
     danger: 'rgba(255, 59, 48, 1)',
-    dangerBg: 'rgba(255, 59, 48, 0.1)'
+    dangerBg: 'rgba(255, 59, 48, 0.1)',
+
+    advertencia: 'rgba(250, 173, 20, 1)',  // amarillo/naranja
+    advertenciaBg: 'rgba(250, 173, 20, 0.1)',
+
+    exito: 'rgba(82, 196, 26, 1)',         // verde
+    exitoBg: 'rgba(82, 196, 26, 0.1)',
+
+    info: 'rgba(24, 144, 255, 1)',         // azul
+    infoBg: 'rgba(24, 144, 255, 0.1)',
 
 }
 
