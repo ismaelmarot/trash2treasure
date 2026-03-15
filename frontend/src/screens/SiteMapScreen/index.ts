@@ -1,1 +1,1 @@
-export * from './SiteMapScreen';
+export * from './SiteMapScreen'
