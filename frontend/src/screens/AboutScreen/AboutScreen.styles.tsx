@@ -58,11 +58,6 @@ export const HeroSection = styled.div`
     text-align: center;
 `
 
-export const LogoWrapper = styled.div`
-    font-size: 80px;
-    margin-bottom: ${SPACING.lg};
-`
-
 export const AppName = styled.h2`
     font-size: 34px;
     font-weight: 800;

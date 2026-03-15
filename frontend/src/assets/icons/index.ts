@@ -1,0 +1,1 @@
+export { default as appIcon } from './app-icon.png'

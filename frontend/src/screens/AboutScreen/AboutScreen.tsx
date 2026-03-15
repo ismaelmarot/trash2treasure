@@ -1,5 +1,6 @@
 
 import { useNavigate } from 'react-router-dom'
+import { appIcon } from '@/assets'
 import {
   AppName,
   AppVersion,
@@ -21,7 +22,6 @@ import {
   HeroSection,
   LegalNotice,
   LinkGroup,
-  LogoWrapper,
   ScrollContent,
   Section,
   SectionTitle,
@@ -31,6 +31,7 @@ import {
   Span,
 } from './AboutScreen.styles'
 import { ICONS } from '../../constants'
+
 
 export function AboutScreen() {
   const navigate = useNavigate()
@@ -47,7 +48,7 @@ export function AboutScreen() {
 
       <ScrollContent>
         <HeroSection>
-          <LogoWrapper>♻️</LogoWrapper>
+          <img src={appIcon} alt="App logo" style={{width:'8rem'}} />
           <AppName>Trash2Treasure</AppName>
           <AppVersion>Versión 1.0.2 Stable</AppVersion>
           <USP>Refiniendo el concepto de "desperdicio" en valor compartido.</USP>
