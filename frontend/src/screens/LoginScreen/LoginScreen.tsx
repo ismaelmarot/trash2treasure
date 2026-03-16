@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Form } from 'react-router-dom'
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, ICONS } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import {
   BackButton,
@@ -20,7 +20,8 @@ import {
   SubmitButton,
   Subtitle,
   Title,
-  ToggleButton
+  ToggleButton,
+  Span,
 } from './LoginScreen.styles'
 
 export function LoginScreen() {
@@ -61,7 +62,7 @@ export function LoginScreen() {
       <Card>
         <Header>
           <BackButton onClick={() => navigate('/welcome')}>
-            ← Volver
+            <ICONS.arrowLeft /><Span>Volver</Span>
           </BackButton>
         </Header>
         <Title>Bienvenido de nuevo</Title>
@@ -95,7 +96,7 @@ export function LoginScreen() {
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
-                {showPassword ? '🫣' : '👁️'}
+                {showPassword ? <ICONS.eyeOpen /> : <ICONS.eyeClosed />}
               </ToggleButton>
             </PasswordWrapper>
           </InputGroup>

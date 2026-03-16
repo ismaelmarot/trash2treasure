@@ -14,7 +14,7 @@ export const Card = styled.div`
     width: 100%;
     max-width: 400px;
     padding: 40px;
-    border-radius: 20px;
+    border-radius: 35px;
     background: ${COLORS.allWhite};
     box-shadow: 0 10px 25px ${COLORS.shadow};
     position: relative;
@@ -68,9 +68,9 @@ export const FooterText = styled.p`
 `
 
 export const StyledLink = styled(Link)`
-    color: #0071e3;
     text-decoration: none;
     font-weight: 500;
+    color: ${COLORS.info};
     
     &:hover {
         text-decoration: underline;

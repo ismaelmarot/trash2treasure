@@ -11,11 +11,11 @@ export const Container = styled.div`
 `
 
 export const Card = styled.div`
-    background: ${COLORS.allWhite};
     width: 100%;
     max-width: 400px;
     padding: 40px;
-    border-radius: 20px;
+    border-radius: 35px;
+    background: ${COLORS.allWhite};
     box-shadow: 0 10px 25px ${COLORS.shadow};
     position: relative;
 `
@@ -75,7 +75,7 @@ export const Label = styled.label`
 export const Input = styled.input`
     width: 100%;
     padding: 12px 16px;
-    border-radius: 12px;
+    border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;
     transition: all 0.2s ease;
@@ -120,7 +120,7 @@ export const ErrorMessage = styled.p`
 export const SubmitButton = styled.button`
     width: 100%;
     padding: 14px;
-    border-radius: 12px;
+    border-radius: 35px;
     border: none;
     background: ${COLORS.info};
     color: ${COLORS.white};
@@ -168,7 +168,7 @@ export const SocialButtons = styled.div`
 export const SocialButton = styled.button<{ $provider: 'facebook' | 'apple' }>`
     ${flex('column','center','center')}
     padding: 10px;
-    border-radius: 12px;
+    border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     background: ${COLORS.white};
     font-size: 14px;
@@ -195,4 +195,8 @@ export const StyledLink = styled(Link)`
     &:hover {
         text-decoration: underline;
     }
+`
+export const Span = styled.span`
+    font-size: 1rem;
+    font-weight: 800;
 `
