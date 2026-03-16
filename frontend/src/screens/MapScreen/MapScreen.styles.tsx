@@ -421,7 +421,7 @@ export const SidebarFooter = styled.div`
 export const SearchForm = styled.form`
     display: flex;
     padding: 4px;
-    border-radius: 16px;
+    border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     background: ${COLORS.allWhite};
     box-shadow: 0 4px 20px ${COLORS.shadow};
@@ -445,7 +445,7 @@ export const SearchButton = styled.button`
     ${flex('column','center','center')}
     ${size('40px','40px')}
     border: none;
-    border-radius: 12px;
+    border-radius: 50%;
     color: ${COLORS.allWhite};
     background: ${COLORS.info};
     cursor: pointer;
