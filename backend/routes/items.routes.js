@@ -5,9 +5,13 @@ const jwt = require('jsonwebtoken');
 const db = require('../db/database');
 const authenticateToken = require('../middleware/auth.middleware');
 
-
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
 
+const fs = require('fs');
+const uploadDir = 'uploads';
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir);
+}
 
 const router = express.Router();
 
@@ -115,8 +119,6 @@ router.get('/stats/categories', (req, res) => {
     res.json(rows);
   });
 });
-
-
 
 
 // Detalle de un item con sus fotos
