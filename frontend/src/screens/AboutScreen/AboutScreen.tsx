@@ -29,6 +29,7 @@ import {
   Title,
   USP,
   Span,
+  AppIcon
 } from './AboutScreen.styles'
 import { ICONS } from '../../constants'
 
@@ -48,7 +49,7 @@ export function AboutScreen() {
 
       <ScrollContent>
         <HeroSection>
-          <img src={appIcon} alt="App logo" style={{width:'8rem'}} />
+          <AppIcon src={appIcon} alt="App logo" />
           <AppName>Trash2Treasure</AppName>
           <AppVersion>Versión 1.0.2 Stable</AppVersion>
           <USP>Refiniendo el concepto de "desperdicio" en valor compartido.</USP>

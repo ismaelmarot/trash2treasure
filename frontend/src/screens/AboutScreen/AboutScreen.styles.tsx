@@ -61,8 +61,7 @@ export const HeroSection = styled.div`
 export const AppName = styled.h2`
     font-size: 34px;
     font-weight: 800;
-    margin: 0 0 8px 0;
-    letter-spacing: -0.5px;
+    margin: 1rem 0 0;
 `;
 
 export const AppVersion = styled.span`
@@ -236,4 +235,10 @@ export const FooterLink = styled.button`
 export const Span = styled.span`
     font-weight: 600;
     font-style: italic;
+`
+
+export const AppIcon = styled.img`
+    width: 6rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
 `
