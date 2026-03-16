@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 export const Card = styled.div`
     background: ${COLORS.allWhite};
-    padding: 32px;
+    padding: 35px;
     border-radius: 28px;
     width: 100%;
     max-width: 600px;
@@ -76,7 +76,7 @@ export const Label = styled.label`
 
 export const Input = styled.input`
     padding: 14px 16px;
-    border-radius: 14px;
+    border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;
     background: #fbfbfd;
@@ -90,8 +90,9 @@ export const Input = styled.input`
 `
 
 export const TextArea = styled.textarea`
-    padding: 14px 16px;
-    border-radius: 14px;
+    padding: 14px 30px;
+    border-radius: 35px;
+    min-height: 10rem;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;
     background: #fbfbfd;
@@ -105,19 +106,19 @@ export const TextArea = styled.textarea`
 `
 
 export const Select = styled.select`
-    padding: 14px 16px;
-    border-radius: 14px;
+    padding: 10px 30px 10px 20px;
+    border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;
-    background: #fbfbfd;
+    background: ${COLORS.allWhite};
     cursor: pointer;
 `
 
 export const ImageContainer = styled.div`
     ${size('100%','220px')}
-    border-radius: 18px;
+    border-radius: 35px;
     border: 1px solid ${COLORS.grey};
-    background: #f5f5f7;
+    background: ${COLORS.white};
     overflow: hidden;
     position: relative;
 `
@@ -182,11 +183,45 @@ export const RemoveImage = styled.button`
 
 export const MapWrapper = styled.div`
     ${size('100%','240px')}
-    border-radius: 16px;
+    border-radius: 35px;
     overflow: hidden;
     border: 1px solid ${COLORS.grey};
     position: relative;
     z-index: 1;
+
+    .leaflet-control-zoom {
+        border: none;
+    }
+
+    .leaflet-control-zoom.leaflet-bar {
+        border: none;
+        box-shadow: none;
+    }
+
+    .leaflet-control-zoom.leaflet-bar a {
+        ${size('34px','34px')}
+        font-size: 18px;
+        line-height: 34px;
+        border: 1px solid ${COLORS.grey};
+        box-shadow: 0 2px 8px ${COLORS.shadow};
+        color: ${COLORS.black};
+        background: ${COLORS.allWhite};
+
+        &:hover {
+            color: ${COLORS.allWhite};
+            background-color: ${COLORS.info} !important;
+        }
+    }
+
+    .leaflet-control-zoom-in {
+        border-top-left-radius: 50% !important;
+        border-top-right-radius: 50% !important;
+    }
+
+    .leaflet-control-zoom-out {
+        border-bottom-left-radius: 50% !important;
+        border-bottom-right-radius: 50% !important;
+    }
 `
 
 export const LocateMeButton = styled.button`
@@ -196,16 +231,15 @@ export const LocateMeButton = styled.button`
     top: 10px;
     right: 10px;
     z-index: 1000;
-    border-radius: 10px;
+    border: 1px solid ${COLORS.greyDark};
+    border-radius: 35px;
     background: ${COLORS.allWhite};
-    border: 1px solid ${COLORS.allWhite};
     box-shadow: 0 2px 8px ${COLORS.shadow};
     font-size: 20px;
     cursor: pointer;
     
     &:hover {
-        background: ${COLORS.grey};
-        border: 1px solid ${COLORS.grey};
+        background: ${COLORS.info};
     }
 `
 
@@ -213,7 +247,7 @@ export const CoordsText = styled.p`
     font-size: 11px;
     color: ${COLORS.greyDark};
     text-align: right;
-    margin-top: 4px;
+    margin: 4px 2rem;
 `
 
 export const HiddenInput = styled.input`
@@ -234,7 +268,7 @@ export const SubmitButton = styled.button`
     color: ${COLORS.allWhite};
     border: none;
     padding: 18px;
-    border-radius: 16px;
+    border-radius: 35px;
     font-size: 17px;
     font-weight: 600;
     cursor: pointer;

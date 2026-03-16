@@ -266,7 +266,6 @@ export function AddItemScreen() {
     )
   }
 
-
   return (
     <Container>
       <Card>
@@ -306,20 +305,18 @@ export function AddItemScreen() {
 
           <InputGroup>
             <Label>Categoría</Label>
-                <Select 
-                  value={category} 
-                  onChange={(e) => setCategory(e.target.value)}
-                  required
-                >
-                  <option value="carton">Cardboard</option>
-                  <option value="botellas">Bottles</option>
-                  <option value="metal">Metal</option>
-                  <option value="mixto">Mixed</option>
-                  <option value="otros">Others</option>
-                </Select>
-
+            <Select 
+              value={category} 
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value="carton">Cardboard</option>
+              <option value="botellas">Bottles</option>
+              <option value="metal">Metal</option>
+              <option value="mixto">Mixed</option>
+              <option value="otros">Others</option>
+            </Select>
           </InputGroup>
-
           <InputGroup>
             <Label>Imagen del Tesoro</Label>
             <ImageContainer>
@@ -356,7 +353,6 @@ export function AddItemScreen() {
               onChange={handleImageChange}
             />
           </InputGroup>
-
 
           <InputGroup>
             <Label>Ubicación (Toca el mapa para mover el pin)</Label>
