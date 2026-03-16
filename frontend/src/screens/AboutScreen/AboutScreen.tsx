@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { appIcon } from '@/assets'
+import { ICONS } from '@/constants'
 import {
   AppName,
   AppVersion,
@@ -30,7 +31,6 @@ import {
   Span,
   AppIcon
 } from './AboutScreen.styles'
-import { ICONS } from '@/constants'
 
 export function AboutScreen() {
   const navigate = useNavigate()
