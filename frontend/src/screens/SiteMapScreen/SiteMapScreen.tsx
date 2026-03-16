@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { ICONS } from '../../constants'
+import { ICONS } from '@/constants'
 import { sitemapColumns } from './SiteMap.data'
 import { SiteMapColumn } from './SiteMapColumn'
 import {

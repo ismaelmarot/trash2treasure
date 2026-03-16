@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import type { SiteMapColumn } from '../../types'
+import type { SiteMapColumn } from '@/types'
 import {
     ColumnTitle,
     DirectoryColumn,

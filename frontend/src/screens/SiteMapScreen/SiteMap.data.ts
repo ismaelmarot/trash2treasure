@@ -1,5 +1,5 @@
-import { ICONS } from '../../constants'
-import type { SiteMapColumn } from '../../types'
+import { ICONS } from '@/constants'
+import type { SiteMapColumn } from '@/types'
 
 export const sitemapColumns: SiteMapColumn[] = [
     {
