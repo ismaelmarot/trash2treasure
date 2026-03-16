@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Form } from 'react-router-dom'
-import { API_BASE_URL } from '../../constants'
+import { API_BASE_URL, ICONS } from '../../constants'
 import {
   BackButton,
   Card,
@@ -84,9 +84,9 @@ export function RegisterScreen() {
           <InputGroup>
             <Label>Nombre</Label>
             <Input 
-              type="text" 
+              type='text'
               value={name} 
-              onChange={(e) => setName(e.target.value)} 
+              onChange={(e) => setName(e.target.value)}
               placeholder="Tu nombre completo"
               required 
             />
@@ -95,9 +95,9 @@ export function RegisterScreen() {
           <InputGroup>
             <Label>Email</Label>
             <Input 
-              type="email" 
+              type='email' 
               value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="tu@email.com"
               required 
             />
@@ -107,17 +107,17 @@ export function RegisterScreen() {
             <Label>Contraseña</Label>
             <PasswordWrapper>
               <Input 
-                type={showPassword ? "text" : "password"} 
+                type={showPassword ? "text" : "password"}
                 value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mínimo 8 caracteres"
                 required 
               />
               <ToggleButton 
-                type="button" 
+                type='button'
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? '🫣' : '👁️'}
+                {showPassword ? <ICONS.eyeOpen /> : <ICONS.eyeClosed />}
               </ToggleButton>
             </PasswordWrapper>
             
@@ -140,13 +140,13 @@ export function RegisterScreen() {
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <SubmitButton type="submit">Registrarse</SubmitButton>
+          <SubmitButton type='submit'>Registrarse</SubmitButton>
         </Form>
 
         <FooterText>
-          ¿Ya tienes cuenta? <StyledLink to="/login">Inicia sesión</StyledLink>
+          ¿Ya tienes cuenta? <StyledLink to='/login'>Inicia sesión</StyledLink>
         </FooterText>
       </Card>
     </Container>
-  );
+  )
 }

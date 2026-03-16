@@ -1,5 +1,6 @@
 import { IoMdClose } from 'react-icons/io'
 import { IoLogOutOutline } from 'react-icons/io5'
+import { FiEye, FiEyeOff  } from 'react-icons/fi'
 import {
     FaCheck,
     FaCrosshairs,
@@ -42,4 +43,6 @@ export const ICONS = {
     leafIcon: FaLeaf,
     user: FaUser,
     mapMarker: FaMapMarkedAlt,
+    eyeOpen: FiEye,
+    eyeClosed: FiEyeOff,
 }
