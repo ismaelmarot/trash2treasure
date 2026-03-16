@@ -62,7 +62,7 @@ export function AboutScreen() {
           <TextStyled>
             Trash2Treasure es una plataforma de economía circular diseñada para transformar 
             la forma en que nuestras comunidades manejan los excedentes. Nuestra misión es simple 
-            pero ambiciosa: <Span>eliminar el concepto de 'basura'</Span> conectando objetos infrautilizados 
+            pero ambiciosa: <Span>eliminar el concepto de "basura"</Span> conectando objetos infrautilizados 
             con personas que pueden renovarlos, reutilizarlos o reciclarlos.
           </TextStyled>
           <TextStyled>
