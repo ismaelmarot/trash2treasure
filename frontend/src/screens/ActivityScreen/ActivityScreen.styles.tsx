@@ -92,7 +92,6 @@ export const TagGroup = styled.div`
     top: ${SPACING.sm};
     left: ${SPACING.sm};
     gap: 6px;
-    box-shadow: 0 4px 20px ${COLORS.shadow};
 `
 
 export const CategoryBadge = styled.span`
