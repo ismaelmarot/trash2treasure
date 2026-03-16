@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Form } from 'react-router-dom'
-import { API_BASE_URL, ICONS } from '@/constants'
+import { API_BASE_URL, ICONS, ICONS_LOGUIN } from '@/constants'
 import {
   BackButton,
   Card,
@@ -123,20 +123,19 @@ export function RegisterScreen() {
             
             <ValidationList>
               <ValidationItem $valid={validations.length}>
-                {validations.length ? '✅' : '○'} Mínimo 8 caracteres
+                {validations.length ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot} Mínimo 8 caracteres
               </ValidationItem>
               <ValidationItem $valid={validations.uppercase}>
-                {validations.uppercase ? '✅' : '○'} Una mayúscula
+                {validations.uppercase ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot} Una mayúscula
               </ValidationItem>
               <ValidationItem $valid={validations.lowercase}>
-                {validations.lowercase ? '✅' : '○'} Una minúscula
+                {validations.lowercase ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot} Una minúscula
               </ValidationItem>
               <ValidationItem $valid={validations.number}>
-                {validations.number ? '✅' : '○'} Un número
+                {validations.number ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot} Un número
               </ValidationItem>
             </ValidationList>
           </InputGroup>
-
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 

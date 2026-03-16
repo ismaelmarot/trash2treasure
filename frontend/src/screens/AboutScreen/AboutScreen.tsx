@@ -30,8 +30,7 @@ import {
   Span,
   AppIcon
 } from './AboutScreen.styles'
-import { ICONS } from '../../constants'
-
+import { ICONS } from '@/constants'
 
 export function AboutScreen() {
   const navigate = useNavigate()
