@@ -3,10 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import type { ItemProps } from '../../interface'
-import { API_BASE_URL } from '../../constants'
-import { useAuth } from '../../hooks'
-import { ConfirmationModal, ItemCountdown } from '../../components'
+import type { ItemProps } from '@/interface'
+import { API_BASE_URL } from '@/constants'
+import { useAuth } from '@/hooks'
+import { ConfirmationModal, ItemCountdown } from '@/components'
 import {
   BackButton,
   CategoryBadge,

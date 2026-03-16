@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { flex, size } from '../../mixins'
-import { COLORS, SPACING } from '../../constants'
+import { flex, size } from '@/mixins'
+import { COLORS, SPACING } from '@/constants'
 
 export const Container = styled.div`
     background: ${COLORS.allWhite};

@@ -3,9 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-le
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useNavigate } from 'react-router-dom'
-import { API_BASE_URL, ICONS } from '../../constants'
-import { useAuth } from '../../hooks'
-import { ItemCountdown } from '../../components'
+import type { ItemProps } from '@/interface'
+import { API_BASE_URL, ICONS } from '@/constants'
+import { useAuth } from '@/hooks'
+import { ItemCountdown } from '@/components'
 import {
   ActionGroup,
   CategoryChip,
@@ -57,7 +58,6 @@ import {
   ViewButton,
   ViewDetailButton
 } from './MapScreen.styles'
-import type { ItemProps } from '../../interface'
 
 const getCategoryEmoji = (category: string) => {
   switch (category) {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Form } from 'react-router-dom'
-import { API_BASE_URL, ICONS } from '../../constants'
+import { API_BASE_URL, ICONS } from '@/constants'
 import {
   BackButton,
   Card,

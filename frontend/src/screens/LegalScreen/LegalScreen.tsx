@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import type { DocumentType } from '../../types'
-import { ICONS } from '../../constants'
+import type { DocumentType } from '@/types'
+import { ICONS } from '@/constants'
 import {
   BackButton,
   CategoryItem,

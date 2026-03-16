@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { API_BASE_URL } from '../../constants'
-import { useAuth } from '../../hooks'
+import { API_BASE_URL } from '@/constants'
+import { useAuth } from '@/hooks'
 import {
   ButtonGroup,
   Card,

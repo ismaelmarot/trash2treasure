@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import type { ItemProps } from '../../interface'
-import { API_BASE_URL } from '../../constants'
-import { useAuth } from '../../hooks'
-import { ConfirmationModal, ItemCountdown } from '../../components'
+import type { ItemProps } from '@/interface'
+import { API_BASE_URL } from '@/constants'
+import { useAuth } from '@/hooks'
+import { ConfirmationModal, ItemCountdown } from '@/components'
 import {
   ActionButton,
   ButtonGroup,

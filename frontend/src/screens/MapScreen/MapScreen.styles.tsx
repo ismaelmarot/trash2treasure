@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { flex, size } from '../../mixins'
-import { COLORS } from '../../constants'
+import { flex, size } from '@/mixins'
+import { COLORS } from '@/constants'
 
 export const Container = styled.div`
     ${size('100%','100%')}
@@ -267,7 +267,7 @@ export const ViewDetailButton = styled.button`
     transition: all 0.2s;
     
     &:hover {
-        background: ${COLORS.info}};
+        background: ${COLORS.info};
         color: ${COLORS.allWhite};
         transform: scale(1.05);
     }
@@ -462,7 +462,10 @@ export const SearchButton = styled.button`
 
 export const ConfirmButton = styled(IconButton)`
     background: ${COLORS.danger};
-    &:hover { background: ${COLORS.danger}}; }
+
+    &:hover { 
+        background: ${COLORS.danger};
+    }
 `
 
 export const CrosshairContainer = styled.div`

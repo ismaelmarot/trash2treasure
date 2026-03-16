@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useNavigate, Link, Form } from 'react-router-dom'
-import { API_BASE_URL } from '../../constants'
-import { useAuth } from '../../hooks/useAuth'
+import { useNavigate, Form } from 'react-router-dom'
+import { API_BASE_URL } from '@/constants'
+import { useAuth } from '@/hooks/useAuth'
 import {
   BackButton,
   Card,

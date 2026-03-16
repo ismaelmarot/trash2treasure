@@ -100,6 +100,6 @@ export const Footer = styled.p`
 export const AppIcon = styled.img`
     width: 6rem;
     margin-bottom: 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 10px ${COLORS.shadow};
     border-radius: 20px;
 `

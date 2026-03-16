@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { COLORS, SPACING } from '../../constants'
-import { flex, size } from '../../mixins'
+import { COLORS, SPACING } from '@/constants'
+import { flex, size } from '@/mixins'
 
 export const Container = styled.div`
     padding: ${SPACING.lg};
