@@ -15,7 +15,7 @@ export const Card = styled.div`
     max-width: 40rem;
     text-align: center;
     padding: ${SPACING.xxl};
-    border-radius: ${SPACING.lg};
+    border-radius: ${SPACING.xl};
     box-shadow: 0 0.25rem 0.75rem ${COLORS.shadow};
     background: ${COLORS.allWhite};
 `
@@ -47,7 +47,7 @@ export const Section = styled.div`
     max-width: 40rem;
     margin-bottom: ${SPACING.xxl};
     padding: ${SPACING.xxl};
-    border-radius: ${SPACING.lg};
+    border-radius: ${SPACING.xl};
     text-align: center;
     box-shadow: 0 0.25rem 0.75rem ${COLORS.shadow};
     background: ${COLORS.allWhite};
@@ -74,18 +74,15 @@ export const Button = styled.button`
 `
 
 export const LogoutButton = styled.button`
-    padding: ${SPACING.sm} ${SPACING.lg};
-    border: none;
-    border-radius: 1rem;
-    background-color: ${COLORS.danger};
     font-weight: 600;
+    border: none;
     cursor: pointer;
 `
 
 export const MenuItem = styled.div`
     ${flex('row','center','space-between')}
     padding: ${SPACING.sm} ${SPACING.md};
-    border-radius: ${SPACING.md};
+    border-radius: ${SPACING.xl};
     background: ${COLORS.white};
     cursor: pointer;
 `
@@ -93,10 +90,7 @@ export const MenuItem = styled.div`
 export const MenuIconWrapper = styled.div`
     ${flex('row','center','center')}
     ${size('2rem','2rem')}
-    border-radius: ${SPACING.sm};
     margin-right: ${SPACING.md};
-    color: ${COLORS.primary};
-    background: ${COLORS.white};
 `
 
 export const MenuLabel = styled.span`
@@ -112,14 +106,16 @@ export const ExitText = styled.span`
 `
 
 export const IconCircle = styled(ICONS.iconCircle)`
+    font-size: 1.5rem;
     color: ${COLORS.advertencia};
 `
 
 export const IconChevron = styled(ICONS.chevronRight)`
-    color: ${COLORS.grey};
+    color: ${COLORS.greyDark};
 `
 
 export const GoOut = styled(ICONS.goOut)`
     font-size: 1.5rem;
-    color: ${COLORS.allWhite}
+    color: ${COLORS.danger};
+    margin-left: 2rem;
 `
