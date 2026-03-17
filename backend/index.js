@@ -57,7 +57,8 @@ app.use((err, req, res, next) => {
 });
 
 // Arrancar servidor
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
   
   // Tarea de limpieza: Borrar items de más de 24h cada hora
@@ -74,5 +75,3 @@ app.listen(PORT, () => {
     });
   }, 60 * 60 * 1000); // 1 hora
 });
-
-
