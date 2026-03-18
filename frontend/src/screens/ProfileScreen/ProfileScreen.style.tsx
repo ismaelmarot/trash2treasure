@@ -85,12 +85,13 @@ export const MenuItem = styled.div`
     border-radius: ${SPACING.xl};
     background: ${COLORS.white};
     cursor: pointer;
+    gap: ${SPACING.sm};
 `
 
 export const MenuIconWrapper = styled.div`
     ${flex('row','center','center')}
     ${size('2rem','2rem')}
-    margin-right: ${SPACING.md};
+    flex-shrink: 0;
 `
 
 export const MenuLabel = styled.span`
@@ -112,6 +113,8 @@ export const IconCircle = styled(ICONS.iconCircle)`
 
 export const IconChevron = styled(ICONS.chevronRight)`
     color: ${COLORS.greyDark};
+    margin-left: ${SPACING.sm};
+    flex-shrink: 0;
 `
 
 export const GoOut = styled(ICONS.goOut)`

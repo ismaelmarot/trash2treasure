@@ -106,12 +106,15 @@ export const TextArea = styled.textarea`
 `
 
 export const Select = styled.select`
-    padding: 10px 30px 10px 20px;
+    padding: 14px 40px 14px 20px;
     border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;
-    background: ${COLORS.allWhite};
+    background: ${COLORS.allWhite} url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23666" d="M6 8L1 3h10z"/></svg>') no-repeat right 15px center;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 `
 
 export const ImageContainer = styled.div`
