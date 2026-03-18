@@ -1,23 +1,23 @@
 import styled from 'styled-components'
 import { flex, size } from '@/mixins'
-import { COLORS } from '@/constants'
-import { ICONS } from '@/constants'
+import { COLORS, SPACING, ICONS} from '@/constants'
 
 export const Container = styled.div`
+    padding: ${SPACING.lg};
     background: ${COLORS.white};
     min-height: calc(100vh - 80px);
-    max-width: 100%;
-    overflow-x: hidden;
+    padding-bottom: 120px;
 `
 
 export const Header = styled.header`
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 `
 
 export const Title = styled.h1`
+    margin: 0;
+    letter-spacing: -1px;
     font-size: 32px;
     font-weight: 700;
-    margin-bottom: 20px;
     color: ${COLORS.black};
 `
 
@@ -42,7 +42,7 @@ export const SearchInput = styled.input`
     width: 100%;
     box-sizing: border-box;
     padding: 14px 14px 14px 48px;
-    border-radius: 14px;
+    border-radius: ${SPACING.xl};
     border: 1px solid ${COLORS.greyDark};
     font-size: 16px;
     background: ${COLORS.allWhite};
@@ -277,3 +277,5 @@ export const EmptyIcon = styled.div`
     font-size: 48px;
     margin-bottom: 16px;
 `
+
+
