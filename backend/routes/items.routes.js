@@ -1,247 +1,217 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const jwt = require('jsonwebtoken');
-const db = require('../db/database');
+const { Item, ItemPhoto, Rating } = require('../db/models');
 const authenticateToken = require('../middleware/auth.middleware');
 
+const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
 
-const fs = require('fs');
-const uploadDir = 'uploads';
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir);
-}
-
-const router = express.Router();
-
-// Configuración de Multer para fotos
+// Configuración de multer para subir imágenes
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    const dir = path.join(__dirname, '../uploads');
+    require('fs').mkdirSync(dir, { recursive: true });
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
 const upload = multer({ storage });
 
-// Listar todos los items (opcionalmente por categoría o usuario) con su primera foto
-router.get('/', (req, res) => {
-  const { category, type, search } = req.query;
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  
-  let userId = null;
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, SECRET_KEY);
-      userId = decoded.id;
-    } catch (e) { /* ignore auth for public list */ }
-  }
+// Obtener items (con filtros opcional)
+router.get('/', async (req, res) => {
+  try {
+    const { category, search, type } = req.query;
+    let filter = {};
 
-  let query = `
-    SELECT i.*, 
-    (SELECT image_url FROM item_photos WHERE item_id = i.id LIMIT 1) as main_image
-    FROM items i
-  `;
-   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  let conditions = ['i.created_at > ?'];
-  let params = [twentyFourHoursAgo];
-
-  if (category && category !== 'todos') {
-    conditions.push('i.category = ?');
-    params.push(category);
-  }
-
-  if (search) {
-    conditions.push('(i.title LIKE ? OR i.description LIKE ?)');
-    params.push(`%${search}%`);
-    params.push(`%${search}%`);
-  }
-
-  if (type === 'mine' && userId) {
-    conditions.push('i.user_id = ?');
-    params.push(userId);
-  } else if (type === 'others' && userId) {
-    conditions.push('i.user_id != ?');
-    params.push(userId);
-  } else if (type === 'claimed' && userId) {
-    conditions.push('i.claimed_by = ?');
-    params.push(userId);
-  }
-
-
-  if (conditions.length > 0) {
-    query += ' WHERE ' + conditions.join(' AND ');
-  }
-
-
-  query += ' ORDER BY i.created_at DESC';
-
-  db.all(query, params, (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
-});
-
-// Obtener conteo por categorías (opcionalmente filtrado por tipo)
-router.get('/stats/categories', (req, res) => {
-  const { type } = req.query;
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  
-  let userId = null;
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, SECRET_KEY);
-      userId = decoded.id;
-    } catch (e) { /* ignore auth */ }
-  }
-
-  let query = 'SELECT category, COUNT(*) as count FROM items';
-  let params = [];
-
-  if (userId) {
-    if (type === 'mine') {
-      query += ' WHERE user_id = ?';
-      params.push(userId);
-    } else if (type === 'others') {
-      query += ' WHERE user_id != ?';
-      params.push(userId);
+    if (category && category !== 'all') {
+      filter.category = category;
     }
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    if (type === 'claimed') {
+      filter.claimed_by = { $exists: true };
+    }
+
+    // Obtener items con datos del usuario
+    const items = await Item.find(filter)
+      .populate('user_id', 'name email')
+      .populate('claimed_by', 'name email')
+      .sort({ created_at: -1 });
+
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  query += ' GROUP BY category';
-
-  db.all(query, params, (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
 });
 
+// Obtener item por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id)
+      .populate('user_id', 'name email')
+      .populate('claimed_by', 'name email');
 
-// Detalle de un item con sus fotos
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  db.get('SELECT * FROM items WHERE id = ?', [id], (err, item) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Crear item (requiere auth)
+router.post('/', authenticateToken, async (req, res) => {
+  try {
+    const { title, description, category, latitude, longitude } = req.body;
+    
+    if (!title || !latitude || !longitude) {
+      return res.status(400).json({ error: 'Title, latitude and longitude are required' });
+    }
+
+    const newItem = new Item({
+      title,
+      description,
+      category,
+      latitude,
+      longitude,
+      user_id: req.user.id,
+      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 horas
+    });
+
+    await newItem.save();
+    res.json(newItem);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Subir foto a un item
+router.post('/:id/photos', authenticateToken, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Image is required' });
+
+    const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ error: 'Item not found' });
 
-    db.all('SELECT * FROM item_photos WHERE item_id = ?', [id], (err, photos) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ ...item, photos });
-    });
-  });
-});
-
-// Crear item
-router.post('/', authenticateToken, (req, res) => {
-  const { title, description, category, latitude, longitude } = req.body;
-  const user_id = req.user.id; // Tomado del token
-  if (!title || !latitude || !longitude) return res.status(400).json({ error: 'Missing required fields' });
-
-  db.run(
-    'INSERT INTO items (title, description, category, latitude, longitude, user_id) VALUES (?, ?, ?, ?, ?, ?)',
-    [title, description, category, latitude, longitude, user_id],
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: this.lastID, title, description, category, latitude, longitude, user_id });
+    // Verificar que el usuario es el dueño
+    if (item.user_id.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized' });
     }
-  );
-});
 
-// Reclamar un item
-router.post('/:id/claim', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const userId = req.user.id;
-
-  // Verificar si ya está reclamado
-  db.get('SELECT claimed_by FROM items WHERE id = ?', [id], (err, item) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (!item) return res.status(404).json({ error: 'Item no encontrado' });
-    if (item.claimed_by) return res.status(400).json({ error: 'Este item ya ha sido reclamado' });
-
-    db.run('UPDATE items SET claimed_by = ? WHERE id = ?', [userId, id], function(err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ message: 'Item reclamado con éxito' });
-    });
-  });
-});
-
-// Dejar de reclamar un item (Unclaim)
-router.post('/:id/unclaim', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const userId = req.user.id;
-
-  // Verificar que el usuario actual es quien lo tiene reclamado
-  db.get('SELECT claimed_by FROM items WHERE id = ?', [id], (err, item) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (!item) return res.status(404).json({ error: 'Item no encontrado' });
+    const imageUrl = `/uploads/${req.file.filename}`;
     
-    if (item.claimed_by !== userId) {
-      return res.status(403).json({ error: 'No tienes permiso para liberar este item' });
-    }
-
-    db.run('UPDATE items SET claimed_by = NULL WHERE id = ?', [id], function(err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ message: 'Has dejado de reclamar el item' });
+    // Guardar en ItemPhoto
+    const itemPhoto = new ItemPhoto({
+      item_id: item._id,
+      image_url: imageUrl
     });
-  });
-});
-// Subir fotos para un item
-router.post('/:id/photos', authenticateToken, upload.single('image'), (req, res) => {
-  const { id } = req.params;
-  if (!req.file) return res.status(400).json({ error: 'No image uploaded' });
+    await itemPhoto.save();
 
-  const imageUrl = `/uploads/${req.file.filename}`;
-  db.run(
-    'INSERT INTO item_photos (item_id, image_url) VALUES (?, ?)',
-    [id, imageUrl],
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: this.lastID, item_id: id, image_url: imageUrl });
+    // Actualizar imagen principal del item si no tiene
+    if (!item.main_image) {
+      item.main_image = imageUrl;
+      await item.save();
     }
-  );
-});
-// Subir fotos para un item
 
+    res.json({ message: 'Image uploaded successfully', image_url: imageUrl });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Reclamar item
+router.post('/:id/claim', authenticateToken, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+
+    if (item.claimed_by) {
+      return res.status(400).json({ error: 'Item already claimed' });
+    }
+
+    if (item.user_id.toString() === req.user.id) {
+      return res.status(400).json({ error: 'Cannot claim your own item' });
+    }
+
+    item.claimed_by = req.user.id;
+    await item.save();
+
+    res.json({ message: 'Item claimed successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Liberar item
+router.post('/:id/unclaim', authenticateToken, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+
+    if (item.claimed_by?.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    item.claimed_by = null;
+    await item.save();
+
+    res.json({ message: 'Item released successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Actualizar item
-router.put('/:id', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const { title, description, category, latitude, longitude } = req.body;
+router.put('/:id', authenticateToken, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
 
-  db.run(
-    'UPDATE items SET title = ?, description = ?, category = ?, latitude = ?, longitude = ? WHERE id = ?',
-    [title, description, category, latitude, longitude, id],
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ message: 'Item updated', id });
-    }
-  );
-});
-
-// Borrar item
-router.delete('/:id', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const userId = req.user.id;
-
-  // Verificar que el usuario sea el dueño
-  db.get('SELECT user_id FROM items WHERE id = ?', [id], (err, item) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (!item) return res.status(404).json({ error: 'Item no encontrado' });
-
-    if (item.user_id !== userId) {
-      return res.status(403).json({ error: 'No tienes permiso para eliminar este tesoro' });
+    if (item.user_id.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized' });
     }
 
-    db.run('DELETE FROM items WHERE id = ?', [id], function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ message: 'Tesoro eliminado con éxito', id });
-    });
-  });
+    const { title, description, category, latitude, longitude } = req.body;
+    
+    if (title) item.title = title;
+    if (description) item.description = description;
+    if (category) item.category = category;
+    if (latitude) item.latitude = latitude;
+    if (longitude) item.longitude = longitude;
+
+    await item.save();
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// Eliminar item
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+
+    if (item.user_id.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    await Item.findByIdAndDelete(req.params.id);
+    await ItemPhoto.deleteMany({ item_id: req.params.id });
+
+    res.json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
