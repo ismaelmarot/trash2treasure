@@ -200,7 +200,6 @@ export const ItemCard = styled.div`
     &:hover {
         transform: translateY(-2px) scale(1.01);
         box-shadow: 0 8px 16px ${COLORS.shadow};
-        border-color: ${COLORS.shadow};
     }
 
     &:active {
