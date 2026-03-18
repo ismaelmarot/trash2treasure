@@ -2,7 +2,7 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 // Apple strategy usually requires a more complex setup (AppleStrategy from 'passport-apple')
 const AppleStrategy = require('passport-apple');
-const db = require('../db/database');
+const { User } = require('../db/models');
 const jwt = require('jsonwebtoken');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
@@ -16,22 +16,37 @@ passport.use(new FacebookStrategy({
   async (accessToken, refreshToken, profile, done) => {
     // Lógica para buscar o crear usuario
     const email = profile.emails ? profile.emails[0].value : null;
-    db.get('SELECT * FROM users WHERE facebook_id = ? OR email = ?', [profile.id, email], (err, user) => {
-      if (err) return done(err);
+    
+    try {
+      // Buscar usuario por facebook_id o email
+      let user = await User.findOne({
+        $or: [
+          { facebook_id: profile.id },
+          { email: email }
+        ]
+      });
+
       if (user) {
+        // Si el usuario existe pero no tiene facebook_id, lo agregamos
         if (!user.facebook_id) {
-          db.run('UPDATE users SET facebook_id = ? WHERE id = ?', [profile.id, user.id]);
+          user.facebook_id = profile.id;
+          await user.save();
         }
         return done(null, user);
       } else {
-        db.run('INSERT INTO users (name, email, facebook_id) VALUES (?, ?, ?)', [profile.displayName, email, profile.id], function(err) {
-          if (err) return done(err);
-          db.get('SELECT * FROM users WHERE id = ?', [this.lastID], (err, newUser) => {
-            done(err, newUser);
-          });
+        // Crear nuevo usuario
+        const newUser = new User({
+          name: profile.displayName,
+          email: email,
+          facebook_id: profile.id,
+          is_verified: true // Los usuarios de Facebook ya verifican su email
         });
+        await newUser.save();
+        done(null, newUser);
       }
-    });
+    } catch (err) {
+      done(err);
+    }
   }
 ));
 
