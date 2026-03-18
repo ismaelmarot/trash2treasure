@@ -1,5 +1,7 @@
 const express = require('express');
 const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const { Item, ItemPhoto, Rating } = require('../db/models');
 const authenticateToken = require('../middleware/auth.middleware');
@@ -7,18 +9,31 @@ const authenticateToken = require('../middleware/auth.middleware');
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
 
-// Configuración de multer para subir imágenes
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../uploads');
-    require('fs').mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// Configuración de multer para subir imágenes a Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'trash2treasure',
+    format: async (req, file) => {
+      // Determinar formato desde el MIME type
+      const ext = path.extname(file.originalname).toLowerCase();
+      return ext === '.png' ? 'png' : 'jpg';
+    },
+    public_id: (req, file) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      return `item-${uniqueSuffix}`;
+    },
+    transformation: [{ width: 800, height: 800, crop: 'limit' }],
+  },
+});
+
 const upload = multer({ storage });
 
 // Obtener items (con filtros opcional)
@@ -107,12 +122,15 @@ router.post('/:id/photos', authenticateToken, upload.single('image'), async (req
       return res.status(403).json({ error: 'Not authorized' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // Cloudinary devuelve la URL en req.file.path
+    const imageUrl = req.file.path;
+    const publicId = req.file.filename; // Cloudinary public_id
     
-    // Guardar en ItemPhoto
+    // Guardar en ItemPhoto con el public_id para poder borrar después
     const itemPhoto = new ItemPhoto({
       item_id: item._id,
-      image_url: imageUrl
+      image_url: imageUrl,
+      cloudinary_public_id: publicId  // Nuevo campo para poder borrar
     });
     await itemPhoto.save();
 
@@ -205,8 +223,25 @@ router.delete('/:id', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
-    await Item.findByIdAndDelete(req.params.id);
+    // Obtener todas las fotos del item
+    const photos = await ItemPhoto.find({ item_id: req.params.id });
+    
+    // Borrar cada foto de Cloudinary
+    for (const photo of photos) {
+      if (photo.cloudinary_public_id) {
+        try {
+          await cloudinary.uploader.destroy(photo.cloudinary_public_id);
+        } catch (cloudinaryError) {
+          console.error('Error deleting photo from Cloudinary:', cloudinaryError);
+        }
+      }
+    }
+
+    // Borrar fotos de la base de datos
     await ItemPhoto.deleteMany({ item_id: req.params.id });
+    
+    // Borrar el item
+    await Item.findByIdAndDelete(req.params.id);
 
     res.json({ message: 'Item deleted successfully' });
   } catch (error) {

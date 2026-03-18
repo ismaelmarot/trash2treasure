@@ -13,10 +13,18 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { connectDB } = require('./db/mongodb');
-const { Item } = require('./db/models');
+const { Item, ItemPhoto } = require('./db/models');
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Middlewares
 app.use(cors());
@@ -64,6 +72,30 @@ app.listen(PORT, '0.0.0.0', () => {
       console.log('Ejecutando limpieza de items expirados...');
       const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       
+      // Obtener items que van a ser borrados
+      const itemsToDelete = await Item.find({ 
+        created_at: { $lt: twentyFourHoursAgo },
+        claimed_by: { $exists: false }
+      }).select('_id');
+      
+      // Para cada item, obtener sus fotos y borrarlas de Cloudinary
+      for (const item of itemsToDelete) {
+        const photos = await ItemPhoto.find({ item_id: item._id });
+        for (const photo of photos) {
+          if (photo.cloudinary_public_id) {
+            try {
+              await cloudinary.uploader.destroy(photo.cloudinary_public_id);
+              console.log(`Foto ${photo.cloudinary_public_id} borrada de Cloudinary`);
+            } catch (err) {
+              console.error('Error borrando foto de Cloudinary:', err.message);
+            }
+          }
+        }
+        // Borrar fotos de la base de datos
+        await ItemPhoto.deleteMany({ item_id: item._id });
+      }
+      
+      // Borrar los items
       const result = await Item.deleteMany({ 
         created_at: { $lt: twentyFourHoursAgo },
         claimed_by: { $exists: false }

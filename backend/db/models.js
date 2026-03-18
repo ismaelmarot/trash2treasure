@@ -28,6 +28,7 @@ const itemSchema = new mongoose.Schema({
 const itemPhotoSchema = new mongoose.Schema({
   item_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
   image_url: { type: String, required: true },
+  cloudinary_public_id: { type: String }, // Para poder borrar de Cloudinary
   created_at: { type: Date, default: Date.now },
 });
 
