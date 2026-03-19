@@ -409,7 +409,7 @@ export function MapScreen() {
 
 
         {filteredItems
-          .filter(item => item.latitude && item.longitude)
+          .filter(item => item.latitude != null && item.longitude != null)
           .map(item => (
             <Marker 
               key={item.id} 

@@ -16,18 +16,14 @@ export const getImageUrl = (imageUrl: string, apiUrl: string): string => {
 export const normalizeItem = (item: any): any => {
   if (!item) return item;
   
-  // Convertir _id (string) a id (number)
-  const id = item._id 
-    ? (typeof item._id === 'string' ? parseInt(item._id, 10) : item._id)
-    : item.id;
+  // Mantener _id como string (no parsear a número)
+  const id = item._id || item.id;
   
   // Si user_id es un objeto (populado), extraer su _id
   let userId;
   if (item.user_id) {
     if (typeof item.user_id === 'object' && item.user_id._id) {
-      userId = parseInt(item.user_id._id, 10);
-    } else if (typeof item.user_id === 'string') {
-      userId = parseInt(item.user_id, 10);
+      userId = item.user_id._id;
     } else {
       userId = item.user_id;
     }
@@ -39,9 +35,7 @@ export const normalizeItem = (item: any): any => {
   let claimedById = null;
   if (item.claimed_by) {
     if (typeof item.claimed_by === 'object' && item.claimed_by._id) {
-      claimedById = parseInt(item.claimed_by._id, 10);
-    } else if (typeof item.claimed_by === 'string') {
-      claimedById = parseInt(item.claimed_by, 10);
+      claimedById = item.claimed_by._id;
     } else {
       claimedById = item.claimed_by;
     }

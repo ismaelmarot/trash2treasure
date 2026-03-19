@@ -100,7 +100,7 @@ router.post('/', authenticateToken, async (req, res) => {
   try {
     const { title, description, category, latitude, longitude } = req.body;
     
-    if (!title || !latitude || !longitude) {
+    if (!title || latitude == null || longitude == null) {
       return res.status(400).json({ error: 'Title, latitude and longitude are required' });
     }
 
@@ -135,7 +135,7 @@ router.post('/:id/photos', authenticateToken, upload.single('image'), async (req
     if (!item) return res.status(404).json({ error: 'Item not found' });
 
     // Verificar que el usuario es el dueño
-    if (item.user_id.toString() !== req.user.id) {
+    if (item.user_id?.toString() !== req.user.id) {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
@@ -211,7 +211,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ error: 'Item not found' });
 
-    if (item.user_id.toString() !== req.user.id) {
+    if (item.user_id?.toString() !== req.user.id) {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
@@ -236,7 +236,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ error: 'Item not found' });
 
-    if (item.user_id.toString() !== req.user.id) {
+    if (item.user_id?.toString() !== req.user.id) {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
