@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation, Form } from 'react-router-dom'
 import { API_BASE_URL } from '@/constants'
+import { useAuth } from '@/hooks'
 import {
   Card,
   CodeInput,
@@ -22,6 +23,8 @@ export function VerificationScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const email = location.state?.email
+  const password = location.state?.password
+  const { login } = useAuth()
 
   if (!email) {
     navigate('/register')
@@ -34,18 +37,42 @@ export function VerificationScreen() {
     setError('')
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/verify`, {
+      // 1. Verificar el código
+      const verifyResponse = await fetch(`${API_BASE_URL}/users/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code }),
       })
 
-      const data = await response.json()
+      const verifyData = await verifyResponse.json()
 
-      if (response.ok) {
-        navigate('/login', { state: { message: 'Cuenta verificada. ¡Ya puedes entrar!' } })
+      if (!verifyResponse.ok) {
+        setError(verifyData.error || 'Código inválido')
+        setLoading(false)
+        return
+      }
+
+      // 2. Si la verificación fue exitosa, hacer login automático
+      if (password) {
+        const loginResponse = await fetch(`${API_BASE_URL}/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        })
+
+        const loginData = await loginResponse.json()
+
+        if (loginResponse.ok) {
+          // Guardar token y usuario en el contexto
+          login(loginData.token, loginData.user)
+          // Redirigir al mapa
+          navigate('/')
+        } else {
+          setError('Verificación exitosa, pero hubo un error al hacer login')
+        }
       } else {
-        setError(data.error || 'Código inválido')
+        // Si no hay password, redirigir al login
+        navigate('/login', { state: { message: 'Cuenta verificada. ¡Ya puedes entrar!' } })
       }
     } catch (err) {
       setError('Error de conexión')

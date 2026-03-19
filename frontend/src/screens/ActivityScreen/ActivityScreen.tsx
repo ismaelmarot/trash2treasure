@@ -4,6 +4,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
+import { normalizeItems } from '@/utils/imageUtils'
 import { getImageUrl } from '@/utils/imageUtils'
 import {
   ActionButton,
@@ -41,7 +42,7 @@ export function ActivityScreen() {
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null)
+  const [selectedItemId, setSelectedItemId] = useState<number | string | null>(null)
   
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
@@ -70,7 +71,7 @@ export function ActivityScreen() {
         }
       });
       const data = await response.json()
-      setItems(data);
+      setItems(normalizeItems(data));
     } catch (error) {
       console.error('Error fetching items:', error)
     } finally {
@@ -78,13 +79,13 @@ export function ActivityScreen() {
     }
   };
 
-  const handleUnclaimClick = (e: React.MouseEvent, itemId: number) => {
+  const handleUnclaimClick = (e: React.MouseEvent, itemId: number | string) => {
     e.stopPropagation()
     setSelectedItemId(itemId)
     setIsModalOpen(true)
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, itemId: number) => {
+  const handleDeleteClick = (e: React.MouseEvent, itemId: number | string) => {
     e.stopPropagation()
     setSelectedItemId(itemId)
     setIsDeleteModalOpen(true)

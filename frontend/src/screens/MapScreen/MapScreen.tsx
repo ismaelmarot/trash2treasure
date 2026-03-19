@@ -7,7 +7,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL, ICONS } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ItemCountdown } from '@/components'
-import { getImageUrl } from '@/utils/imageUtils'
+import { getImageUrl, normalizeItems } from '@/utils/imageUtils'
 import {
   ActionGroup,
   CategoryChip,
@@ -320,7 +320,7 @@ export function MapScreen() {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await response.json()
-      setItems(data);
+      setItems(normalizeItems(data));
     } catch (error) {
       console.error('Error fetching items for map:', error)
     } finally {

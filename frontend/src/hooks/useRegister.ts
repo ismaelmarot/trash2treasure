@@ -36,7 +36,7 @@ export function useRegister() {
       const data = await response.json()
 
       if (response.ok) {
-        navigate('/verify', { state: { email } })
+        navigate('/verify', { state: { email, password } })
       } else {
         setError(data.error || 'Registration failed')
       }

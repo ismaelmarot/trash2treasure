@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks'
 import type { ItemProps } from '@/interface'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { ItemCountdown } from '@/components'
-import { getImageUrl } from '@/utils/imageUtils'
+import { getImageUrl, normalizeItems } from '@/utils/imageUtils'
 import {
   CategoriesBar,
   CategoryBadge,
@@ -82,7 +82,7 @@ export function SearchScreen() {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await response.json()
-      setItems(data)
+      setItems(normalizeItems(data))
     } catch (error: any) {
       if (error.name === 'AbortError') return;
       console.error('Error fetching search results:', error)
