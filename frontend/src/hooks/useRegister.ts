@@ -6,7 +6,9 @@ export function useRegister() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState('')
 
   const validations = {
@@ -25,6 +27,12 @@ export function useRegister() {
       setError('La contraseña no cumple con los requisitos de seguridad')
       return
     }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden')
+      return
+    }
+
     setError('')
 
     try {
@@ -45,5 +53,21 @@ export function useRegister() {
     }
   }
 
-  return { name, setName, email, setEmail, password, setPassword, showPassword, setShowPassword, error, validations, handleSubmit }
+  return { 
+    name, 
+    setName, 
+    email, 
+    setEmail, 
+    password, 
+    setPassword, 
+    confirmPassword, 
+    setConfirmPassword,
+    showPassword, 
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+    error, 
+    validations, 
+    handleSubmit 
+  }
 }

@@ -20,8 +20,12 @@ export function RegisterForm() {
         setEmail,
         password,
         setPassword,
+        confirmPassword,
+        setConfirmPassword,
         showPassword,
         setShowPassword,
+        showConfirmPassword,
+        setShowConfirmPassword,
         error,
         handleSubmit,
         validations
@@ -76,6 +80,25 @@ export function RegisterForm() {
             </PasswordWrapper>
 
             <PasswordValidation validations={validations} />
+        </InputGroup>
+
+        <InputGroup>
+            <Label>Confirmar Contraseña</Label>
+            <PasswordWrapper>
+            <Input
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Repite tu contraseña"
+                required
+            />
+            <ToggleButton
+                type='button'
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+                {showConfirmPassword ? <ICONS.eyeOpen /> : <ICONS.eyeClosed />}
+            </ToggleButton>
+            </PasswordWrapper>
         </InputGroup>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
