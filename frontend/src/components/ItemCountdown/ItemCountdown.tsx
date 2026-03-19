@@ -14,6 +14,13 @@ export function ItemCountdown({
   const [isUrgent, setIsUrgent] = useState(false)
 
   useEffect(() => {
+    // Si no hay createdAt, no hacemos nada
+    if (!createdAt) {
+      setTimeLeft('')
+      setPostingTime('')
+      return
+    }
+
     // Format posting time (local)
     const dateStr = createdAt.includes('T') ? createdAt : createdAt.replace(' ', 'T') + 'Z'
     const createdDate = new Date(dateStr)

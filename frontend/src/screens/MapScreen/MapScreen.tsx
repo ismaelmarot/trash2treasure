@@ -408,37 +408,40 @@ export function MapScreen() {
         )}
 
 
-        {filteredItems.map(item => (
-          <Marker 
-            key={item.id} 
-            position={[item.latitude, item.longitude]} 
-            icon={getCategoryIcon(item.category)}
-            eventHandlers={{
-              click: () => {
-                // Centrar suavemente al hacer clic en el marcador
-                // Leaflet maneja esto en parte, pero podemos forzarlo si queremos
-              }
-            }}
-          >
-            <Popup>
-              <PopupContent>
-                {item.main_image && (
-                  <PopupImage 
-                    src={getImageUrl(item.main_image, API_BASE_URL)} 
-                    alt={item.title} 
-                  />
-                )}
-                <PopupTitle>{item.title}</PopupTitle>
-                <CountdownWrapper>
-                  <ItemCountdown createdAt={item.created_at} align="flex-start" />
-                </CountdownWrapper>
-                <ViewButton onClick={() => navigate(`/item/${item.id}`)}>
-                  Ver Detalles
-                </ViewButton>
-              </PopupContent>
-            </Popup>
-          </Marker>
-        ))}
+        {filteredItems
+          .filter(item => item.latitude && item.longitude)
+          .map(item => (
+            <Marker 
+              key={item.id} 
+              position={[item.latitude, item.longitude]} 
+              icon={getCategoryIcon(item.category)}
+              eventHandlers={{
+                click: () => {
+                  // Centrar suavemente al hacer clic en el marcador
+                  // Leaflet maneja esto en parte, pero podemos forzarlo si queremos
+                }
+              }}
+            >
+              <Popup>
+                <PopupContent>
+                  {item.main_image && (
+                    <PopupImage 
+                      src={getImageUrl(item.main_image, API_BASE_URL)} 
+                      alt={item.title} 
+                    />
+                  )}
+                  <PopupTitle>{item.title}</PopupTitle>
+                  <CountdownWrapper>
+                    <ItemCountdown createdAt={item.created_at} align="flex-start" />
+                  </CountdownWrapper>
+                  <ViewButton onClick={() => navigate(`/item/${item.id}`)}>
+                    Ver Detalles
+                  </ViewButton>
+                </PopupContent>
+              </Popup>
+            </Marker>
+          ))
+        }
       </MapContainer>
 
       {/* Sidebar Section */}
@@ -504,8 +507,10 @@ export function MapScreen() {
           ) : (
             filteredItems.map(item => (
               <ItemCard key={item.id} onClick={() => {
-                setUserLocation([item.latitude, item.longitude]);
-                setShouldRecenter(prev => prev + 1);
+                if (item.latitude && item.longitude) {
+                  setUserLocation([item.latitude, item.longitude]);
+                  setShouldRecenter(prev => prev + 1);
+                }
               }}>
                 <ItemThumbnail 
                   src={item.main_image ? getImageUrl(item.main_image, API_BASE_URL) : 'https://via.placeholder.com/60'} 
