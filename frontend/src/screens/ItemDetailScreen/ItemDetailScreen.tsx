@@ -125,17 +125,23 @@ export function ItemDetailScreen() {
         
         <SectionTitle>Ubicación</SectionTitle>
         <MapWrapper>
-          <MapContainer 
-            center={[item.latitude, item.longitude]} 
-            zoom={16} 
-            style={{ height: '100%', width: '100%' }}
-            dragging={false}
-            scrollWheelZoom={false}
-            zoomControl={false}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Marker position={[item.latitude, item.longitude]} />
-          </MapContainer>
+          {item.latitude != null && item.longitude != null ? (
+            <MapContainer 
+              center={[item.latitude, item.longitude]} 
+              zoom={16} 
+              style={{ height: '100%', width: '100%' }}
+              dragging={false}
+              scrollWheelZoom={false}
+              zoomControl={false}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Marker position={[item.latitude, item.longitude]} />
+            </MapContainer>
+          ) : (
+            <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+              Ubicación no disponible
+            </div>
+          )}
         </MapWrapper>
 
         {item.user_id !== user?.id && item.claimed_by === user?.id && (

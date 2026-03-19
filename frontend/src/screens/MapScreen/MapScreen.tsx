@@ -170,7 +170,7 @@ export function MapScreen() {
   const filteredItems = items
     .map(item => ({
       ...item,
-      distance: userLocation 
+      distance: userLocation && item.latitude != null && item.longitude != null
         ? calculateDistance(userLocation[0], userLocation[1], item.latitude, item.longitude)
         : Infinity
     }))
@@ -507,7 +507,7 @@ export function MapScreen() {
           ) : (
             filteredItems.map(item => (
               <ItemCard key={item.id} onClick={() => {
-                if (item.latitude && item.longitude) {
+                if (item.latitude != null && item.longitude != null) {
                   setUserLocation([item.latitude, item.longitude]);
                   setShouldRecenter(prev => prev + 1);
                 }

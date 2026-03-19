@@ -179,7 +179,7 @@ export function SearchScreen() {
                   <ItemCountdown createdAt={item.created_at} />
                 </ItemHeader>
                 <ItemMeta>
-                  {userLocation && (
+                  {userLocation && item.latitude != null && item.longitude != null && (
                     <Distance>
                       {calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)}
                     </Distance>
