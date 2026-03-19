@@ -25,7 +25,7 @@ export function WelcomeScreen() {
           <LogoText>Trash2Treasure</LogoText>
         </LogoContainer>
         
-        <Title>Redifiniendo el concepto de "desperdicio" en valor compartido.</Title>
+        <Title>Redefiniendo el concepto de "desperdicio" en valor compartido.</Title>
         <Subtitle>
           La comunidad de economía circular más grande de tu zona. 
           Encuentra, comparte y salva tesoros.
