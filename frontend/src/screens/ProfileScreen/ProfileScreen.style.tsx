@@ -77,7 +77,7 @@ export const LogoutButton = styled.button`
     font-weight: 600;
     border: none;
     cursor: pointer;
-    border: 3px solid red;
+    background-color: ${COLORS.white};
 `
 
 export const MenuItem = styled.div`
@@ -113,7 +113,6 @@ export const IconCircle = styled(ICONS.iconCircle)`
 `
 
 export const IconChevron = styled(ICONS.chevronRight)`
-    /* color: ${COLORS.greyDark}; */
     margin-left: ${SPACING.sm};
     flex-shrink: 0;
 `
@@ -121,5 +120,4 @@ export const IconChevron = styled(ICONS.chevronRight)`
 export const GoOut = styled(ICONS.goOut)`
     font-size: 1.5rem;
     color: ${COLORS.danger};
-    margin-left: 2rem;
 `
