@@ -7,6 +7,71 @@ export const CATEGORIES = [
         icon: CATEGORIES_ICONS.star
     },
     {
+        id: 'paper',
+        label: 'Paper',
+        icon: CATEGORIES_ICONS.paper
+    },
+    {
+        id: 'plastic',
+        label: 'Plastic',
+        icon: CATEGORIES_ICONS.plastic
+    },
+    {
+        id: 'glass',
+        label: 'Glass',
+        icon: CATEGORIES_ICONS.glass
+    },
+    {
+        id: 'metal',
+        label: 'Metal',
+        icon: CATEGORIES_ICONS.metal
+    },
+    {
+        id: 'clothes',
+        label: 'Clothes',
+        icon: CATEGORIES_ICONS.clothes
+    },
+    {
+        id: 'books',
+        label: 'Books',
+        icon: CATEGORIES_ICONS.books
+    },
+    {
+        id: 'electronics',
+        label: 'Electronics',
+        icon: CATEGORIES_ICONS.electronics
+    },
+    {
+        id: 'batteries',
+        label: 'Batteries',
+        icon: CATEGORIES_ICONS.batteries
+    },
+    {
+        id: 'organic',
+        label: 'Organic',
+        icon: CATEGORIES_ICONS.organic
+    },
+    {
+        id: 'furniture',
+        label: 'Furniture',
+        icon: CATEGORIES_ICONS.furniture
+    },
+    {
+        id: 'construction',
+        label: 'Construction',
+        icon: CATEGORIES_ICONS.construction
+    },
+    {
+        id: 'wood',
+        label: 'Wood',
+        icon: CATEGORIES_ICONS.wood
+    },
+    {
+        id: 'garden',
+        label: 'Garden',
+        icon: CATEGORIES_ICONS.garden
+    },
+    {
         id: 'carton',
         label: 'Cardboard',
         icon: CATEGORIES_ICONS.cardboard
@@ -17,11 +82,6 @@ export const CATEGORIES = [
         icon: CATEGORIES_ICONS.bottle
     },
     {
-        id: 'metal',
-        label: 'Metal',
-        icon: CATEGORIES_ICONS.metal
-    },
-    {
         id: 'mixto',
         label: 'Mixed',
         icon: CATEGORIES_ICONS.recycle
@@ -29,6 +89,6 @@ export const CATEGORIES = [
     {
         id: 'otros',
         label: 'Others',
-        icon: CATEGORIES_ICONS.star
+        icon: CATEGORIES_ICONS.sparkles
     },
 ]

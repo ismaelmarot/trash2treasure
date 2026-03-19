@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useNavigate } from 'react-router-dom'
 import type { ItemProps } from '@/interface'
-import { API_BASE_URL, ICONS } from '@/constants'
+import { API_BASE_URL, ICONS, CATEGORIES } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ItemCountdown } from '@/components'
 import { getImageUrl, normalizeItems } from '@/utils/imageUtils'
@@ -61,14 +61,8 @@ import {
 } from './MapScreen.styles'
 
 const getCategoryEmoji = (category: string) => {
-  switch (category) {
-    case 'carton': return '📦'
-    case 'botellas': return '🍾'
-    case 'metal': return '🔩'
-    case 'mixto': return '♻️'
-    case 'otros': return '✨'
-    default: return '📍'
-  }
+  const cat = CATEGORIES.find(c => c.id === category);
+  return cat ? cat.icon : '📍';
 }
 
 const getCategoryIcon = (category: string) => {
@@ -482,19 +476,13 @@ export function MapScreen() {
           <FilterSection>
             <SectionLabel>Categoría</SectionLabel>
             <CategoryScroll>
-              {[
-                { id: 'all', label: 'Todos' },
-                { id: 'carton', label: 'Cartón' },
-                { id: 'botellas', label: 'Botellas' },
-                { id: 'metal', label: 'Metal' },
-                { id: 'mixto', label: 'Mixto' },
-                { id: 'otros', label: 'Otros' }
-              ].map(cat => (
+              {CATEGORIES.map(cat => (
                 <CategoryChip 
                   key={cat.id} 
                   $active={selectedCategory === cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                 >
+                  <span>{cat.icon}</span>
                   {cat.label}
                 </CategoryChip>
               ))}

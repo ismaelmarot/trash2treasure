@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useAuth } from '@/hooks'
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, CATEGORIES } from '@/constants'
 import {
   CameraControls,
   CameraModal,
@@ -340,11 +340,11 @@ export function AddItemScreen() {
               onChange={(e) => setCategory(e.target.value)}
               required
             >
-              <option value="carton">Cardboard</option>
-              <option value="botellas">Bottles</option>
-              <option value="metal">Metal</option>
-              <option value="mixto">Mixed</option>
-              <option value="otros">Others</option>
+              {CATEGORIES.filter(cat => cat.id !== 'todos').map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon} {cat.label}
+                </option>
+              ))}
             </Select>
           </InputGroup>
           <InputGroup>
