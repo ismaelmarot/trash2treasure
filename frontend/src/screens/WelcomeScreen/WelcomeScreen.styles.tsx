@@ -78,7 +78,7 @@ export const PrimaryButton = styled.button`
 export const SecondaryButton = styled.button`
     border: none;
     padding: 18px;
-    border-radius: 16px;
+    border-radius: 35px;
     font-size: 18px;
     font-weight: 600;
     color: #0071e3;
