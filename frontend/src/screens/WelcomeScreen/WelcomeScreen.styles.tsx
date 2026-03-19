@@ -55,13 +55,13 @@ export const ButtonGroup = styled.div`
 `
 
 export const PrimaryButton = styled.button`
-    background: ${COLORS.info};
-    color: ${COLORS.white};
-    border: none;
     padding: 18px;
-    border-radius: 16px;
+    border: none;
+    border-radius: 35px;
     font-size: 18px;
     font-weight: 600;
+    color: ${COLORS.white};
+    background: ${COLORS.info};
     cursor: pointer;
     transition: transform 0.2s ease;
 
