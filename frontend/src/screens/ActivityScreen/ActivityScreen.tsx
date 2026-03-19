@@ -183,6 +183,8 @@ export function ActivityScreen() {
               <ImageWrapper>
                 {item.main_image ? (
                   <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
+                ) : item.photos && item.photos.length > 0 ? (
+                  <ItemImage src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} alt={item.title} />
                 ) : (
                   <PlaceholderImage>📦</PlaceholderImage>
                 )}

@@ -57,10 +57,14 @@ router.get('/', async (req, res) => {
       filter.claimed_by = { $exists: true };
     }
 
-    // Obtener items con datos del usuario
+    // Obtener items con datos del usuario y fotos
     const items = await Item.find(filter)
       .populate('user_id', 'name email')
       .populate('claimed_by', 'name email')
+      .populate({
+        path: 'photos',
+        select: 'image_url cloudinary_public_id created_at'
+      })
       .sort({ created_at: -1 });
 
     // Convertir _id a id para compatibilidad con el frontend
@@ -81,7 +85,11 @@ router.get('/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id)
       .populate('user_id', 'name email')
-      .populate('claimed_by', 'name email');
+      .populate('claimed_by', 'name email')
+      .populate({
+        path: 'photos',
+        select: 'image_url cloudinary_public_id created_at'
+      });
 
     if (!item) return res.status(404).json({ error: 'Item not found' });
     

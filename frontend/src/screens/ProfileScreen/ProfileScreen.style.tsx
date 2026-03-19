@@ -77,6 +77,7 @@ export const LogoutButton = styled.button`
     font-weight: 600;
     border: none;
     cursor: pointer;
+    border: 3px solid red;
 `
 
 export const MenuItem = styled.div`
@@ -112,7 +113,7 @@ export const IconCircle = styled(ICONS.iconCircle)`
 `
 
 export const IconChevron = styled(ICONS.chevronRight)`
-    color: ${COLORS.greyDark};
+    /* color: ${COLORS.greyDark}; */
     margin-left: ${SPACING.sm};
     flex-shrink: 0;
 `

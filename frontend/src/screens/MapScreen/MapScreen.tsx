@@ -422,15 +422,20 @@ export function MapScreen() {
                 }
               }}
             >
-              <Popup>
-                <PopupContent>
-                  {item.main_image && (
-                    <PopupImage 
-                      src={getImageUrl(item.main_image, API_BASE_URL)} 
-                      alt={item.title} 
-                    />
-                  )}
-                  <PopupTitle>{item.title}</PopupTitle>
+                <Popup>
+                  <PopupContent>
+                    {item.main_image ? (
+                      <PopupImage 
+                        src={getImageUrl(item.main_image, API_BASE_URL)} 
+                        alt={item.title} 
+                      />
+                    ) : item.photos && item.photos.length > 0 ? (
+                      <PopupImage 
+                        src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} 
+                        alt={item.title} 
+                      />
+                    ) : null}
+                    <PopupTitle>{item.title}</PopupTitle>
                   <CountdownWrapper>
                     <ItemCountdown createdAt={item.created_at} align="flex-start" />
                   </CountdownWrapper>
@@ -513,7 +518,12 @@ export function MapScreen() {
                 }
               }}>
                 <ItemThumbnail 
-                  src={item.main_image ? getImageUrl(item.main_image, API_BASE_URL) : 'https://via.placeholder.com/60'} 
+                  src={item.main_image 
+                    ? getImageUrl(item.main_image, API_BASE_URL) 
+                    : item.photos && item.photos.length > 0 
+                      ? getImageUrl(item.photos[0].image_url, API_BASE_URL)
+                      : 'https://via.placeholder.com/60'
+                  } 
                   alt={item.title} 
                 />
                 <ItemInfo>

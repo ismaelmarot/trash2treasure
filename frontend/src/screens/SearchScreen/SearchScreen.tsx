@@ -163,6 +163,8 @@ export function SearchScreen() {
               <ItemThumbnail>
                 {item.main_image ? (
                   <img src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
+                ) : item.photos && item.photos.length > 0 ? (
+                  <img src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} alt={item.title} />
                 ) : (
                   <PlaceholderIcon>📦</PlaceholderIcon>
                 )}

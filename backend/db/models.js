@@ -24,6 +24,17 @@ const itemSchema = new mongoose.Schema({
   main_image: { type: String }, // URL de la imagen principal
 });
 
+// Virtual para popular las fotos del item
+itemSchema.virtual('photos', {
+  ref: 'ItemPhoto',
+  localField: '_id',
+  foreignField: 'item_id'
+});
+
+// Asegurar que los virtuals se incluyan en toJSON y toObject
+itemSchema.set('toObject', { virtuals: true });
+itemSchema.set('toJSON', { virtuals: true });
+
 // ItemPhoto Schema
 const itemPhotoSchema = new mongoose.Schema({
   item_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },

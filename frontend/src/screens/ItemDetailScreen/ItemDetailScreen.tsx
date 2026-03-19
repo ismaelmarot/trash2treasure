@@ -102,6 +102,8 @@ export function ItemDetailScreen() {
       <ImageSection>
         {item.photos && item.photos.length > 0 ? (
           <MainImage src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} alt={item.title} />
+        ) : item.main_image ? (
+          <MainImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
         ) : (
           <PlaceholderImage>📦</PlaceholderImage>
         )}
