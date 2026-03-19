@@ -84,7 +84,7 @@ export function ItemDetailScreen() {
       // Refresh item details
       const updatedResponse = await fetch(`${API_BASE_URL}/items/${id}`)
       const updatedData = await updatedResponse.json()
-      setItem(updatedData)
+      setItem(normalizeItem(updatedData))
     } catch (error) {
       console.error('Error unclaiming item:', error);
       alert('No se pudo liberar el item. Inténtalo de nuevo.')
