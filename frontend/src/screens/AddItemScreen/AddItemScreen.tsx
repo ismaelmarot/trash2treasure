@@ -191,6 +191,31 @@ export function AddItemScreen() {
     setLoading(true)
     setError('')
 
+    // Validaciones
+    if (!title.trim()) {
+      setError('El título es obligatorio')
+      setLoading(false)
+      return
+    }
+
+    if (!description.trim()) {
+      setError('La descripción es obligatoria')
+      setLoading(false)
+      return
+    }
+
+    if (!image) {
+      setError('Debes seleccionar una foto del tesoro')
+      setLoading(false)
+      return
+    }
+
+    if (!location || !location.lat || !location.lng) {
+      setError('La ubicación es obligatoria')
+      setLoading(false)
+      return
+    }
+
     try {
       const itemResponse = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
@@ -288,7 +313,7 @@ export function AddItemScreen() {
             <Form onSubmit={handleSubmit}>
 
           <InputGroup>
-            <Label>Título</Label>
+            <Label required>Título</Label>
             <Input 
               value={title} 
               onChange={(e) => setTitle(e.target.value)} 
@@ -298,12 +323,13 @@ export function AddItemScreen() {
           </InputGroup>
 
           <InputGroup>
-            <Label>Descripción</Label>
+            <Label required>Descripción</Label>
             <TextArea 
               value={description} 
               onChange={(e) => setDescription(e.target.value)} 
               placeholder="Describe el estado y detalles..."
               rows={3}
+              required
             />
           </InputGroup>
 
@@ -322,8 +348,8 @@ export function AddItemScreen() {
             </Select>
           </InputGroup>
           <InputGroup>
-            <Label>Imagen del Tesoro</Label>
-            <ImageContainer>
+            <Label required>Imagen del Tesoro</Label>
+            <ImageContainer style={!imagePreview ? { border: '2px dashed #ccc' } : {}}>
               {imagePreview ? (
                 <PreviewWrapper>
                   <PreviewImage src={imagePreview} alt="Preview" />
@@ -359,7 +385,7 @@ export function AddItemScreen() {
           </InputGroup>
 
           <InputGroup>
-            <Label>Ubicación (Toca el mapa para mover el pin)</Label>
+            <Label required>Ubicación (Toca el mapa para mover el pin)</Label>
             <MapWrapper>
               <MapContainer 
                 center={[location.lat, location.lng]} 

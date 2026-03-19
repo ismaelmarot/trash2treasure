@@ -66,12 +66,19 @@ export const InputGroup = styled.div`
     gap: 5px;
 `
 
-export const Label = styled.label`
+export const Label = styled.label<{ required?: boolean }>`
     font-size: 14px;
     font-weight: 600;
     padding-left: 4px;
     margin-top: 1rem;
     color: ${COLORS.black};
+    
+    ${({ required }) => required && `
+        &::after {
+            content: ' *';
+            color: ${COLORS.danger};
+        }
+    `}
 `;
 
 export const Input = styled.input`
