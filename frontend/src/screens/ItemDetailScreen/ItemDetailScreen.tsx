@@ -7,7 +7,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
-import { getImageUrl } from '@/utils/imageUtils'
+import { getImageUrl, normalizeItem } from '@/utils/imageUtils'
 import {
   BackButton,
   CategoryBadge,
@@ -53,7 +53,7 @@ export function ItemDetailScreen() {
       try {
         const response = await fetch(`${API_BASE_URL}/items/${id}`)
         const data = await response.json()
-        setItem(data)
+        setItem(normalizeItem(data))
       } catch (error) {
         console.error("Error fetching item details:", error)
       } finally {
