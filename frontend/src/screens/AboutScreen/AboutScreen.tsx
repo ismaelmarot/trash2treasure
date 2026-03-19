@@ -50,7 +50,7 @@ export function AboutScreen() {
           <AppIcon src={appIcon} alt="App logo" />
           <AppName>Trash2Treasure</AppName>
           <AppVersion>Versión 1.0.2 Stable</AppVersion>
-          <USP>Refiniendo el concepto de "desperdicio" en valor compartido.</USP>
+          <USP>Redifiniendo el concepto de "desperdicio" en valor compartido.</USP>
         </HeroSection>
 
         <Section>

@@ -17,6 +17,6 @@ export const ValidationItem = styled.div<{ $valid: boolean }>`
     transition: color 0.2s ease;
 `
 
-export const Text = styled.text`
+export const Text = styled.span`
     padding-left: 2px;
 `
