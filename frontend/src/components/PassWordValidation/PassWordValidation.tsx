@@ -6,19 +6,19 @@ export function PasswordValidation({ validations }: PassWordValidationProps) {
   return (
     <ValidationList>
       <ValidationItem $valid={validations.length}>
-        {ICONS_LOGUIN.checkYes}
+        {validations.length ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot}
         <Text>Mínimo 8 caracteres</Text>
       </ValidationItem>
       <ValidationItem $valid={validations.uppercase}>
-        {ICONS_LOGUIN.checkYes}
+        {validations.uppercase ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot}
         <Text>Una mayúscula</Text>
       </ValidationItem>
       <ValidationItem $valid={validations.lowercase}>
-        {ICONS_LOGUIN.checkYes}
+        {validations.lowercase ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot}
        <Text>Una minúscula</Text>
       </ValidationItem>
       <ValidationItem $valid={validations.number}>
-        {ICONS_LOGUIN.checkYes}
+        {validations.number ? ICONS_LOGUIN.checkYes : ICONS_LOGUIN.checkNot}
         <Text>Un número</Text>
       </ValidationItem>
     </ValidationList>
