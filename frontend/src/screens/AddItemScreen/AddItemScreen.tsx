@@ -77,6 +77,14 @@ export function AddItemScreen() {
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const galleryInputRef = useRef<HTMLInputElement>(null)
 
+  // Verificar si todos los campos obligatorios están completos
+  const isFormValid = title.trim() !== '' && 
+                      description.trim() !== '' && 
+                      image !== null && 
+                      location && 
+                      location.lat !== null && 
+                      location.lng !== null
+
   // Obtener ubicación actual al cargar
   useEffect(() => {
     if (navigator.geolocation) {
@@ -410,7 +418,7 @@ export function AddItemScreen() {
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <SubmitButton type='submit' disabled={loading}>
+          <SubmitButton type='submit' disabled={loading || !isFormValid}>
             {loading ? 'Publicando...' : 'Publicar Tesoro'}
           </SubmitButton>
         </Form>
