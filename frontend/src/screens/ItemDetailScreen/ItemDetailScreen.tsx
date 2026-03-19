@@ -7,6 +7,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
+import { getImageUrl } from '@/utils/imageUtils'
 import {
   BackButton,
   CategoryBadge,
@@ -100,7 +101,7 @@ export function ItemDetailScreen() {
       
       <ImageSection>
         {item.photos && item.photos.length > 0 ? (
-          <MainImage src={`${API_BASE_URL.replace('/api', '')}${item.photos[0].image_url}`} alt={item.title} />
+          <MainImage src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} alt={item.title} />
         ) : (
           <PlaceholderImage>📦</PlaceholderImage>
         )}

@@ -4,6 +4,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
+import { getImageUrl } from '@/utils/imageUtils'
 import {
   ActionButton,
   ButtonGroup,
@@ -180,7 +181,7 @@ export function ActivityScreen() {
             <ItemCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
               <ImageWrapper>
                 {item.main_image ? (
-                  <ItemImage src={`${API_BASE_URL.replace('/api', '')}${item.main_image}`} alt={item.title} />
+                  <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
                 ) : (
                   <PlaceholderImage>📦</PlaceholderImage>
                 )}

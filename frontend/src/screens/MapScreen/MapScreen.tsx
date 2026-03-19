@@ -7,6 +7,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL, ICONS } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ItemCountdown } from '@/components'
+import { getImageUrl } from '@/utils/imageUtils'
 import {
   ActionGroup,
   CategoryChip,
@@ -423,7 +424,7 @@ export function MapScreen() {
               <PopupContent>
                 {item.main_image && (
                   <PopupImage 
-                    src={`${API_BASE_URL.replace('/api', '')}${item.main_image}`} 
+                    src={getImageUrl(item.main_image, API_BASE_URL)} 
                     alt={item.title} 
                   />
                 )}
@@ -507,7 +508,7 @@ export function MapScreen() {
                 setShouldRecenter(prev => prev + 1);
               }}>
                 <ItemThumbnail 
-                  src={item.main_image ? `${API_BASE_URL.replace('/api', '')}${item.main_image}` : 'https://via.placeholder.com/60'} 
+                  src={item.main_image ? getImageUrl(item.main_image, API_BASE_URL) : 'https://via.placeholder.com/60'} 
                   alt={item.title} 
                 />
                 <ItemInfo>

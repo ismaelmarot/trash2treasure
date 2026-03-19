@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks'
 import type { ItemProps } from '@/interface'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { ItemCountdown } from '@/components'
+import { getImageUrl } from '@/utils/imageUtils'
 import {
   CategoriesBar,
   CategoryBadge,
@@ -161,7 +162,7 @@ export function SearchScreen() {
             <ResultCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
               <ItemThumbnail>
                 {item.main_image ? (
-                  <img src={`${API_BASE_URL.replace('/api', '')}${item.main_image}`} alt={item.title} />
+                  <img src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
                 ) : (
                   <PlaceholderIcon>📦</PlaceholderIcon>
                 )}
