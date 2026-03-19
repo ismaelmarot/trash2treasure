@@ -63,7 +63,14 @@ router.get('/', async (req, res) => {
       .populate('claimed_by', 'name email')
       .sort({ created_at: -1 });
 
-    res.json(items);
+    // Convertir _id a id para compatibilidad con el frontend
+    const itemsWithId = items.map(item => {
+      const obj = item.toObject();
+      obj.id = obj._id;
+      return obj;
+    });
+
+    res.json(itemsWithId);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -77,7 +84,12 @@ router.get('/:id', async (req, res) => {
       .populate('claimed_by', 'name email');
 
     if (!item) return res.status(404).json({ error: 'Item not found' });
-    res.json(item);
+    
+    // Convertir _id a id para compatibilidad con el frontend
+    const itemWithId = item.toObject();
+    itemWithId.id = itemWithId._id;
+    
+    res.json(itemWithId);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -103,7 +115,12 @@ router.post('/', authenticateToken, async (req, res) => {
     });
 
     await newItem.save();
-    res.json(newItem);
+    
+    // Convertir _id a id para compatibilidad con el frontend
+    const itemWithId = newItem.toObject();
+    itemWithId.id = itemWithId._id;
+    
+    res.json(itemWithId);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
