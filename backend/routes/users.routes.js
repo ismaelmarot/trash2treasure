@@ -50,7 +50,7 @@ router.post('/register', async (req, res) => {
     const msg = {
       to: email,
       from: {
-        email: 'noreply@trash2treasure.com',
+        email: 'ismaelmarot@hotmail.com',
         name: 'Trash2Treasure'
       },
       subject: 'Código de verificación - Trash2Treasure',
