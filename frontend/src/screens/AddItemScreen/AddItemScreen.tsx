@@ -210,11 +210,15 @@ export function AddItemScreen() {
       const itemData = await itemResponse.json()
       if (!itemResponse.ok) throw new Error(itemData.error || 'Error al crear item')
 
+      // MongoDB devuelve _id, pero algunos endpoints usan id
+      const itemId = itemData._id || itemData.id
+      if (!itemId) throw new Error('Error: no se pudo obtener el ID del item')
+
       if (image) {
         const formData = new FormData()
         formData.append('image', image)
 
-        const photoResponse = await fetch(`${API_BASE_URL}/items/${itemData.id}/photos`, {
+        const photoResponse = await fetch(`${API_BASE_URL}/items/${itemId}/photos`, {
           method: 'POST',
           headers: { 
             'Authorization': `Bearer ${token}`
