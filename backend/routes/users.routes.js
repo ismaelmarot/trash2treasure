@@ -1,21 +1,14 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const { User } = require('../db/models');
 
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
 
-// Configuración de nodemailer (Mock/Ethereal para desarrollo)
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  auth: {
-    user: 'test@ethereal.email',
-    pass: 'password'
-  }
-});
+// Configurar SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Obtener todos los usuarios
 router.get('/', async (req, res) => {
@@ -53,7 +46,36 @@ router.post('/register', async (req, res) => {
 
     await newUser.save();
 
-    console.log(`[EMAIL MOCK] Código de verificación para ${email}: ${verificationCode}`);
+    // Enviar email con SendGrid
+    const msg = {
+      to: email,
+      from: {
+        email: 'noreply@trash2treasure.com',
+        name: 'Trash2Treasure'
+      },
+      subject: 'Código de verificación - Trash2Treasure',
+      text: `Hola ${name},\n\nTu código de verificación es: ${verificationCode}\n\nEste código expira en 10 minutos.\n\nSaludos,\nEquipo Trash2Treasure`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1d1d1f;">¡Bienvenido a Trash2Treasure!</h2>
+          <p>Hola ${name},</p>
+          <p>Tu código de verificación es:</p>
+          <div style="background-color: #f5f5f7; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+            <h1 style="font-size: 32px; letter-spacing: 8px; color: #1d1d1f; margin: 0;">${verificationCode}</h1>
+          </div>
+          <p>Este código expira en 10 minutos.</p>
+          <p>Saludos,<br>Equipo Trash2Treasure</p>
+        </div>
+      `
+    };
+
+    try {
+      await sgMail.send(msg);
+      console.log(`✅ Email de verificación enviado a ${email}`);
+    } catch (emailError) {
+      console.error('Error enviando email:', emailError);
+      // No fallamos el registro solo porque falló el email
+    }
     
     res.json({ 
       id: newUser._id, 
