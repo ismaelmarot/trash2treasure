@@ -66,8 +66,18 @@ export function ItemDetailScreen() {
   const { user, token } = useAuth()
 
   useEffect(() => {
+    const cached = localStorage.getItem('userLocation')
+    if (cached) {
+      try {
+        setUserLocation(JSON.parse(cached))
+      } catch {}
+    }
     navigator.geolocation.getCurrentPosition(
-      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        setUserLocation(loc)
+        localStorage.setItem('userLocation', JSON.stringify(loc))
+      },
       () => null
     )
   }, [])
