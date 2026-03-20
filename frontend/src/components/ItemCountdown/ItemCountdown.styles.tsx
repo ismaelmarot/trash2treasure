@@ -4,7 +4,8 @@ import { COLORS } from '../../constants'
 export const Wrapper = styled.div<{ $align?: string; $direction?: string }>`
     display: flex;
     flex-direction: ${props => props.$direction || 'row'};
-    align-items: ${props => props.$align || 'center'};
+    align-items: center;
+    justify-content: ${props => props.$align || 'flex-start'};
     gap: 12px;
 `
 

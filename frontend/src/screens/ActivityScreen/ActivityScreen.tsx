@@ -198,7 +198,7 @@ export function ActivityScreen() {
 
               <ItemContent>
                 <ItemHeader>
-                  <ItemCountdown createdAt={item.created_at} />
+                  <ItemCountdown createdAt={item.created_at} direction="column" align="flex-end" />
                 </ItemHeader>
                 <ItemTitle>{item.title}</ItemTitle>
                 <ItemDescription>{item.description || 'Sin descripción'}</ItemDescription>

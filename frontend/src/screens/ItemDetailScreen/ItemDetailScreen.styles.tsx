@@ -41,7 +41,7 @@ export const ImageSection = styled.div`
     margin: 0 auto;
     aspect-ratio: 1 / 1;
     position: relative;
-    background: ${COLORS.allWhite};
+    background: ${COLORS.white};
 `
 
 export const MainImage = styled.img`
