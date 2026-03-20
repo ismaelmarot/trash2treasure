@@ -36,6 +36,8 @@ import {
   LocationStatus,
   Overlay,
   PopupContent,
+  PopupDescription,
+  PopupDistance,
   PopupImage,
   PopupTitle,
   SearchButton,
@@ -429,16 +431,22 @@ export function MapScreen() {
                         alt={item.title} 
                       />
                     ) : null}
+                    <PopupDistance>
+                      {item.distance < 1000 
+                        ? `📍 ${Math.round(item.distance)} m` 
+                        : `📍 ${(item.distance / 1000).toFixed(1)} km`}
+                    </PopupDistance>
+                    <CountdownWrapper>
+                      <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
+                    </CountdownWrapper>
                     <PopupTitle>{item.title}</PopupTitle>
-                  <CountdownWrapper>
-                    <ItemCountdown createdAt={item.created_at} align="flex-start" />
-                  </CountdownWrapper>
-                  <ViewButton onClick={() => navigate(`/item/${item.id}`)}>
-                    Ver Detalles
-                  </ViewButton>
-                </PopupContent>
-              </Popup>
-            </Marker>
+                    <PopupDescription>{item.description || 'Sin descripción'}</PopupDescription>
+                    <ViewButton onClick={() => navigate(`/item/${item.id}`)}>
+                      Ver detalle
+                    </ViewButton>
+                  </PopupContent>
+                </Popup>
+              </Marker>
           ))
         }
       </MapContainer>

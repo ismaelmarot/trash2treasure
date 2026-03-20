@@ -548,8 +548,8 @@ export const Spinner = styled.div`
 `
 
 export const PopupContent = styled.div`
-    min-width: 180px;
-    max-width: 220px;
+    min-width: 200px;
+    max-width: 240px;
     padding: 4px;
 `
 
@@ -560,15 +560,36 @@ export const PopupImage = styled.img`
     margin-bottom: 8px;
 `
 
+export const PopupDistance = styled.span`
+    font-size: 12px;
+    color: ${COLORS.greyDark};
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+`
+
 export const PopupTitle = styled.h3`
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: ${COLORS.black};
-    margin: 0 0 8px 0;
+    margin: 8px 0 4px 0;
+    padding-top: 8px;
+    border-top: 1px solid ${COLORS.grey};
+`
+
+export const PopupDescription = styled.p`
+    font-size: 12px;
+    color: ${COLORS.greyDark};
+    margin: 0 0 10px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
 `
 
 export const CountdownWrapper = styled.div`
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 `
 
 export const ViewButton = styled.button`
@@ -578,8 +599,8 @@ export const ViewButton = styled.button`
     border-radius: 10px;
     font-weight: 600;
     color: ${COLORS.allWhite};
-    background: ${COLORS.info};
+    background: ${COLORS.black};
     cursor: pointer;
     font-size: 14px;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 `
