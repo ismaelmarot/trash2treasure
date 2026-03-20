@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { ItemCountdownProps } from '../../interface'
 import { FaClock } from 'react-icons/fa'
-import { Container, PostingLabel, Time, Wrapper } from './ItemCountdown.styles'
+import { Container, ExpiredBadge, PostingLabel, Time, Wrapper } from './ItemCountdown.styles'
 
 export function ItemCountdown({ 
   createdAt, 
@@ -13,6 +13,7 @@ export function ItemCountdown({
   const [timeLeft, setTimeLeft] = useState<string>('')
   const [postingTime, setPostingTime] = useState<string>('')
   const [isUrgent, setIsUrgent] = useState(false)
+  const [isExpired, setIsExpired] = useState(false)
 
   useEffect(() => {
     // Si no hay createdAt, no hacemos nada
@@ -33,19 +34,18 @@ export function ItemCountdown({
     setPostingTime(timeFormatter.format(createdDate))
 
     const calculateTimeLeft = () => {
-      // SQLite stores as "YYYY-MM-DD HH:MM:SS" (UTC).
-      // We force 'Z' to ensure it's parsed as UTC by the browser.
       const MAX_DURATION = 24 * 60 * 60 * 1000
       const expirationDate = new Date(createdDate.getTime() + MAX_DURATION)
       const now = new Date();
       
       let diff = expirationDate.getTime() - now.getTime()
 
-      // Cap at 24h max and 0 min
       if (diff > MAX_DURATION) diff = MAX_DURATION;
 
       if (diff <= 0) {
         setTimeLeft('EXPIRADO')
+        setIsExpired(true)
+        setIsUrgent(false)
         if (onExpire) onExpire()
         return
       }
@@ -57,7 +57,6 @@ export function ItemCountdown({
       const formatted = `${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`
       setTimeLeft(formatted)
       
-      // Urgent if less than 1 hour left
       setIsUrgent(hours < 1)
     };
 
@@ -71,10 +70,14 @@ export function ItemCountdown({
   return (
     <Wrapper $align={align} $direction={direction}>
       <PostingLabel>Publicado {postingTime}</PostingLabel>
-      <Container $isUrgent={isUrgent}>
-        {showIcon && <FaClock size={10} />}
-        <Time>{timeLeft}</Time>
-      </Container>
+      {isExpired ? (
+        <ExpiredBadge>Expirado</ExpiredBadge>
+      ) : (
+        <Container $isUrgent={isUrgent}>
+          {showIcon && <FaClock size={10} />}
+          <Time>{timeLeft}</Time>
+        </Container>
+      )}
     </Wrapper>
   )
 }
