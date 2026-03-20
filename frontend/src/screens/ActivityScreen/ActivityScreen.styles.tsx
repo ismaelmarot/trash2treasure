@@ -130,7 +130,10 @@ export const ItemContent = styled.div`
 `
 
 export const ItemHeader = styled.div`
-    ${flex('column','flex-end','center')}
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
     margin-bottom: ${SPACING.md};
 `
 
@@ -245,4 +248,10 @@ export const UnclaimButton = styled.button`
         background: ${COLORS.danger};
         color: ${COLORS.allWhite};
     }
+`
+
+export const DistanceBadge = styled.span`
+    font-size: 12px;
+    color: ${COLORS.greyDark};
+    font-weight: 500;
 `

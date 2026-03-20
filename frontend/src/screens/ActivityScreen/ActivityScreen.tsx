@@ -4,8 +4,7 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
-import { normalizeItems } from '@/utils/imageUtils'
-import { getImageUrl } from '@/utils/imageUtils'
+import { normalizeItems, getImageUrl } from '@/utils/imageUtils'
 import {
   ActionButton,
   ButtonGroup,
@@ -14,6 +13,7 @@ import {
   ClaimedBadge,
   Container,
   DeleteButton,
+  DistanceBadge,
   EmptyIcon,
   EmptyState,
   Grid,
@@ -37,12 +37,27 @@ import {
   UnclaimButton
 } from './ActivityScreen.styles'
 
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): string => {
+  const R = 6371
+  const deg2rad = (deg: number) => deg * (Math.PI / 180)
+  const dLat = deg2rad(lat2 - lat1)
+  const dLon = deg2rad(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d < 1 ? `${(d * 1000).toFixed(0)} m` : `${d.toFixed(1)} km`;
+}
+
 export function ActivityScreen() {
   const [items, setItems] = useState<ItemProps[]>([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [selectedItemId, setSelectedItemId] = useState<number | string | null>(null)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +68,13 @@ export function ActivityScreen() {
   }
 
   const { token, user } = useAuth()
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => null
+    )
+  }, [])
 
   useEffect(() => {
     fetchItems();
@@ -198,7 +220,10 @@ export function ActivityScreen() {
 
               <ItemContent>
                 <ItemHeader>
-                  <ItemCountdown createdAt={item.created_at} direction="column" align="flex-end" />
+                  {userLocation && item.latitude != null && item.longitude != null && (
+                    <DistanceBadge>📍 {calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)}</DistanceBadge>
+                  )}
+                  <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
                 </ItemHeader>
                 <ItemTitle>{item.title}</ItemTitle>
                 <ItemDescription>{item.description || 'Sin descripción'}</ItemDescription>
