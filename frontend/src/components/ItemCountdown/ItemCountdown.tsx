@@ -7,7 +7,8 @@ export function ItemCountdown({
   createdAt, 
   onExpire, 
   showIcon = true,
-  align = 'flex-end'
+  align = 'flex-end',
+  direction = 'row'
 }: ItemCountdownProps) {
   const [timeLeft, setTimeLeft] = useState<string>('')
   const [postingTime, setPostingTime] = useState<string>('')
@@ -68,7 +69,7 @@ export function ItemCountdown({
   }, [createdAt, onExpire])
 
   return (
-    <Wrapper $align={align}>
+    <Wrapper $align={align} $direction={direction}>
       <PostingLabel>Publicado {postingTime}</PostingLabel>
       <Container $isUrgent={isUrgent}>
         {showIcon && <FaClock size={10} />}

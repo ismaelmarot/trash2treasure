@@ -1,12 +1,11 @@
 import styled from 'styled-components'
 import { COLORS } from '../../constants'
 
-export const Wrapper = styled.div<{ $align: string }>`
+export const Wrapper = styled.div<{ $align?: string; $direction?: string }>`
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    flex-direction: ${props => props.$direction || 'row'};
+    align-items: ${props => props.$align || 'center'};
+    gap: 12px;
 `
 
 export const PostingLabel = styled.span`
@@ -26,6 +25,7 @@ export const Container = styled.div<{ $isUrgent: boolean }>`
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px ${COLORS.shadow};
     color: ${props => props.$isUrgent ? COLORS.danger : COLORS.black};
     background: ${props => props.$isUrgent ? COLORS.dangerBg : COLORS.white};
 `

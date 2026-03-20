@@ -3,4 +3,5 @@ export interface ItemCountdownProps {
     onExpire?: () => void;
     showIcon?: boolean;
     align?: 'flex-start' | 'flex-end';
+    direction?: 'row' | 'column';
 }
