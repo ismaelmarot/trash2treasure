@@ -70,20 +70,36 @@ export function ActivityScreen() {
   const { token, user } = useAuth()
 
   useEffect(() => {
-    const cached = localStorage.getItem('userLocation')
-    if (cached) {
+    const getIPLocation = async () => {
       try {
-        setUserLocation(JSON.parse(cached))
+        const response = await fetch('https://ipapi.co/json/')
+        const data = await response.json()
+        if (data.latitude && data.longitude) {
+          const loc = { lat: data.latitude, lng: data.longitude }
+          setUserLocation(loc)
+        }
       } catch {}
     }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
-        setUserLocation(loc)
-        localStorage.setItem('userLocation', JSON.stringify(loc))
-      },
-      () => null
-    )
+
+    const saved = localStorage.getItem('manually_set_location')
+    if (saved) {
+      try {
+        const [lat, lng] = JSON.parse(saved)
+        setUserLocation({ lat, lng })
+      } catch {}
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+          setUserLocation(loc)
+        },
+        () => getIPLocation()
+      )
+    } else {
+      getIPLocation()
+    }
   }, [])
 
   useEffect(() => {
