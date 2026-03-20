@@ -185,6 +185,26 @@ export const MapWrapper = styled.div`
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 `
 
+export const NavigateButton = styled.button`
+    width: 100%;
+    background: ${COLORS.info};
+    color: ${COLORS.allWhite};
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 28px;
+    transition: all 0.2s ease;
+    letter-spacing: -0.2px;
+    
+    &:hover {
+        transform: scale(1.01);
+        opacity: 0.9;
+    }
+`
+
 export const ClaimButton = styled.button`
     width: 100%;
     background: ${COLORS.black};

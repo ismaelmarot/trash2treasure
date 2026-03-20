@@ -25,6 +25,7 @@ import {
   MainImage,
   MapWrapper,
   MetaRow,
+  NavigateButton,
   OwnerBadge,
   PlaceholderImage,
   SectionTitle,
@@ -202,6 +203,19 @@ export function ItemDetailScreen() {
             </div>
           )}
         </MapWrapper>
+
+        {item.latitude != null && item.longitude != null && (
+          <NavigateButton 
+            onClick={() => {
+              window.open(
+                `https://www.google.com/maps/dir/?api=1&destination=${item.latitude},${item.longitude}`,
+                '_blank'
+              )
+            }}
+          >
+            📍 Cómo llegar
+          </NavigateButton>
+        )}
 
         {item.user_id !== user?.id && item.claimed_by === user?.id && (
           <UnclaimButton onClick={handleUnclaimClick}>
