@@ -311,7 +311,7 @@ export const CameraModal = styled.div`
     right: 0;
     bottom: 0;
     background: ${COLORS.black};
-    z-index: 1000;
+    z-index: 3000;
 `
 
 export const CameraViewWrapper = styled.div`
