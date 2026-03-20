@@ -12,21 +12,21 @@ import {
   ClaimButton,
   ClaimStatusBadge,
   Container,
-  Distance,
+  DistanceBadge,
   EmptyIcon,
   EmptyResults,
   Header,
+  ImageWrapper,
+  ItemCard,
   ItemContent,
-  ItemDesc,
+  ItemDescription,
   ItemHeader,
-  ItemMeta,
-  ItemThumbnail,
+  ItemImage,
   ItemTitle,
   LoadingSpinner,
   LoadingWrapper,
   OwnerBadge,
-  PlaceholderIcon,
-  ResultCard,
+  PlaceholderImage,
   ResultsGrid,
   SearchForm,
   SearchIcon,
@@ -46,11 +46,31 @@ export function SearchScreen() {
   const { token, user } = useAuth()
 
   useEffect(() => {
+    const getIPLocation = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/')
+        const data = await response.json()
+        if (data.latitude && data.longitude) {
+          setUserLocation({ lat: data.latitude, lng: data.longitude })
+        }
+      } catch {}
+    }
+
+    const saved = localStorage.getItem('manually_set_location')
+    if (saved) {
+      try {
+        const [lat, lng] = JSON.parse(saved)
+        setUserLocation({ lat, lng })
+      } catch {}
+    }
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        (err) => console.log('Location not available for distance', err)
+        () => getIPLocation()
       )
+    } else {
+      getIPLocation()
     }
   }, [])
 
@@ -96,17 +116,16 @@ export function SearchScreen() {
     fetchItems()
   }
 
-  const deg2rad = (deg: number) => deg * (Math.PI/180)
-
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): string => {
     const R = 6371
+    const deg2rad = (deg: number) => deg * (Math.PI / 180)
     const dLat = deg2rad(lat2 - lat1)
     const dLon = deg2rad(lon2 - lon1)
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
     return d < 1 ? `${(d * 1000).toFixed(0)} m` : `${d.toFixed(1)} km`;
   }
@@ -124,13 +143,13 @@ export function SearchScreen() {
   return (
     <Container>
       <Header>
-        <Title>Explore</Title>
+        <Title>Explorar</Title>
         <SearchForm onSubmit={handleSearch}>
           <SearchInputWrapper>
             <SearchIcon />
             <SearchInput 
               type="text" 
-              placeholder="Search for treasures..." 
+              placeholder="Busca tesoros..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -154,59 +173,63 @@ export function SearchScreen() {
       {(loading && items.length === 0) ? (
         <LoadingWrapper>
           <LoadingSpinner />
-          <p>Searching treasures...</p>
+          <p>Buscando tesoros...</p>
         </LoadingWrapper>
       ) : (
         <ResultsGrid>
           {filteredItems.map(item => (
-            <ResultCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
-              <ItemThumbnail>
+            <ItemCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
+              <ImageWrapper>
                 {item.main_image ? (
-                  <img src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
+                  <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
                 ) : item.photos && item.photos.length > 0 ? (
-                  <img src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} alt={item.title} />
+                  <ItemImage src={getImageUrl(item.photos[0].image_url, API_BASE_URL)} alt={item.title} />
                 ) : (
-                  <PlaceholderIcon>📦</PlaceholderIcon>
+                  <PlaceholderImage>📦</PlaceholderImage>
                 )}
                 <TagGroup>
                   <CategoryBadge>{item.category}</CategoryBadge>
-                  {item.user_id === user?.id && <OwnerBadge>Mi Reporte</OwnerBadge>}
+                  {item.user_id === user?.id && <OwnerBadge>Mío</OwnerBadge>}
                   {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
                   {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
                 </TagGroup>
-              </ItemThumbnail>
+              </ImageWrapper>
+
               <ItemContent>
                 <ItemHeader>
-                  <ItemTitle>{item.title}</ItemTitle>
-                  <ItemCountdown createdAt={item.created_at} />
+                  <DistanceBadge>
+                    {item.latitude != null && item.longitude != null
+                      ? `📍 ${userLocation ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude) : '...'}`
+                      : '📍 Ubicación no disponible'}
+                  </DistanceBadge>
+                  <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
                 </ItemHeader>
-                <ItemMeta>
-                  {userLocation && item.latitude != null && item.longitude != null && (
-                    <Distance>
-                      {calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)}
-                    </Distance>
-                  )}
-                </ItemMeta>
-                <ItemDesc>{item.description || 'Sin descripción'}</ItemDesc>
-
+                <ItemTitle>{item.title}</ItemTitle>
+                <ItemDescription>{item.description || 'Sin descripción'}</ItemDescription>
                 <ClaimButton 
-                  disabled={!!item.claimed_by}
+                  disabled={!!item.claimed_by || item.user_id === user?.id}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (!item.claimed_by) {
+                    if (!item.claimed_by && item.user_id !== user?.id) {
                       navigate(`/claimed/${item.id}`);
                     }
                   }}
                 >
-                  {item.claimed_by ? 'Reclamado' : 'Reclamar'}
+                  {item.user_id === user?.id 
+                    ? 'Tu reporte' 
+                    : item.claimed_by === user?.id 
+                      ? 'Ya lo reclamaste' 
+                      : item.claimed_by 
+                        ? 'Ya reclamado' 
+                        : '¡Lo quiero!'}
                 </ClaimButton>
               </ItemContent>
-            </ResultCard>
+            </ItemCard>
           ))}
           {filteredItems.length === 0 && (
             <EmptyResults>
               <EmptyIcon>🔍</EmptyIcon>
-              <p>No results found for "{searchQuery}"</p>
+              <p>No se encontraron resultados para "{searchQuery}"</p>
             </EmptyResults>
           )}
         </ResultsGrid>

@@ -132,158 +132,116 @@ export const ResultsGrid = styled.div`
     }
 `
 
-export const ResultCard = styled.div`
-    display: flex;
-    flex-direction: column;
+export const ItemCard = styled.div`
     background: ${COLORS.allWhite};
-    border-radius: 20px;
+    border-radius: ${SPACING.lg};
     overflow: hidden;
-    box-shadow: 0 4px 15px ${COLORS.shadow};
+    box-shadow: 0 4px 20px ${COLORS.shadow};
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px ${COLORS.shadow};
-    }
-
-    &:active {
-        transform: scale(0.98);
+        transform: translateY(-6px);
     }
 `
 
-export const ItemThumbnail = styled.div`
+export const ImageWrapper = styled.div`
     width: 100%;
-    padding-top: 75%;
+    aspect-ratio: 1;
     position: relative;
     background: ${COLORS.white};
-    overflow: hidden;
-    
-    img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
 `
 
-export const CategoryBadge = styled.span`
-    padding: 4px 8px;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 700;
-    color: ${COLORS.black};
-    background: ${COLORS.allWhite};
-    box-shadow: 0 2px 8px ${COLORS.shadow};
-    text-transform: uppercase;
+export const ItemImage = styled.img`
+    ${size('100%','100%')}
+    object-fit: cover;
+`
+
+export const PlaceholderImage = styled.div`
+    ${flex('column','center','center')}
+    ${size('100%','100%')}
+    font-size: 40px;
 `
 
 export const TagGroup = styled.div`
     ${flex('column','flex-start','center')}
     position: absolute;
-    top: 8px;
-    left: 8px;
-    gap: 4px;
+    top: ${SPACING.sm};
+    left: ${SPACING.sm};
+    gap: 6px;
 `
 
-export const ClaimStatusBadge = styled.span<{ $others?: boolean }>`
-    background: ${props => props.$others ? COLORS.danger : COLORS.black};
-    color: ${COLORS.allWhite};
-    padding: 4px 8px;
-    border-radius: 8px;
+export const CategoryBadge = styled.span`
+    background: ${COLORS.allWhite};
+    padding: 4px 10px;
+    border-radius: 10px;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    box-shadow: 0 2px 8px ${COLORS.shadow};
+    color: ${COLORS.black};
+    border: 1px solid ${COLORS.allWhite};
 `
 
 export const OwnerBadge = styled.span`
-    padding: 4px 8px;
-    border-radius: 8px;
+    background: ${COLORS.advertencia};
+    color: ${COLORS.allWhite};
+    padding: 4px 10px;
+    border-radius: 10px;
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    color: ${COLORS.allWhite};
-    background: ${COLORS.exito};
     box-shadow: 0 2px 8px ${COLORS.shadow};
 `
 
-export const PlaceholderIcon = styled.div`
-    ${flex('column','center','center')}
-    ${size('100%','100%')}
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 40px;
+export const ClaimStatusBadge = styled.span<{ $others?: boolean }>`
+    background: ${props => props.$others ? COLORS.exito : COLORS.black};
+    color: ${COLORS.allWhite};
+    padding: ${SPACING.xs} ${SPACING.sm};
+    border-radius: 35px;
+    font-size: 10px;
+    font-weight: 700;
 `
 
 export const ItemContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-    padding: 14px;
+    padding: ${SPACING.md};
 `
 
 export const ItemHeader = styled.div`
-    ${flex('column','flex-start','space-between')}
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
-    min-width: 0;
-    margin-bottom: 6px;
+    margin-bottom: ${SPACING.md};
+`
+
+export const DistanceBadge = styled.span`
+    font-size: 13px;
+    color: ${COLORS.greyDark};
+    font-weight: 500;
+    margin-bottom: 4px;
 `
 
 export const ItemTitle = styled.h3`
-    min-width: 0;
+    flex: 1;
+    padding-top: ${SPACING.md};
+    overflow: hidden;
     font-size: 16px;
     font-weight: 600;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
-    flex: 1;
-    color: ${COLORS.black};
-
-    @media (max-width: 480px) {
-        font-size: 14px;
-    }
-`
-
-export const Distance = styled.span`
-    font-size: 11px;
-    color: ${COLORS.greyDark};
-    font-weight: 600;
-    background: ${COLORS.grey};
-    padding: 4px 8px;
-    border-radius: 8px;
     white-space: nowrap;
+    border-top: 1px solid ${COLORS.grey};
+    color: ${COLORS.black};
 `
 
-export const ItemMeta = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-`
-
-export const ItemDesc = styled.p`
-    font-size: 13px;
-    color: ${COLORS.greyDark};
-    margin: 0 0 14px 0;
+export const ItemDescription = styled.p`
     display: -webkit-box;
+    font-size: 13px;
+    color: ${COLORS.primaryDark};
+    margin-bottom: ${SPACING.md};
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.4;
-    flex: 1;
-
-    @media (max-width: 480px) {
-        font-size: 12px;
-        margin-bottom: 10px;
-        -webkit-line-clamp: 1;
-    }
 `
 
 export const ClaimButton = styled.button`
@@ -291,23 +249,21 @@ export const ClaimButton = styled.button`
     background: ${COLORS.black};
     color: ${COLORS.allWhite};
     border: none;
-    padding: 10px;
-    border-radius: 12px;
-    font-size: 13px;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     
-    &:hover {
-        background: #000;
-    }
-    
-    &:active {
-        transform: scale(0.98);
+    &:hover:not(:disabled) {
+        transform: scale(1.01);
+        opacity: 0.9;
     }
 
     &:disabled {
         background: ${COLORS.grey};
+        color: ${COLORS.greyDark};
         cursor: not-allowed;
     }
 `
