@@ -66,16 +66,15 @@ app.use((err, req, res, next) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
   
-  // Tarea de limpieza: Borrar items de más de 24h cada hora
+  // Tarea de limpieza: Borrar items expirados cada hora
   setInterval(async () => {
     try {
       console.log('Ejecutando limpieza de items expirados...');
       const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       
-      // Obtener items que van a ser borrados
+      // Obtener TODOS los items expirados (reclamados o no)
       const itemsToDelete = await Item.find({ 
-        created_at: { $lt: twentyFourHoursAgo },
-        claimed_by: { $exists: false }
+        created_at: { $lt: twentyFourHoursAgo }
       }).select('_id');
       
       // Para cada item, obtener sus fotos y borrarlas de Cloudinary
@@ -97,8 +96,7 @@ app.listen(PORT, '0.0.0.0', () => {
       
       // Borrar los items
       const result = await Item.deleteMany({ 
-        created_at: { $lt: twentyFourHoursAgo },
-        claimed_by: { $exists: false }
+        created_at: { $lt: twentyFourHoursAgo }
       });
       
       console.log(`Limpieza completada. Items eliminados: ${result.deletedCount}`);
