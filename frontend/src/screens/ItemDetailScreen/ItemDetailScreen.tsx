@@ -17,12 +17,14 @@ import {
   Container,
   ContentCard,
   Description,
+  DistanceBadge,
   ErrorState,
   Header,
   ImageSection,
   Loading,
   MainImage,
   MapWrapper,
+  MetaRow,
   OwnerBadge,
   PlaceholderImage,
   SectionTitle,
@@ -39,14 +41,36 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 })
 
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): string => {
+  const R = 6371
+  const deg2rad = (deg: number) => deg * (Math.PI / 180)
+  const dLat = deg2rad(lat2 - lat1)
+  const dLon = deg2rad(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d < 1 ? `${(d * 1000).toFixed(0)} m` : `${d.toFixed(1)} km`;
+}
+
 export function ItemDetailScreen() {
   const { id } = useParams()
   const [item, setItem] = useState<ItemProps | null>(null)
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const navigate = useNavigate()
 
   const { user, token } = useAuth()
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => null
+    )
+  }, [])
 
   useEffect(() => {
     const fetchItemDetail = async () => {
@@ -95,6 +119,10 @@ export function ItemDetailScreen() {
 
   if (!item) return <ErrorState>Tesoro no encontrado.</ErrorState>;
 
+  const distance = userLocation && item.latitude != null && item.longitude != null
+    ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)
+    : null
+
   return (
     <Container>
       <BackButton onClick={() => navigate(-1)}>← Volver</BackButton>
@@ -112,6 +140,7 @@ export function ItemDetailScreen() {
       <ContentCard>
         <BadgeRow>
           <CategoryBadge>{item.category}</CategoryBadge>
+          {distance && <DistanceBadge>📍 {distance}</DistanceBadge>}
           {item.user_id === user?.id && <OwnerBadge>Mi Reporte</OwnerBadge>}
           {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
           {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
@@ -121,7 +150,9 @@ export function ItemDetailScreen() {
           <Title>{item.title}</Title>
         </Header>
 
-        <ItemCountdown createdAt={item.created_at} align="flex-start" />
+        <MetaRow>
+          <ItemCountdown createdAt={item.created_at} align="flex-start" />
+        </MetaRow>
 
         <Description>{item.description || 'Sin descripción adicional.'}</Description>
         

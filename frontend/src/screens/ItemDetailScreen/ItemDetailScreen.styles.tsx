@@ -10,8 +10,8 @@ export const Container = styled.div`
 
 export const BackButton = styled.button`
     position: fixed;
-    top: env(safe-area-inset-top, 20px);
-    left: 20px;
+    top: 20px;
+    right: 20px;
     z-index: 100;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(20px);
@@ -117,9 +117,25 @@ export const ContentCard = styled.div`
     border-radius: 24px 24px 0 0;
     padding: 32px 24px;
     box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.08);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+`
+
+export const MetaRow = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+`
+
+export const DistanceBadge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: ${COLORS.black};
+    background: ${COLORS.white};
 `
 
 export const Header = styled.div`

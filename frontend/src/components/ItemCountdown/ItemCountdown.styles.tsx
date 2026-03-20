@@ -3,9 +3,9 @@ import { COLORS } from '../../constants'
 
 export const Wrapper = styled.div<{ $align: string }>`
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: ${props => props.$align};
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 20px;
 `
 
@@ -13,6 +13,7 @@ export const PostingLabel = styled.span`
     font-size: 13px;
     color: ${COLORS.greyDark};
     font-weight: 500;
+    white-space: nowrap;
 `
 
 export const Container = styled.div<{ $isUrgent: boolean }>`
