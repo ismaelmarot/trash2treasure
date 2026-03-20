@@ -1,32 +1,32 @@
 import styled from 'styled-components'
-import { flex } from '../../mixins'
-import { COLORS, SPACING } from '../../constants'
+import { COLORS } from '../../constants'
 
 export const Wrapper = styled.div<{ $align: string }>`
-    ${flex('column','center','center')}
-    width: 100%;
-    gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     align-items: ${props => props.$align};
+    margin-bottom: 20px;
 `
 
 export const PostingLabel = styled.span`
-    font-size: 12px;
-    color: ${COLORS.primaryDark};
+    font-size: 13px;
+    color: ${COLORS.greyDark};
     font-weight: 500;
 `
 
 export const Container = styled.div<{ $isUrgent: boolean }>`
-    ${flex('row','center','center')}
-    gap: ${SPACING.sm};
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     transition: all 0.3s ease;
-    border: px solid ${props => props.$isUrgent ? COLORS.black : 'transparent'};
-    color: ${props => props.$isUrgent ? COLORS.danger : COLORS.info};
-    background: ${props => props.$isUrgent ? COLORS.black : COLORS.infoBg};
+    color: ${props => props.$isUrgent ? COLORS.danger : COLORS.black};
+    background: ${props => props.$isUrgent ? COLORS.dangerBg : COLORS.white};
 `
 
 export const Time = styled.span`

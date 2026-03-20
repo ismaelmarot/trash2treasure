@@ -10,6 +10,7 @@ import { ConfirmationModal, ItemCountdown } from '@/components'
 import { getImageUrl, normalizeItem } from '@/utils/imageUtils'
 import {
   BackButton,
+  BadgeRow,
   CategoryBadge,
   ClaimButton,
   ClaimStatusBadge,
@@ -25,7 +26,6 @@ import {
   OwnerBadge,
   PlaceholderImage,
   SectionTitle,
-  TagGroup,
   Title,
   UnclaimButton
 } from './ItemDetailScreen.styles'
@@ -107,22 +107,22 @@ export function ItemDetailScreen() {
         ) : (
           <PlaceholderImage>📦</PlaceholderImage>
         )}
-        <TagGroup>
-          <CategoryBadge>{item.category}</CategoryBadge>
-          <ItemCountdown createdAt={item.created_at} align="flex-start" />
-          {item.user_id === user?.id && <OwnerBadge>Mi Reporte</OwnerBadge>}
-          {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
-          {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
-        </TagGroup>
-
       </ImageSection>
 
       <ContentCard>
+        <BadgeRow>
+          <CategoryBadge>{item.category}</CategoryBadge>
+          {item.user_id === user?.id && <OwnerBadge>Mi Reporte</OwnerBadge>}
+          {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
+          {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
+        </BadgeRow>
+
         <Header>
           <Title>{item.title}</Title>
         </Header>
 
-        
+        <ItemCountdown createdAt={item.created_at} align="flex-start" />
+
         <Description>{item.description || 'Sin descripción adicional.'}</Description>
         
         <SectionTitle>Ubicación</SectionTitle>
