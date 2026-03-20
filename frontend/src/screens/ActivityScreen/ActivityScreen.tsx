@@ -220,9 +220,11 @@ export function ActivityScreen() {
 
               <ItemContent>
                 <ItemHeader>
-                  {userLocation && item.latitude != null && item.longitude != null && (
-                    <DistanceBadge>📍 {calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)}</DistanceBadge>
-                  )}
+                  <DistanceBadge>
+                    {item.latitude != null && item.longitude != null
+                      ? `📍 ${userLocation ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude) : '...'}`
+                      : '📍 Ubicación no disponible'}
+                  </DistanceBadge>
                   <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
                 </ItemHeader>
                 <ItemTitle>{item.title}</ItemTitle>

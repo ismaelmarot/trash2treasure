@@ -251,7 +251,8 @@ export const UnclaimButton = styled.button`
 `
 
 export const DistanceBadge = styled.span`
-    font-size: 12px;
+    font-size: 13px;
     color: ${COLORS.greyDark};
     font-weight: 500;
+    margin-bottom: 4px;
 `
