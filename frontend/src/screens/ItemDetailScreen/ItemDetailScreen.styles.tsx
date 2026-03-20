@@ -72,6 +72,9 @@ export const MetaInfo = styled.div`
 `
 
 export const CategoryBadge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
@@ -89,6 +92,9 @@ export const TagGroup = styled.div`
 `
 
 export const ClaimStatusBadge = styled.span<{ $others?: boolean }>`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
@@ -100,6 +106,9 @@ export const ClaimStatusBadge = styled.span<{ $others?: boolean }>`
 `
 
 export const OwnerBadge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
