@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 
 export function PWASetup() {
   useEffect(() => {
-    // Agregar meta tags para iOS
+    // Meta tag para el color del tema
     const metaThemeColor = document.createElement('meta');
     metaThemeColor.name = 'theme-color';
     metaThemeColor.content = '#0071e3';
     document.head.appendChild(metaThemeColor);
 
+    // Meta tags obligatorios para iOS
     const metaAppleMobileWebAppCapable = document.createElement('meta');
     metaAppleMobileWebAppCapable.name = 'apple-mobile-web-app-capable';
     metaAppleMobileWebAppCapable.content = 'yes';
@@ -15,7 +16,7 @@ export function PWASetup() {
 
     const metaAppleStatusBarStyle = document.createElement('meta');
     metaAppleStatusBarStyle.name = 'apple-mobile-web-app-status-bar-style';
-    metaAppleStatusBarStyle.content = 'black-translucent';
+    metaAppleStatusBarStyle.content = 'default';
     document.head.appendChild(metaAppleStatusBarStyle);
 
     const metaAppleMobileWebAppTitle = document.createElement('meta');
@@ -23,26 +24,19 @@ export function PWASetup() {
     metaAppleMobileWebAppTitle.content = 'Trash2Treasure';
     document.head.appendChild(metaAppleMobileWebAppTitle);
 
-    // Agregar enlace para el icono de la pantalla de inicio de iOS
+    // Enlace para el icono de la pantalla de inicio de iOS
     const linkAppleTouchIcon = document.createElement('link');
     linkAppleTouchIcon.rel = 'apple-touch-icon';
-    linkAppleTouchIcon.href = '/apple-touch-icon.png';
+    linkAppleTouchIcon.href = '/icon-192.png';
     document.head.appendChild(linkAppleTouchIcon);
 
-    // Agregar enlace para el manifiesto
+    // Enlace para el manifiesto (PWA)
     const linkManifest = document.createElement('link');
     linkManifest.rel = 'manifest';
     linkManifest.href = '/manifest.json';
     document.head.appendChild(linkManifest);
 
-    // Agregar enlace para el icono SVG (opcional, para mejores bordes en iOS)
-    const linkMaskIcon = document.createElement('link');
-    linkMaskIcon.rel = 'mask-icon';
-    linkMaskIcon.href = '/icon.svg';
-    (linkMaskIcon as any).color = '#0071e3';
-    document.head.appendChild(linkMaskIcon);
-
-    // Intentar registrar el Service Worker
+    // Registro del Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
@@ -56,14 +50,13 @@ export function PWASetup() {
     }
 
     return () => {
-      // Cleanup en caso de desmontaje
+      // Cleanup
       document.head.removeChild(metaThemeColor);
       document.head.removeChild(metaAppleMobileWebAppCapable);
       document.head.removeChild(metaAppleStatusBarStyle);
       document.head.removeChild(metaAppleMobileWebAppTitle);
       document.head.removeChild(linkAppleTouchIcon);
       document.head.removeChild(linkManifest);
-      document.head.removeChild(linkMaskIcon);
     };
   }, []);
 
