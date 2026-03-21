@@ -8,6 +8,21 @@ export const Container = styled.div`
     position: relative;
     background: ${COLORS.white};
     overflow: hidden;
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 34px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px ${COLORS.shadow};
+    }
+
+    .leaflet-popup-content {
+        margin: 0;
+        width: auto !important;
+    }
+
+    .leaflet-popup-tip {
+        display: none;
+    }
 `
 
 export const SidebarContainer = styled.div<{ $isOpen: boolean }>`
@@ -242,7 +257,6 @@ export const ItemDescription = styled.p`
 export const ItemMeta = styled.div`
     display: flex;
     align-items: center;
-    gap: 6px;
     font-size: 13px;
     color: ${COLORS.greyDark};
     margin-top: 4px;
@@ -562,12 +576,14 @@ export const PopupContent = styled.div`
     min-width: 200px;
     max-width: 240px;
     padding: 4px;
+    border-radius: 34px;
+    overflow: hidden;
 `
 
 export const PopupImage = styled.img`
     ${size('100%','120px')}
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 30px;
     margin-bottom: 8px;
 `
 
@@ -603,7 +619,7 @@ export const ViewButton = styled.button`
     width: 100%;
     padding: 10px;
     border: none;
-    border-radius: 10px;
+    border-radius: 34px;
     font-weight: 600;
     color: ${COLORS.allWhite};
     background: ${COLORS.black};
