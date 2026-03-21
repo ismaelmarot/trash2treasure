@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks'
+import { API_BASE_URL } from '@/constants'
 import {
   Avatar,
   AvatarImage,
@@ -19,6 +21,13 @@ import {
   Section,
   SectionTitle,
   ExitText,
+  PointsCard,
+  PointsLabel,
+  PointsValue,
+  StatsRow,
+  StatItem,
+  StatValue,
+  StatLabel
 } from './ProfileScreen.style'
 
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
@@ -32,8 +41,20 @@ function getAvatarColor(name: string): string {
 }
 
 export function ProfileScreen() {
-  const { user, logout: authLogout, isAuthenticated } = useAuth()
+  const { user, token, logout: authLogout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const [pointsData, setPointsData] = useState<any>(null)
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      fetch(`${API_BASE_URL}/points/my-points`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => setPointsData(data))
+        .catch(err => console.error('Error fetching points:', err))
+    }
+  }, [isAuthenticated, token])
 
   const logout = () => {
     authLogout();
@@ -70,6 +91,27 @@ export function ProfileScreen() {
           Editar Perfil
         </EditProfileButton>
       </Card>
+
+      <Section>
+        <SectionTitle>🌿 Eco Points</SectionTitle>
+        <PointsCard onClick={() => navigate('/points')}>
+          <PointsLabel>Total Eco Points</PointsLabel>
+          <PointsValue>{pointsData?.points?.total_points || 0}</PointsValue>
+          <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
+            {pointsData?.division || 'Curioso Verde'}
+          </div>
+        </PointsCard>
+        <StatsRow>
+          <StatItem>
+            <StatValue>{pointsData?.points?.total_reports || 0}</StatValue>
+            <StatLabel>Reportes</StatLabel>
+          </StatItem>
+          <StatItem>
+            <StatValue>{pointsData?.points?.total_collected || 0}</StatValue>
+            <StatLabel>Recolectados</StatLabel>
+          </StatItem>
+        </StatsRow>
+      </Section>
 
       <Section>
         <SectionTitle>Actividad</SectionTitle>

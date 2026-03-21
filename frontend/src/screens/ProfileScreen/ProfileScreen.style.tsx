@@ -146,3 +146,53 @@ export const GoOut = styled(ICONS.goOut)`
     font-size: 1.5rem;
     color: ${COLORS.danger};
 `
+
+export const PointsCard = styled.div`
+    background: linear-gradient(135deg, #0071e3 0%, #00c6ff 100%);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 113, 227, 0.3);
+    }
+`
+
+export const PointsLabel = styled.div`
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+`
+
+export const PointsValue = styled.div`
+    font-size: 32px;
+    font-weight: 700;
+`
+
+export const StatsRow = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+`
+
+export const StatItem = styled.div`
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+`
+
+export const StatValue = styled.div`
+    font-size: 20px;
+    font-weight: 700;
+    color: ${COLORS.black};
+`
+
+export const StatLabel = styled.div`
+    font-size: 12px;
+    color: ${COLORS.greyDark};
+`
