@@ -150,6 +150,25 @@ export function ItemDetailScreen() {
     ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)
     : null
 
+  // Calcular distancia en metros para verificar si está a menos de 50m
+  const distanceInMeters = userLocation && item.latitude != null && item.longitude != null
+    ? (() => {
+        const R = 6371000 // Radio de la Tierra en metros
+        const deg2rad = (deg: number) => deg * (Math.PI / 180)
+        const dLat = deg2rad(item.latitude - userLocation.lat)
+        const dLon = deg2rad(item.longitude - userLocation.lng)
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(deg2rad(userLocation.lat)) * Math.cos(deg2rad(item.latitude)) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      })()
+    : null
+
+  const isWithinRange = distanceInMeters !== null && distanceInMeters <= 50
+  const canClaim = !item.claimed_by && item.user_id !== user?.id && isWithinRange
+
   return (
     <Container>
       <BackButton onClick={() => navigate(-1)}>← Volver</BackButton>
@@ -225,7 +244,7 @@ export function ItemDetailScreen() {
 
         
         <ClaimButton 
-          disabled={!!item.claimed_by || item.user_id === user?.id}
+          disabled={!canClaim && !item.claimed_by && item.user_id !== user?.id}
           onClick={() => navigate(`/claimed/${item.id}`)}
         >
           {item.user_id === user?.id 
@@ -234,7 +253,9 @@ export function ItemDetailScreen() {
               ? 'Ya lo reclamaste' 
               : item.claimed_by 
                 ? 'Ya reclamado' 
-                : '¡Lo quiero!'}
+                : !isWithinRange && distanceInMeters !== null
+                  ? `Acércate (${Math.round(distanceInMeters)}m)`
+                  : '¡Lo quiero!'}
         </ClaimButton>
       </ContentCard>
 
