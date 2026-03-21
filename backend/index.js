@@ -42,10 +42,12 @@ app.get('/', (req, res) => {
 const usersRoutes = require('./routes/users.routes');
 const itemsRoutes = require('./routes/items.routes');
 const ratingsRoutes = require('./routes/ratings.routes');
+const pointsRoutes = require('./routes/points.routes');
 
 app.use('/api/users', usersRoutes);
 app.use('/api/items', itemsRoutes);
 app.use('/api/ratings', ratingsRoutes);
+app.use('/api/points', pointsRoutes);
 
 // Servir archivos estáticos (fotos de items)
 const path = require('path');

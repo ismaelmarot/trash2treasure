@@ -46,7 +46,6 @@ export const BottomNav = () => {
             ) : (
               <Icon size={24} />
             )}
-            <span>{item.label}</span>
           </BottomNavItem>
         )
       })}
