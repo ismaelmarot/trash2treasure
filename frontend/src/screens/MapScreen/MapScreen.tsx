@@ -462,7 +462,7 @@ export function MapScreen() {
           <TitleRow>
             <SidebarTitle>Explorar Tesoros</SidebarTitle>
             <ToggleButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-              {isSidebarOpen ? <ICONS.arrowRight /> : <ICONS.bars />}
+              {isSidebarOpen ? <ICONS.closeIcon /> : <ICONS.bars />}
             </ToggleButton>
           </TitleRow>
 
