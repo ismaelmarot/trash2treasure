@@ -211,7 +211,7 @@ export const ClaimButton = styled.button`
     color: ${COLORS.allWhite};
     border: none;
     padding: 18px;
-    border-radius: 14px;
+    border-radius: 34px;
     font-size: 17px;
     font-weight: 600;
     cursor: pointer;
