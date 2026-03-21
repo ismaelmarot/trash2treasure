@@ -82,7 +82,7 @@ export const Label = styled.label<{ required?: boolean }>`
 `;
 
 export const Input = styled.input`
-    padding: 14px 16px;
+    padding: 14px 0px 14px 30px;
     border-radius: 35px;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;

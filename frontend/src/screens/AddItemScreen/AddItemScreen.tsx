@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { savePendingItem, isOnline, fileToBase64 } from '@/services/offlineDB'
+import { OfflineModal } from '@/components/OfflineModal'
 import {
   CameraControls,
   CameraModal,
@@ -60,6 +61,7 @@ export function AddItemScreen() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [showOfflineModal, setShowOfflineModal] = useState(false)
   
   // Ubicación por defecto (Buenos Aires o similar)
   const [location, setLocation] = useState<{ lat: number; lng: number }>({
@@ -225,32 +227,46 @@ export function AddItemScreen() {
       return
     }
 
-    // Si no hay conexión, guardar localmente
+    // Si no hay conexión, mostrar modal
     if (!isOnline()) {
-      try {
-        const imageBase64 = await fileToBase64(image)
-        await savePendingItem({
-          title,
-          description,
-          category,
-          latitude: location.lat,
-          longitude: location.lng,
-          imageBase64
-        })
-
-        setSuccess(true)
-        setTimeout(() => {
-          navigate('/activity')
-        }, 2500)
-      } catch (err: any) {
-        setError('Error al guardar offline: ' + err.message)
-      } finally {
-        setLoading(false)
-      }
+      setLoading(false)
+      setShowOfflineModal(true)
       return
     }
 
     // Conexión disponible, guardar en servidor
+    await saveToServer()
+  }
+
+  const saveOffline = async () => {
+    setShowOfflineModal(false)
+    setLoading(true)
+    
+    try {
+      const imageBase64 = await fileToBase64(image!)
+      await savePendingItem({
+        title,
+        description,
+        category,
+        latitude: location.lat,
+        longitude: location.lng,
+        imageBase64
+      })
+
+      setSuccess(true)
+      setTimeout(() => {
+        navigate('/activity')
+      }, 2500)
+    } catch (err: any) {
+      setError('Error al guardar offline: ' + err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const saveToServer = async () => {
+    setLoading(true)
+    
     try {
       const itemResponse = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
@@ -469,6 +485,12 @@ export function AddItemScreen() {
           </CameraViewWrapper>
         </CameraModal>
       )}
+
+      <OfflineModal 
+        isOpen={showOfflineModal}
+        onConfirm={saveOffline}
+        onCancel={() => setShowOfflineModal(false)}
+      />
     </Container>
   )
 }
