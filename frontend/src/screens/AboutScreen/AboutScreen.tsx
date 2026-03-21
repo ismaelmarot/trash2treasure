@@ -96,6 +96,9 @@ export function AboutScreen() {
             <ExternalLink href='https://github.com/ismaelmarot' target='_blank' rel="noopener noreferrer">
               <ICONS.gitHub /> Perfil de GitHub
             </ExternalLink>
+            <ExternalLink href='https://www.linkedin.com/in/ismael-marot/' target='_blank' rel="noopener noreferrer">
+              🔗 LinkedIn
+            </ExternalLink>
             <ExternalLink href='#' target='_blank' rel="noopener noreferrer">
               <ICONS.externalLink /> Portfolio Profesional
             </ExternalLink>
