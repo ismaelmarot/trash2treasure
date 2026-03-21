@@ -486,7 +486,18 @@ export function PointsScreen() {
       </TabContainer>
       <TabContent>
         {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => (
-          <AchievementCard key={challenge.id} $unlocked={completedChallenges.includes(challenge.id)}>
+          <AchievementCard 
+            key={challenge.id} 
+            $unlocked={completedChallenges.includes(challenge.id)}
+            onClick={() => openAchievementModal({
+              id: challenge.id,
+              name: challenge.name,
+              description: challenge.description,
+              icon: challenge.icon,
+              points: challenge.reward,
+              unlocked: completedChallenges.includes(challenge.id)
+            })}
+          >
             <AchievementIcon>{challenge.icon}</AchievementIcon>
             <AchievementName>{challenge.name}</AchievementName>
             <AchievementDesc>{challenge.description}</AchievementDesc>
