@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons'
-import { FaMap, FaSearch, FaPlus, FaBell, FaUser } from 'react-icons/fa'
+import { FaMap, FaSearch, FaPlus, FaBell, FaUser, FaTrophy } from 'react-icons/fa'
 
 type NavigationItem = {
   label: string
@@ -27,6 +27,11 @@ export const navigationItems: NavigationItem[] = [
     label: 'Activity',
     path: '/activity',
     icon: FaBell,
+  },
+  {
+    label: 'Points',
+    path: '/points',
+    icon: FaTrophy,
   },
   {
     label: 'Profile',
