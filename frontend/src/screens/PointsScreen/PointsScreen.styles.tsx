@@ -321,7 +321,7 @@ export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
   padding: 16px;
   text-align: center;
   box-shadow: ${props => props.$unlocked ? '0 2px 12px rgba(0,0,0,0.1)' : 'none'};
-  border: 2px solid ${props => props.$unlocked ? COLORS.primaryDark : '#e0e0e0'};
+  border: 2px solid ${props => props.$unlocked ? '#34c759' : '#e0e0e0'};
   transition: all 0.2s ease;
   cursor: pointer;
   

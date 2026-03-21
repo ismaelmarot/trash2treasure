@@ -49,7 +49,6 @@ import {
   ProgressFill,
   ProgressStats,
   RankingItem,
-  RankingList,
   SectionTitle,
   StatItem,
   StatLabel,
@@ -222,11 +221,9 @@ export function PointsScreen() {
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('daily')
+  const [activeStatsTab, setActiveStatsTab] = useState('ranking')
   
   // Estados para secciones desplegables
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
-  const [isFamiliesOpen, setIsFamiliesOpen] = useState(false)
-  const [isDivisionsOpen, setIsDivisionsOpen] = useState(false)
   const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   const openAchievementModal = (achievement: any) => {
@@ -304,45 +301,48 @@ export function PointsScreen() {
         </StatsRow>
       </PointsCard>
 
-      {/* Ranking */}
-      <SectionTitle>🏆 Ranking</SectionTitle>
-      <RankingList>
-        {ranking.map((item, index) => (
-          <RankingItem 
-            key={item.user_id} 
-            $isCurrentUser={item.isCurrentUser || item.user_id === user?.id}
-            $position={index + 1}
-          >
-            <Position $top={index < 3}>
-              {item.position}
-            </Position>
-            <UserAvatar>
-              {item.profile_image ? (
-                <AvatarImage src={item.profile_image} alt={item.name} />
-              ) : (
-                <span style={{ background: getAvatarColor(item.name), width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {item.name.charAt(0).toUpperCase()}
-                </span>
-              )}
-            </UserAvatar>
-            <UserInfo>
-              <UserName>{item.name}</UserName>
-              <UserDivision>{item.division}</UserDivision>
-            </UserInfo>
-            <UserPoints>{item.total_points} pts</UserPoints>
-          </RankingItem>
-        ))}
-      </RankingList>
+      {/* Pestañas de Stats */}
+      <TabContainer>
+        <Tab $active={activeStatsTab === 'ranking'} onClick={() => setActiveStatsTab('ranking')}>Ranking</Tab>
+        <Tab $active={activeStatsTab === 'divisions'} onClick={() => setActiveStatsTab('divisions')}>Divisiones</Tab>
+        <Tab $active={activeStatsTab === 'categories'} onClick={() => setActiveStatsTab('categories')}>Categorías</Tab>
+        <Tab $active={activeStatsTab === 'families'} onClick={() => setActiveStatsTab('families')}>Familias</Tab>
+      </TabContainer>
 
-      <Divider />
+      {/* Ranking */}
+      {activeStatsTab === 'ranking' && (
+        <TabContent style={{ gridTemplateColumns: '1fr' }}>
+          {ranking.map((item, index) => (
+            <RankingItem 
+              key={item.user_id} 
+              $isCurrentUser={item.isCurrentUser || item.user_id === user?.id}
+              $position={index + 1}
+            >
+              <Position $top={index < 3}>
+                {item.position}
+              </Position>
+              <UserAvatar>
+                {item.profile_image ? (
+                  <AvatarImage src={item.profile_image} alt={item.name} />
+                ) : (
+                  <span style={{ background: getAvatarColor(item.name), width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {item.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </UserAvatar>
+              <UserInfo>
+                <UserName>{item.name}</UserName>
+                <UserDivision>{item.division}</UserDivision>
+              </UserInfo>
+              <UserPoints>{item.total_points} pts</UserPoints>
+            </RankingItem>
+          ))}
+        </TabContent>
+      )}
 
       {/* Divisiones */}
-      <CollapsibleSection>
-        <CollapsibleHeader onClick={() => setIsDivisionsOpen(!isDivisionsOpen)}>
-          <CollapsibleTitle>🏅 Divisiones</CollapsibleTitle>
-          <CollapsibleArrow $isOpen={isDivisionsOpen}>▼</CollapsibleArrow>
-        </CollapsibleHeader>
-        <CollapsibleContent $isOpen={isDivisionsOpen}>
+      {activeStatsTab === 'divisions' && (
+        <TabContent style={{ gridTemplateColumns: '1fr' }}>
           {DIVISIONS.map((level) => (
             <div key={level.level}>
               <DivisionLevel>{level.level}</DivisionLevel>
@@ -384,19 +384,15 @@ export function PointsScreen() {
               </DivisionGrid>
             </div>
           ))}
-        </CollapsibleContent>
-      </CollapsibleSection>
+        </TabContent>
+      )}
 
-      {/* Puntos por Categoría (desplegable) */}
-      <CollapsibleSection>
-        <CollapsibleHeader onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
-          <CollapsibleTitle>📊 Puntos por Categoría</CollapsibleTitle>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>{totalCategoryPoints} pts</span>
-            <CollapsibleArrow $isOpen={isCategoriesOpen}>▼</CollapsibleArrow>
+      {/* Puntos por Categoría */}
+      {activeStatsTab === 'categories' && (
+        <TabContent style={{ gridTemplateColumns: '1fr' }}>
+          <div style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>
+            Total: {totalCategoryPoints} pts
           </div>
-        </CollapsibleHeader>
-        <CollapsibleContent $isOpen={isCategoriesOpen}>
           {Object.entries(points.category_points || {}).length > 0 ? (
             Object.entries(points.category_points || {}).map(([category, catPoints]) => (
               <BarChartRow key={category}>
@@ -419,19 +415,15 @@ export function PointsScreen() {
               Reporta o recolecta items para ganar puntos
             </p>
           )}
-        </CollapsibleContent>
-      </CollapsibleSection>
+        </TabContent>
+      )}
 
-      {/* Actividad por Familia (desplegable) */}
-      <CollapsibleSection>
-        <CollapsibleHeader onClick={() => setIsFamiliesOpen(!isFamiliesOpen)}>
-          <CollapsibleTitle>🏠 Actividad por Familia</CollapsibleTitle>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>{totalFamilyReports} items</span>
-            <CollapsibleArrow $isOpen={isFamiliesOpen}>▼</CollapsibleArrow>
+      {/* Actividad por Familia */}
+      {activeStatsTab === 'families' && (
+        <TabContent style={{ gridTemplateColumns: '1fr' }}>
+          <div style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>
+            Total: {totalFamilyReports} items
           </div>
-        </CollapsibleHeader>
-        <CollapsibleContent $isOpen={isFamiliesOpen}>
           {Object.entries(points.family_reports || {}).map(([family, count]) => (
             <BarChartRow key={family}>
               <BarHeader>
@@ -448,8 +440,8 @@ export function PointsScreen() {
               </BarContainer>
             </BarChartRow>
           ))}
-        </CollapsibleContent>
-      </CollapsibleSection>
+        </TabContent>
+      )}
 
       <Divider />
 
