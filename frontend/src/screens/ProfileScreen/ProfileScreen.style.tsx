@@ -148,7 +148,7 @@ export const GoOut = styled(ICONS.goOut)`
 `
 
 export const PointsCard = styled.div`
-    background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+    background: ${COLORS.primaryDark};
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 16px;
@@ -158,7 +158,7 @@ export const PointsCard = styled.div`
     
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 20px rgba(52, 199, 89, 0.3);
+        box-shadow: 0 4px 20px rgba(66, 165, 159, 0.3);
     }
 `
 
