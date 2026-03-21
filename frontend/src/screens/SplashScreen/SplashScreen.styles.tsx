@@ -56,14 +56,12 @@ export const AppName = styled.h2`
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: ${slideUp} 0.8s ease 0.2s both;
+  animation: ${slideUp} 0.8s ease 0.2s both, shimmer 4s ease-in-out infinite;
   
   @keyframes shimmer {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
-  
-  animation: ${slideUp} 0.8s ease 0.2s both, shimmer 2s ease-in-out infinite;
 `
 
 export const AppVersion = styled.span`
@@ -79,27 +77,14 @@ export const USP = styled.p`
   max-width: 300px;
   font-size: 19px;
   font-weight: 500;
-  color: #999;
   line-height: 1.4;
   text-align: center;
-  animation: ${slideUp} 0.8s ease 0.6s both;
-  position: relative;
-  display: inline-block;
+  animation: ${slideUp} 0.8s ease 0.6s both, colorChange 2s ease 1.2s forwards;
+  color: #999;
   
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: ${COLORS.black};
-    animation: underline 1.5s ease 1.2s forwards;
-  }
-  
-  @keyframes underline {
-    0% { width: 0; }
-    100% { width: 100%; }
+  @keyframes colorChange {
+    0% { color: #999; }
+    100% { color: ${COLORS.black}; }
   }
 `
 
