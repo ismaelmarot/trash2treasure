@@ -30,6 +30,7 @@ export const Container = styled.div`
   color: ${COLORS.black};
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   animation: ${fadeIn} 0.5s ease;
+  padding-top: 0;
 `
 
 export const AppIcon = styled.img`
@@ -38,12 +39,13 @@ export const AppIcon = styled.img`
   border-radius: 22px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   animation: ${scaleIn} 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-bottom: 16px;
 `
 
 export const AppName = styled.h2`
   font-size: 34px;
   font-weight: 800;
-  margin: 1rem 0 0;
+  margin: 0 0 40px 0;
   background: linear-gradient(
     90deg,
     ${COLORS.black} 0%,
