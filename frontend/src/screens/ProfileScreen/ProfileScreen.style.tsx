@@ -20,7 +20,7 @@ export const Card = styled.div`
     background: ${COLORS.allWhite};
 `
 
-export const Avatar = styled.div`
+export const Avatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>`
     ${flex('column','center','center')}
     ${size('5rem','5rem')}
     border-radius: 50%;
@@ -28,7 +28,14 @@ export const Avatar = styled.div`
     font-size: 2rem;
     font-weight: 600;
     color: ${COLORS.white};
-    background: ${COLORS.info};
+    background: ${props => props.$hasImage ? 'transparent' : props.$bgColor || COLORS.info};
+    overflow: hidden;
+`
+
+export const AvatarImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 `
 
 export const Name = styled.h2`
@@ -38,8 +45,26 @@ export const Name = styled.h2`
 `
 
 export const Email = styled.p`
-    margin-bottom: ${SPACING.xxl};
+    margin-bottom: ${SPACING.md};
     color: ${COLORS.primaryDark};
+`
+
+export const EditProfileButton = styled.button`
+    background: ${COLORS.info};
+    color: ${COLORS.allWhite};
+    border: none;
+    padding: ${SPACING.sm} ${SPACING.xl};
+    border-radius: 35px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: ${SPACING.sm};
+    
+    &:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
 `
 
 export const Section = styled.div`

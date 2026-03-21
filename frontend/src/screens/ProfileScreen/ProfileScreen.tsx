@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks'
 import {
   Avatar,
+  AvatarImage,
   Button,
   Card,
   Container,
+  EditProfileButton,
   Email,
   GoOut,
   IconChevron,
@@ -18,6 +20,16 @@ import {
   SectionTitle,
   ExitText,
 } from './ProfileScreen.style'
+
+const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
+
+function getAvatarColor(name: string): string {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
 
 export function ProfileScreen() {
   const { user, logout: authLogout, isAuthenticated } = useAuth()
@@ -40,12 +52,23 @@ export function ProfileScreen() {
     );
   }
 
+  const avatarColor = getAvatarColor(user?.name || 'U')
+
   return (
     <Container>
       <Card>
-        <Avatar>{user?.name?.[0] || 'U'}</Avatar>
+        <Avatar $hasImage={!!user?.profile_image} $bgColor={avatarColor}>
+          {user?.profile_image ? (
+            <AvatarImage src={user.profile_image} alt="Profile" />
+          ) : (
+            user?.name?.[0]?.toUpperCase() || 'U'
+          )}
+        </Avatar>
         <Name>{user?.name}</Name>
-        <Email>{user?.email}</Email> 
+        <Email>{user?.email}</Email>
+        <EditProfileButton onClick={() => navigate('/edit-profile')}>
+          Editar Perfil
+        </EditProfileButton>
       </Card>
 
       <Section>
