@@ -65,27 +65,33 @@ export const AppName = styled.h2`
 `
 
 export const AppVersion = styled.span`
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   color: ${COLORS.greyDark};
   position: absolute;
+  bottom: 60px;
+`
+
+export const Developer = styled.span`
+  font-size: 12px;
+  font-weight: 400;
+  color: #bbb;
+  position: absolute;
   bottom: 40px;
-  animation: ${slideUp} 0.8s ease 0.4s both;
 `
 
 export const USP = styled.p`
-  max-width: 300px;
-  font-size: 19px;
+  max-width: 320px;
+  font-size: 18px;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.5;
   text-align: center;
-  animation: ${slideUp} 0.8s ease 0.6s both, colorChange 2s ease 1.2s forwards;
-  color: #999;
-  
-  @keyframes colorChange {
-    0% { color: #999; }
-    100% { color: ${COLORS.black}; }
-  }
+  margin: 0;
+`
+
+export const AnimatedLetter = styled.span<{ $visible: boolean }>`
+  color: ${props => props.$visible ? COLORS.black : '#ccc'};
+  transition: color 0.1s ease;
 `
 
 export const EcoPointsBadge = styled.div`

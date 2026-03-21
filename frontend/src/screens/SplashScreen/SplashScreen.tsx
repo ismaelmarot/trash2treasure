@@ -8,17 +8,37 @@ import {
   AppName,
   AppVersion,
   Container,
+  Developer,
   EcoPointsBadge,
   LoadingDots,
   Dot,
   PointsValue,
-  USP
+  USP,
+  AnimatedLetter
 } from './SplashScreen.styles'
+
+const USP_TEXT = 'Redefiniendo el concepto de "desperdicio" en valor compartido.'
 
 export function SplashScreen() {
   const navigate = useNavigate()
   const { token, isAuthenticated } = useAuth()
   const [totalPoints, setTotalPoints] = useState(0)
+  const [visibleLetters, setVisibleLetters] = useState(0)
+
+  useEffect(() => {
+    // Animación letra a letra
+    const letterInterval = setInterval(() => {
+      setVisibleLetters(prev => {
+        if (prev >= USP_TEXT.length) {
+          clearInterval(letterInterval)
+          return prev
+        }
+        return prev + 1
+      })
+    }, 40)
+
+    return () => clearInterval(letterInterval)
+  }, [])
 
   useEffect(() => {
     const loadData = async () => {
@@ -34,14 +54,13 @@ export function SplashScreen() {
         }
       }
 
-      // Esperar 2.5 segundos para mostrar la splash screen
       setTimeout(() => {
         if (isAuthenticated) {
           navigate('/app')
         } else {
           navigate('/welcome')
         }
-      }, 2500)
+      }, 3000)
     }
 
     loadData()
@@ -51,8 +70,16 @@ export function SplashScreen() {
     <Container>
       <AppIcon src={appIcon} alt="App logo" />
       <AppName>Trash2Treasure</AppName>
-      <AppVersion>Versión 1.0.2 Stable</AppVersion>
-      <USP>Redifiniendo el concepto de "desperdicio" en valor compartido.</USP>
+      <USP>
+        {USP_TEXT.split('').map((letter, index) => (
+          <AnimatedLetter 
+            key={index} 
+            $visible={index < visibleLetters}
+          >
+            {letter}
+          </AnimatedLetter>
+        ))}
+      </USP>
 
       {isAuthenticated && (
         <EcoPointsBadge>
@@ -65,6 +92,9 @@ export function SplashScreen() {
         <Dot $delay={0.2} />
         <Dot $delay={0.4} />
       </LoadingDots>
+
+      <AppVersion>Versión 1.0.2 Stable</AppVersion>
+      <Developer>Developed by Ismael Marot</Developer>
     </Container>
   )
 }
