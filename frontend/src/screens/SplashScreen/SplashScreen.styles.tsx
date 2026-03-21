@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components'
 import { flex } from '@/mixins'
-import { COLORS, SPACING } from '@/constants'
+import { COLORS } from '@/constants'
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -69,12 +69,9 @@ export const AppName = styled.h2`
 export const AppVersion = styled.span`
   font-size: 14px;
   font-weight: 600;
-  color: ${COLORS.primaryDark};
-  background: ${COLORS.white};
-  padding: 4px 12px;
-  border-radius: ${SPACING.lg};
-  margin-bottom: ${SPACING.lg};
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: ${COLORS.greyDark};
+  position: absolute;
+  bottom: 40px;
   animation: ${slideUp} 0.8s ease 0.4s both;
 `
 
@@ -82,10 +79,28 @@ export const USP = styled.p`
   max-width: 300px;
   font-size: 19px;
   font-weight: 500;
-  color: ${COLORS.black};
+  color: #999;
   line-height: 1.4;
   text-align: center;
   animation: ${slideUp} 0.8s ease 0.6s both;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: ${COLORS.black};
+    animation: underline 1.5s ease 1.2s forwards;
+  }
+  
+  @keyframes underline {
+    0% { width: 0; }
+    100% { width: 100%; }
+  }
 `
 
 export const EcoPointsBadge = styled.div`
