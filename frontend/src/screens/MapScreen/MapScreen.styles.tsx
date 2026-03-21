@@ -245,13 +245,24 @@ export const ItemMeta = styled.div`
     gap: 6px;
     font-size: 13px;
     color: ${COLORS.greyDark};
+    margin-top: 4px;
 `
 
 export const DotDivider = styled.span`
     width: 3px;
     height: 3px;
-    background: ${COLORS.greyDark};
     border-radius: 50%;
+    background: ${COLORS.greyDark};
+`
+
+export const PublishedTime = styled.span`
+    font-size: 12px;
+    color: ${COLORS.greyDark};
+    margin-top: 2px;
+`
+
+export const CountdownWrapper = styled.div`
+    margin-top: 4px;
 `
 
 export const ViewDetailButton = styled.button`
@@ -586,10 +597,6 @@ export const PopupDescription = styled.p`
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.4;
-`
-
-export const CountdownWrapper = styled.div`
-    margin-bottom: 4px;
 `
 
 export const ViewButton = styled.button`
