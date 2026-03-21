@@ -105,13 +105,15 @@ export const EcoPointsBadge = styled.div`
   padding: 12px 24px;
   border-radius: 25px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   animation: ${slideUp} 0.8s ease 0.8s both;
+  max-width: 90%;
+  white-space: nowrap;
 `
 
 export const PointsValue = styled.span`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
 `
 

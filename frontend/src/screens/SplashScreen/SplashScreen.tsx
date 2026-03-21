@@ -98,7 +98,7 @@ export function SplashScreen() {
 
       {isAuthenticated && (
         <EcoPointsBadge>
-          🌿 <PointsValue>{totalPoints}</PointsValue> Eco Points
+          🌿 <PointsValue>{totalPoints.toLocaleString()}</PointsValue> Eco Points
         </EcoPointsBadge>
       )}
 
