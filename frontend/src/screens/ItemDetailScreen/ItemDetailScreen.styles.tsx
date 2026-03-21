@@ -191,7 +191,7 @@ export const NavigateButton = styled.button`
     color: ${COLORS.allWhite};
     border: none;
     padding: 16px;
-    border-radius: 14px;
+    border-radius: 35px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;

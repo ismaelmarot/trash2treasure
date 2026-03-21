@@ -136,6 +136,7 @@ export const BackButton = styled.button`
     cursor: pointer;
     margin-bottom: 20px;
     padding: 0;
+    border: 3px solid red;
     
     &:hover {
         text-decoration: underline;

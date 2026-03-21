@@ -59,7 +59,7 @@ import {
   VerticalDivider,
   ViewButton,
   ViewDetailButton,
-  PublishedTime
+  PublishedTime,
 } from './MapScreen.styles'
 
 const getCategoryEmoji = (category: string) => {
@@ -526,7 +526,7 @@ export function MapScreen() {
                   <ItemName>{item.title}</ItemName>
                   <ItemDescription>{item.description}</ItemDescription>
                   <ItemMeta>
-                    📍<span> {Math.round(item.distance)}m</span>
+                    <span>📍{Math.round(item.distance)}m</span>
                   </ItemMeta>
                   <PublishedTime>
                     Pub: {new Date(item.created_at).toLocaleDateString('es-ES', { 

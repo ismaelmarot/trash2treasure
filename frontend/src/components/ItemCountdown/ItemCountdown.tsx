@@ -69,7 +69,6 @@ export function ItemCountdown({
 
   return (
     <Wrapper $align={align} $direction={direction}>
-      <PostingLabel>Publicado {postingTime}</PostingLabel>
       {isExpired ? (
         <ExpiredBadge>Expirado</ExpiredBadge>
       ) : (
