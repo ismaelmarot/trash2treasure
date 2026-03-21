@@ -17,11 +17,37 @@ export const Container = styled.div`
 
     .leaflet-popup-content {
         margin: 0;
+        padding: 12px;
         width: auto !important;
     }
 
     .leaflet-popup-tip {
         display: none;
+    }
+
+    .leaflet-popup-close-button {
+        width: 28px !important;
+        height: 28px !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        border-radius: 50% !important;
+        color: white !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        top: 8px !important;
+        right: 8px !important;
+        z-index: 10 !important;
+        opacity: 1 !important;
+        transition: all 0.2s ease !important;
+        line-height: 1 !important;
+        text-indent: 0 !important;
+        
+        &:hover {
+            background: rgba(0, 0, 0, 0.9) !important;
+            transform: scale(1.1) !important;
+        }
     }
 `
 
