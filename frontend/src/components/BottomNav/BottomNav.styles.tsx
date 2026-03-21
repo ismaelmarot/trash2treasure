@@ -27,7 +27,7 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
   justify-content: center;
   gap: 4px;
   flex: 1;
-  min-width: 0; /* Permite que el elemento se encoja por debajo de su min-content */
+  min-width: 0;
   height: 100%;
   color: ${({ $active }) => ($active ? '#0071e3' : '#8e8e93')};
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -42,16 +42,14 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /* Para evitar que cambie de ancho drásticamente al ponerse bold */
     letter-spacing: ${({ $active }) => ($active ? '-0.2px' : '0px')};
+    line-height: 1;
   }
   
-  /* Icon Container para animaciones sutiles */
   svg {
     font-size: 24px;
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform: ${({ $active }) => ($active ? 'scale(1.15)' : 'scale(1)')};
-    margin-bottom: 2px;
   }
 
   &:hover {
@@ -70,27 +68,26 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
 `
 
 export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>`
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  min-height: 28px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   background: ${props => props.$hasImage ? 'transparent' : props.$bgColor || '#0071e3'};
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: white;
-  margin-bottom: 2px;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   flex-shrink: 0;
 `
 
 export const AvatarImage = styled.img`
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   object-fit: cover;
   border-radius: 50%;
   display: block;
