@@ -338,15 +338,17 @@ export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
   padding: 16px;
   text-align: center;
   box-shadow: 0 2px 12px ${COLORS.shadow};
-  opacity: ${props => props.$unlocked ? 1 : 0.6};
-  border: 2px solid ${props => props.$unlocked ? 'rgba(0, 113, 227, 0.2)' : '#e8e8e8'};
+  opacity: ${props => props.$unlocked ? 1 : 0.7};
+  filter: ${props => props.$unlocked ? 'none' : 'blur(0.5px)'};
+  border: 2px solid ${props => props.$unlocked ? COLORS.primaryDark : '#e0e0e0'};
   transition: all 0.2s ease;
   cursor: pointer;
   
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 20px ${COLORS.shadow};
-    border-color: ${props => props.$unlocked ? '#0071e3' : '#d0d0d0'};
+    filter: none;
+    opacity: 1;
   }
 `
 
@@ -597,7 +599,7 @@ export const Tab = styled.button<{ $active: boolean }>`
 
 export const TabContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   
   @media (max-width: 480px) {
