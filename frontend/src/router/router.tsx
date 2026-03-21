@@ -12,6 +12,7 @@ import {
   SearchScreen,
   LoginScreen,
   RegisterScreen,
+  SplashScreen,
   WelcomeScreen,
   VerificationScreen,
   AboutScreen,
@@ -22,6 +23,10 @@ import { Layout } from '../components'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 
 export const router = createBrowserRouter([
+  {
+    path: '/splash',
+    element: <SplashScreen />,
+  },
   {
     path: '/welcome',
     element: <WelcomeScreen />,
