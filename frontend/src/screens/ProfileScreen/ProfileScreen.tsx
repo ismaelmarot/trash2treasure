@@ -114,10 +114,6 @@ export function ProfileScreen() {
       </Section>
 
       <Section>
-        <SectionTitle>Actividad</SectionTitle>
-          <p>Aún no tienes publicaciones.</p>
-        </Section>
-      <Section>
       <SectionTitle>Aplicación</SectionTitle>
         <MenuItem onClick={() => navigate('/about')}>
           <MenuIconWrapper>

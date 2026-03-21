@@ -113,15 +113,26 @@ export const RankingList = styled.div`
   gap: 12px;
 `
 
-export const RankingItem = styled.div<{ $isCurrentUser?: boolean }>`
+export const RankingItem = styled.div<{ $isCurrentUser?: boolean; $position?: number }>`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  background: ${props => props.$isCurrentUser ? '#f0f7ff' : COLORS.allWhite};
+  padding: 14px 16px;
+  background: ${props => {
+    if (props.$position === 1) return 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
+    if (props.$position === 2) return 'linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%)';
+    if (props.$position === 3) return 'linear-gradient(135deg, #CD7F32 0%, #B8860B 100%)';
+    if (props.$isCurrentUser) return '#f0f7ff';
+    return COLORS.allWhite;
+  }};
   border-radius: 16px;
-  box-shadow: 0 2px 8px ${COLORS.shadow};
-  border: ${props => props.$isCurrentUser ? '2px solid #0071e3' : 'none'};
+  box-shadow: 0 2px 12px ${COLORS.shadow};
+  border: ${props => props.$isCurrentUser ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.05)'};
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateX(4px);
+  }
 `
 
 export const Position = styled.div<{ $top?: boolean }>`
@@ -224,15 +235,6 @@ export const AchievementsGrid = styled.div`
   gap: 12px;
 `
 
-export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
-  background: ${props => props.$unlocked ? COLORS.allWhite : '#f5f5f5'};
-  border-radius: 16px;
-  padding: 16px;
-  text-align: center;
-  box-shadow: 0 2px 8px ${COLORS.shadow};
-  opacity: ${props => props.$unlocked ? 1 : 0.5};
-`
-
 export const AchievementIcon = styled.div`
   font-size: 32px;
   margin-bottom: 8px;
@@ -263,4 +265,88 @@ export const Divider = styled.div`
   height: 1px;
   background: #f0f0f0;
   margin: 24px 0;
+`
+
+// Gráficas estilo Duolingo
+export const ChartContainer = styled.div`
+  background: ${COLORS.allWhite};
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 16px ${COLORS.shadow};
+  margin-bottom: 16px;
+`
+
+export const ChartTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${COLORS.black};
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
+export const BarChartRow = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+`
+
+export const BarLabel = styled.div`
+  width: 80px;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${COLORS.black};
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`
+
+export const BarContainer = styled.div`
+  flex: 1;
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+`
+
+export const BarFill = styled.div<{ $color: string; $width: number }>`
+  height: 100%;
+  width: ${props => props.$width}%;
+  background: ${props => props.$color};
+  border-radius: 12px;
+  transition: width 0.5s ease;
+`
+
+export const BarValue = styled.div`
+  width: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  color: ${COLORS.black};
+  text-align: right;
+`
+
+// Logros con efecto zoom
+export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
+  background: ${props => props.$unlocked ? COLORS.allWhite : '#f8f8f8'};
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 12px ${COLORS.shadow};
+  opacity: ${props => props.$unlocked ? 1 : 0.6};
+  border: 2px solid ${props => props.$unlocked ? 'rgba(0, 113, 227, 0.2)' : '#e8e8e8'};
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px ${COLORS.shadow};
+    border-color: ${props => props.$unlocked ? '#0071e3' : '#d0d0d0'};
+  }
+`
+
+export const FamilySection = styled.div`
+  margin-top: 24px;
 `
