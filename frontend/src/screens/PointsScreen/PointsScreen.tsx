@@ -266,10 +266,11 @@ export function PointsScreen() {
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division, achievements: achievementsFromBackend } = pointsData
+  const { points, division, achievements: achievementsFromBackend, completedChallenges: completedFromBackend } = pointsData
 
   // Usar los logros del backend (que ya tienen unlocked calculado)
   const achievements = achievementsFromBackend || ACHIEVEMENTS.map(a => ({ ...a, unlocked: false }))
+  const completedChallenges = completedFromBackend || []
 
   // Calcular totales
   const totalCategoryPoints = Object.values(points.category_points || {}).reduce((sum: number, v) => sum + (Number(v) || 0), 0)
@@ -485,11 +486,11 @@ export function PointsScreen() {
       </TabContainer>
       <TabContent>
         {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => (
-          <AchievementCard key={challenge.id} $unlocked={false}>
+          <AchievementCard key={challenge.id} $unlocked={completedChallenges.includes(challenge.id)}>
             <AchievementIcon>{challenge.icon}</AchievementIcon>
             <AchievementName>{challenge.name}</AchievementName>
             <AchievementDesc>{challenge.description}</AchievementDesc>
-            <div style={{ fontSize: '12px', color: '#ff9500', marginTop: '4px', fontWeight: '600' }}>
+            <div style={{ fontSize: '12px', color: completedChallenges.includes(challenge.id) ? '#34c759' : '#ff9500', marginTop: '4px', fontWeight: '600' }}>
               +{challenge.reward} pts
             </div>
           </AchievementCard>
