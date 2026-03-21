@@ -55,8 +55,13 @@ export const Grid = styled.div`
     gap: 16px;
     
     @media (min-width: 768px) {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    @media (min-width: 1200px) {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
     }
 `
 
