@@ -37,7 +37,7 @@ export function SplashScreen() {
       // Esperar 2.5 segundos para mostrar la splash screen
       setTimeout(() => {
         if (isAuthenticated) {
-          navigate('/')
+          navigate('/app')
         } else {
           navigate('/welcome')
         }

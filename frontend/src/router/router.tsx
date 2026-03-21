@@ -24,7 +24,7 @@ import { ProtectedRoute } from '../components/ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
-    path: '/splash',
+    path: '/',
     element: <SplashScreen />,
   },
   {
@@ -48,7 +48,7 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: '/',
+        path: '/app',
         element: <Layout />,
         children: [
           {

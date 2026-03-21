@@ -66,7 +66,7 @@ export function VerificationScreen() {
           // Guardar token y usuario en el contexto
           login(loginData.token, loginData.user)
           // Redirigir al mapa
-          navigate('/')
+          navigate('/app')
         } else {
           setError('Verificación exitosa, pero hubo un error al hacer login')
         }

@@ -10,32 +10,32 @@ type NavigationItem = {
 export const navigationItems: NavigationItem[] = [
   {
     label: 'Map',
-    path: '/',
+    path: '/app',
     icon: FaMap,
   },
   {
     label: 'Search',
-    path: '/search',
+    path: '/app/search',
     icon: FaSearch,
   },
   {
     label: 'Add',
-    path: '/add',
+    path: '/app/add',
     icon: FaPlus,
   },
   {
     label: 'Activity',
-    path: '/activity',
+    path: '/app/activity',
     icon: FaBell,
   },
   {
     label: 'Points',
-    path: '/points',
+    path: '/app/points',
     icon: FaTrophy,
   },
   {
     label: 'Profile',
-    path: '/profile',
+    path: '/app/profile',
     icon: FaUser,
   },
 ]

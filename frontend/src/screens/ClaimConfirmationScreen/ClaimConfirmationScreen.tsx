@@ -130,11 +130,11 @@ export function ClaimConfirmationScreen() {
         </InfoBox>
 
         <ButtonGroup>
-          <PrimaryButton onClick={() => navigate('/activity?tab=claimed')}>
+          <PrimaryButton onClick={() => navigate('/app/activity?tab=claimed')}>
             Ver mis Reclamados
           </PrimaryButton>
 
-          <SecondaryButton onClick={() => navigate('/')}>
+          <SecondaryButton onClick={() => navigate('/app')}>
             Ir al Mapa
           </SecondaryButton>
         </ButtonGroup>
