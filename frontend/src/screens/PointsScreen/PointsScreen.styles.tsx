@@ -235,23 +235,6 @@ export const AchievementsGrid = styled.div`
   gap: 12px;
 `
 
-export const AchievementIcon = styled.div`
-  font-size: 32px;
-  margin-bottom: 8px;
-`
-
-export const AchievementName = styled.div`
-  font-size: 12px;
-  font-weight: 600;
-  color: ${COLORS.black};
-  margin-bottom: 4px;
-`
-
-export const AchievementDesc = styled.div`
-  font-size: 10px;
-  color: ${COLORS.greyDark};
-`
-
 export const Loading = styled.div`
   display: flex;
   justify-content: center;
@@ -333,13 +316,11 @@ export const BarValue = styled.div`
 
 // Logros con efecto zoom
 export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
-  background: ${props => props.$unlocked ? COLORS.allWhite : '#f8f8f8'};
+  background: ${props => props.$unlocked ? COLORS.allWhite : '#f5f5f5'};
   border-radius: 25px;
   padding: 16px;
   text-align: center;
-  box-shadow: 0 2px 12px ${COLORS.shadow};
-  opacity: ${props => props.$unlocked ? 1 : 0.7};
-  filter: ${props => props.$unlocked ? 'none' : 'blur(0.5px)'};
+  box-shadow: ${props => props.$unlocked ? '0 2px 12px rgba(0,0,0,0.1)' : 'none'};
   border: 2px solid ${props => props.$unlocked ? COLORS.primaryDark : '#e0e0e0'};
   transition: all 0.2s ease;
   cursor: pointer;
@@ -347,9 +328,26 @@ export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 20px ${COLORS.shadow};
-    filter: none;
-    opacity: 1;
   }
+`
+
+export const AchievementIcon = styled.div<{ $unlocked?: boolean }>`
+  font-size: 32px;
+  margin-bottom: 8px;
+  filter: ${props => props.$unlocked ? 'none' : 'grayscale(100%)'};
+  opacity: ${props => props.$unlocked ? 1 : 0.4};
+`
+
+export const AchievementName = styled.div<{ $unlocked?: boolean }>`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${props => props.$unlocked ? COLORS.black : '#999'};
+  margin-bottom: 4px;
+`
+
+export const AchievementDesc = styled.div<{ $unlocked?: boolean }>`
+  font-size: 10px;
+  color: ${props => props.$unlocked ? COLORS.greyDark : '#bbb'};
 `
 
 export const FamilySection = styled.div`

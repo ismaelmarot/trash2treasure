@@ -463,10 +463,10 @@ export function PointsScreen() {
               $unlocked={achievement.unlocked}
               onClick={() => openAchievementModal(achievement)}
             >
-              <AchievementIcon>{achievement.icon}</AchievementIcon>
-              <AchievementName>{achievement.name}</AchievementName>
-              <AchievementDesc>{achievement.description}</AchievementDesc>
-              <div style={{ fontSize: '12px', color: '#34c759', marginTop: '4px', fontWeight: '600' }}>
+              <AchievementIcon $unlocked={achievement.unlocked}>{achievement.icon}</AchievementIcon>
+              <AchievementName $unlocked={achievement.unlocked}>{achievement.name}</AchievementName>
+              <AchievementDesc $unlocked={achievement.unlocked}>{achievement.description}</AchievementDesc>
+              <div style={{ fontSize: '12px', color: achievement.unlocked ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
                 +{achievement.points} pts
               </div>
             </AchievementCard>
@@ -485,27 +485,30 @@ export function PointsScreen() {
         <Tab $active={activeTab === 'annual'} onClick={() => setActiveTab('annual')}>Anual</Tab>
       </TabContainer>
       <TabContent>
-        {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => (
-          <AchievementCard 
-            key={challenge.id} 
-            $unlocked={completedChallenges.includes(challenge.id)}
-            onClick={() => openAchievementModal({
-              id: challenge.id,
-              name: challenge.name,
-              description: challenge.description,
-              icon: challenge.icon,
-              points: challenge.reward,
-              unlocked: completedChallenges.includes(challenge.id)
-            })}
-          >
-            <AchievementIcon>{challenge.icon}</AchievementIcon>
-            <AchievementName>{challenge.name}</AchievementName>
-            <AchievementDesc>{challenge.description}</AchievementDesc>
-            <div style={{ fontSize: '12px', color: completedChallenges.includes(challenge.id) ? '#34c759' : '#ff9500', marginTop: '4px', fontWeight: '600' }}>
-              +{challenge.reward} pts
-            </div>
-          </AchievementCard>
-        ))}
+        {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => {
+          const isUnlocked = completedChallenges.includes(challenge.id)
+          return (
+            <AchievementCard 
+              key={challenge.id} 
+              $unlocked={isUnlocked}
+              onClick={() => openAchievementModal({
+                id: challenge.id,
+                name: challenge.name,
+                description: challenge.description,
+                icon: challenge.icon,
+                points: challenge.reward,
+                unlocked: isUnlocked
+              })}
+            >
+              <AchievementIcon $unlocked={isUnlocked}>{challenge.icon}</AchievementIcon>
+              <AchievementName $unlocked={isUnlocked}>{challenge.name}</AchievementName>
+              <AchievementDesc $unlocked={isUnlocked}>{challenge.description}</AchievementDesc>
+              <div style={{ fontSize: '12px', color: isUnlocked ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
+                +{challenge.reward} pts
+              </div>
+            </AchievementCard>
+          )
+        })}
       </TabContent>
 
       <Divider />
