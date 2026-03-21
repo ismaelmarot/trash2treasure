@@ -72,6 +72,8 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
 export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>`
   width: 28px;
   height: 28px;
+  min-width: 28px;
+  min-height: 28px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -83,10 +85,13 @@ export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>
   color: white;
   margin-bottom: 2px;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
 `
 
 export const AvatarImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 28px;
+  height: 28px;
   object-fit: cover;
+  border-radius: 50%;
+  display: block;
 `
