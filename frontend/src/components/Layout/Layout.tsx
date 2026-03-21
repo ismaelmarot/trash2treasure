@@ -7,7 +7,7 @@ import { Container, Main, Content } from './Layout.styles'
 export const Layout = () => {
   const { isMobile } = useBreakpoint()
 
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(true)
 
   const toggleSidebar = () => {
     setCollapsed(prev => !prev)

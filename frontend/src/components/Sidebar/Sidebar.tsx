@@ -31,7 +31,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
     <SidebarContainer $collapsed={collapsed}>
 
       <CollapseButton onClick={toggleSidebar} $collapsed={collapsed}>
-        {collapsed ? <ICONS.arrowRight size={20} /> : <ICONS.closeIcon size={20} />}
+        {collapsed ? <ICONS.bars size={20} /> : <ICONS.closeIcon size={20} />}
       </CollapseButton>
 
 
