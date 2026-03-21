@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { ItemCountdownProps } from '@/interface'
 import { FaClock } from 'react-icons/fa'
-import { Container, ExpiredBadge, PostingLabel, Time, Wrapper } from './ItemCountdown.styles'
+import { Container, ExpiredBadge, Time, Wrapper } from './ItemCountdown.styles'
 
 export function ItemCountdown({ 
   createdAt, 
@@ -11,7 +11,6 @@ export function ItemCountdown({
   direction = 'row'
 }: ItemCountdownProps) {
   const [timeLeft, setTimeLeft] = useState<string>('')
-  const [postingTime, setPostingTime] = useState<string>('')
   const [isUrgent, setIsUrgent] = useState(false)
   const [isExpired, setIsExpired] = useState(false)
 
@@ -19,19 +18,12 @@ export function ItemCountdown({
     // if not createdAt, we do nothing
     if (!createdAt) {
       setTimeLeft('')
-      setPostingTime('')
       return
     }
 
     // Format posting time (local)
     const dateStr = createdAt.includes('T') ? createdAt : createdAt.replace(' ', 'T') + 'Z'
     const createdDate = new Date(dateStr)
-    const timeFormatter = new Intl.DateTimeFormat('es-AR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    })
-    setPostingTime(timeFormatter.format(createdDate))
 
     const calculateTimeLeft = () => {
       const MAX_DURATION = 24 * 60 * 60 * 1000
