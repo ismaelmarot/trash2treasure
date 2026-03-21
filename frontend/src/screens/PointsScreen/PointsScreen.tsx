@@ -345,7 +345,10 @@ export function PointsScreen() {
                 {level.items.map((div) => {
                   const isCurrent = div.name === division
                   const isPast = points.total_points >= div.max
-                  const progress = div.max === Infinity ? 100 : Math.min((points.total_points / div.max) * 100, 100)
+                  const pointsFromMin = points.total_points - div.min
+                  const pointsToMax = div.max - div.min
+                  const progress = div.max === Infinity ? 100 : Math.min((pointsFromMin / pointsToMax) * 100, 100)
+                  const pointsRemaining = div.max === Infinity ? 0 : Math.max(div.max - points.total_points, 0)
                   
                   return (
                     <DivisionCard key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
@@ -356,9 +359,16 @@ export function PointsScreen() {
                           <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
                         </DivisionHeader>
                         {isCurrent && (
-                          <ProgressBar>
-                            <ProgressFill $progress={progress} />
-                          </ProgressBar>
+                          <>
+                            <ProgressBar>
+                              <ProgressFill $progress={progress} />
+                            </ProgressBar>
+                            <div style={{ fontSize: '11px', opacity: 0.9, marginTop: '6px' }}>
+                              {pointsRemaining > 0 
+                                ? `${pointsRemaining} pts para siguiente nivel` 
+                                : 'Nivel máximo alcanzado'}
+                            </div>
+                          </>
                         )}
                       </DivisionInfo>
                       {isCurrent && <span style={{ fontSize: '12px', color: 'white', fontWeight: '600', marginLeft: '12px' }}>Tú</span>}

@@ -125,7 +125,7 @@ export const RankingItem = styled.div<{ $isCurrentUser?: boolean; $position?: nu
     if (props.$isCurrentUser) return '#f0f7ff';
     return COLORS.allWhite;
   }};
-  border-radius: 16px;
+  border-radius: 35px;
   box-shadow: 0 2px 12px ${COLORS.shadow};
   border: ${props => props.$isCurrentUser ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.05)'};
   transition: transform 0.2s ease;
