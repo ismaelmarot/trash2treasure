@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, COLORS } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
 import {
@@ -268,8 +268,9 @@ export function PointsScreen() {
   const { points, division, achievements: unlockedAchievements } = pointsData
   const unlockedIds = unlockedAchievements?.map((a: any) => a.achievement_id) || []
 
-  const maxCategoryPoints = Math.max(...Object.values(points.category_points || {}).map(v => Number(v) || 0), 1)
-  const maxFamilyReports = Math.max(...Object.values(points.family_reports || {}).map(v => Number(v) || 0), 1)
+  // Calcular totales
+  const totalCategoryPoints = Object.values(points.category_points || {}).reduce((sum: number, v) => sum + (Number(v) || 0), 0)
+  const totalFamilyReports = Object.values(points.family_reports || {}).reduce((sum: number, v) => sum + (Number(v) || 0), 0)
 
   return (
     <Container>
@@ -385,7 +386,10 @@ export function PointsScreen() {
       <CollapsibleSection>
         <CollapsibleHeader onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
           <CollapsibleTitle>📊 Puntos por Categoría</CollapsibleTitle>
-          <CollapsibleArrow $isOpen={isCategoriesOpen}>▼</CollapsibleArrow>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>{totalCategoryPoints} pts</span>
+            <CollapsibleArrow $isOpen={isCategoriesOpen}>▼</CollapsibleArrow>
+          </div>
         </CollapsibleHeader>
         <CollapsibleContent $isOpen={isCategoriesOpen}>
           {Object.entries(points.category_points || {}).length > 0 ? (
@@ -400,7 +404,7 @@ export function PointsScreen() {
                 <BarContainer>
                   <BarFill 
                     $color={CATEGORY_INFO[category]?.color || '#0071e3'} 
-                    $width={(Number(catPoints) / maxCategoryPoints) * 100} 
+                    $width={(Number(catPoints) / totalCategoryPoints) * 100} 
                   />
                 </BarContainer>
               </BarChartRow>
@@ -417,7 +421,10 @@ export function PointsScreen() {
       <CollapsibleSection>
         <CollapsibleHeader onClick={() => setIsFamiliesOpen(!isFamiliesOpen)}>
           <CollapsibleTitle>🏠 Actividad por Familia</CollapsibleTitle>
-          <CollapsibleArrow $isOpen={isFamiliesOpen}>▼</CollapsibleArrow>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>{totalFamilyReports} items</span>
+            <CollapsibleArrow $isOpen={isFamiliesOpen}>▼</CollapsibleArrow>
+          </div>
         </CollapsibleHeader>
         <CollapsibleContent $isOpen={isFamiliesOpen}>
           {Object.entries(points.family_reports || {}).map(([family, count]) => (
@@ -431,7 +438,7 @@ export function PointsScreen() {
               <BarContainer>
                 <BarFill 
                   $color={FAMILY_INFO[family]?.color || '#0071e3'} 
-                  $width={(Number(count) / maxFamilyReports) * 100} 
+                  $width={(Number(count) / totalFamilyReports) * 100} 
                 />
               </BarContainer>
             </BarChartRow>
