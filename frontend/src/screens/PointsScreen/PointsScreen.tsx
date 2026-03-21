@@ -357,7 +357,7 @@ export function PointsScreen() {
                   
                   return (
                     <DivisionCard key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
-                      <DivisionIcon>{div.icon}</DivisionIcon>
+                      <DivisionIcon $isCurrent={isCurrent}>{div.icon}</DivisionIcon>
                       <DivisionInfo>
                         <DivisionHeader>
                           <DivisionName>{div.name}</DivisionName>

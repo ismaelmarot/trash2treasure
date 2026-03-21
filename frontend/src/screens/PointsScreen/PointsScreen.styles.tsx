@@ -499,28 +499,23 @@ export const DivisionCard = styled.div<{ $isCurrent?: boolean; $isPast?: boolean
   justify-content: space-between;
   padding: 14px 20px;
   border-radius: 35px;
-  background: ${props => {
-    if (props.$isCurrent) return COLORS.primaryDark;
-    if (props.$isPast) return '#f0f0f0';
-    return '#f8f8f8';
-  }};
-  color: ${props => {
-    if (props.$isCurrent) return 'white';
-    if (props.$isPast) return COLORS.greyDark;
-    return '#999';
-  }};
-  border: ${props => props.$isCurrent ? '2px solid rgba(66, 165, 159, 0.5)' : '1px solid #eee'};
+  background: ${props => props.$isCurrent ? COLORS.primaryDark : '#f0f0f0'};
+  color: ${props => props.$isCurrent ? 'white' : '#999'};
+  border: ${props => props.$isCurrent ? '2px solid rgba(66, 165, 159, 0.5)' : '1px solid #e0e0e0'};
+  opacity: ${props => props.$isCurrent ? 1 : 0.6};
   transition: transform 0.2s ease;
   
   &:hover {
-    transform: translateX(4px);
+    transform: ${props => props.$isCurrent ? 'translateX(4px)' : 'none'};
   }
 `
 
-export const DivisionIcon = styled.div`
+export const DivisionIcon = styled.div<{ $isCurrent?: boolean }>`
   font-size: 20px;
   flex-shrink: 0;
   margin-right: 12px;
+  filter: ${props => props.$isCurrent ? 'none' : 'grayscale(100%)'};
+  opacity: ${props => props.$isCurrent ? 1 : 0.5};
 `
 
 export const DivisionInfo = styled.div`
