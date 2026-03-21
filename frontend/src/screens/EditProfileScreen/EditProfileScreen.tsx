@@ -44,7 +44,6 @@ export function EditProfileScreen() {
   const { token, user, login } = useAuth()
 
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [profileImage, setProfileImage] = useState<string | null>(null)
   const [newImage, setNewImage] = useState<File | null>(null)
   const [newImagePreview, setNewImagePreview] = useState<string | null>(null)
@@ -68,7 +67,6 @@ export function EditProfileScreen() {
         })
         const data = await response.json()
         setName(data.name || '')
-        setEmail(data.email || '')
         setProfileImage(data.profile_image || null)
       } catch (err) {
         console.error('Error fetching profile:', err)
@@ -296,15 +294,6 @@ export function EditProfileScreen() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Tu nombre"
               required
-            />
-          </InputGroup>
-
-          <InputGroup>
-            <Label>Email</Label>
-            <Input
-              value={email}
-              disabled
-              style={{ opacity: 0.6, cursor: 'not-allowed' }}
             />
           </InputGroup>
 
