@@ -11,6 +11,34 @@ import {
 } from '@/services/offlineDB'
 import { useAuth } from '@/hooks/useAuth'
 
+// Solicitar permiso para notificaciones
+const requestNotificationPermission = async (): Promise<boolean> => {
+  if (!('Notification' in window)) return false
+  if (Notification.permission === 'granted') return true
+  if (Notification.permission === 'denied') return false
+  
+  const permission = await Notification.requestPermission()
+  return permission === 'granted'
+}
+
+// Enviar notificación
+const sendNotification = async (title: string, body: string) => {
+  const hasPermission = await requestNotificationPermission()
+  if (!hasPermission) return
+
+  try {
+    new Notification(title, {
+      body,
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      tag: 'trash2treasure-sync',
+      requireInteraction: true
+    })
+  } catch (error) {
+    console.error('Error sending notification:', error)
+  }
+}
+
 export function useOfflineSync() {
   const [pendingCount, setPendingCount] = useState(0)
   const [isSyncing, setIsSyncing] = useState(false)
@@ -79,18 +107,37 @@ export function useOfflineSync() {
     if (!isOnline() || !token || isSyncing) return
 
     setIsSyncing(true)
+    let successCount = 0
+    let failCount = 0
 
     try {
       const pendingItems = await getPendingItems()
 
       for (const item of pendingItems) {
         const success = await syncItem(item)
-        if (!success) {
-          console.error('Failed to sync item:', item.id)
+        if (success) {
+          successCount++
+        } else {
+          failCount++
         }
       }
 
       await updateCount()
+
+      // Enviar notificaciones
+      if (successCount > 0) {
+        await sendNotification(
+          '✅ Tesoro publicado',
+          `${successCount} ${successCount === 1 ? 'tesoro se publicó' : 'tesoros se publicaron'} correctamente.`
+        )
+      }
+
+      if (failCount > 0) {
+        await sendNotification(
+          '❌ Error al publicar',
+          `${failCount} ${failCount === 1 ? 'tesoro no se pudo publicar' : 'tesoros no se pudieron publicar'}.`
+        )
+      }
     } catch (error) {
       console.error('Error during sync:', error)
     } finally {
