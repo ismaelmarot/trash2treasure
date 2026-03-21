@@ -15,13 +15,26 @@ import {
   BarFill,
   BarLabel,
   BarValue,
-  ChartContainer,
-  ChartTitle,
+  CollapsibleArrow,
+  CollapsibleContent,
+  CollapsibleHeader,
+  CollapsibleSection,
+  CollapsibleSummary,
+  CollapsibleTitle,
   Container,
   Divider,
   DivisionBadge,
-  FamilySection,
+  DivisionItem,
+  DivisionList,
+  DivisionName,
+  DivisionRange,
   Header,
+  InfoContent,
+  InfoDetail,
+  InfoIcon,
+  InfoItem,
+  InfoList,
+  InfoTitle,
   Loading,
   PointsCard,
   PointsHeader,
@@ -86,6 +99,30 @@ const FAMILY_INFO: Record<string, { icon: string; name: string; color: string }>
   special: { icon: '✨', name: 'SPECIAL', color: '#ffd60a' }
 }
 
+const DIVISIONS = [
+  { name: 'Curioso Verde', min: 0, max: 100, icon: '🌱' },
+  { name: 'Recolector Novato', min: 100, max: 200, icon: '♻️' },
+  { name: 'Semilla', min: 200, max: 400, icon: '🌿' },
+  { name: 'Eco Aprendiz', min: 400, max: 700, icon: '🌳' },
+  { name: 'Guardián del Bosque', min: 700, max: 1000, icon: '🌲' },
+  { name: 'Maestro del Reciclaje', min: 1000, max: 1500, icon: '🏆' },
+  { name: 'Defensor del Planeta', min: 1500, max: 2000, icon: '🌍' },
+  { name: 'Titán Verde', min: 2000, max: 2500, icon: '⚡' },
+  { name: 'Gaia Ascendido', min: 2500, max: 3000, icon: '🚀' },
+  { name: 'Leyenda Sustentable', min: 3000, max: Infinity, icon: '👑' }
+]
+
+const POINTS_INFO = [
+  { icon: '📸', title: 'Reportar', detail: '+1 punto por cada reporte. +3 extra si la categoría es crítica (baterías, electrónicos, construcción, muebles)' },
+  { icon: '♻️', title: 'Recolectar', detail: '+3 puntos por cada recolección. +3 extra si la categoría es crítica. +1 a +3 extra por rapidez (<3h: +1, <1h: +3)' },
+  { icon: '⏱️', title: 'Bonus por tiempo', detail: '<1 hora: +3 puntos extra. <3 horas: +1 punto extra' },
+  { icon: '🔥', title: 'Streak diario', detail: '3 días: +4 pts. 5 días: +6 pts. 10 días: +15 pts' },
+  { icon: '🔁', title: 'Combo misma familia', detail: '2 items: +2 pts. 3 items: +4 pts. 5 items: +7 pts' },
+  { icon: '🌈', title: 'Combo mixto', detail: '2 familias: +4 pts. 3 familias: +8 pts. 4 familias: +10 pts' },
+  { icon: '🥇', title: 'First del día', detail: 'Primero en reportar: +5 pts. Primero en recolectar: +6 pts' },
+  { icon: '🏆', title: 'Top del día', detail: '1°: +20 pts. 2°: +15 pts. 3°: +10 pts' }
+]
+
 export function PointsScreen() {
   const { token, user } = useAuth()
   const [loading, setLoading] = useState(true)
@@ -93,6 +130,12 @@ export function PointsScreen() {
   const [ranking, setRanking] = useState<any[]>([])
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  
+  // Estados para secciones desplegables
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
+  const [isFamiliesOpen, setIsFamiliesOpen] = useState(false)
+  const [isDivisionsOpen, setIsDivisionsOpen] = useState(false)
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   const openAchievementModal = (achievement: any) => {
     setSelectedAchievement(achievement)
@@ -133,9 +176,12 @@ export function PointsScreen() {
 
   const { points, division, achievements } = pointsData
 
-  // Encontrar el máximo para las gráficas
   const maxCategoryPoints = Math.max(...Object.values(points.category_points || {}).map(v => Number(v) || 0), 1)
   const maxFamilyReports = Math.max(...Object.values(points.family_reports || {}).map(v => Number(v) || 0), 1)
+  
+  // Totales para resumen
+  const totalCategories = Object.keys(points.category_points || {}).length
+  const totalFamilies = Object.values(points.family_reports || {}).filter(v => Number(v) > 0).length
 
   return (
     <Container>
@@ -197,35 +243,78 @@ export function PointsScreen() {
 
       <Divider />
 
-      {/* Gráfica por Categoría */}
-      <ChartContainer>
-        <ChartTitle>📊 Puntos por Categoría</ChartTitle>
-        {Object.entries(points.category_points || {}).length > 0 ? (
-          Object.entries(points.category_points || {}).map(([category, catPoints]) => (
-            <BarChartRow key={category}>
-              <BarLabel>
-                {CATEGORY_INFO[category]?.icon || '📦'} {CATEGORY_INFO[category]?.name || category}
-              </BarLabel>
-              <BarContainer>
-                <BarFill 
-                  $color={CATEGORY_INFO[category]?.color || '#0071e3'} 
-                  $width={(Number(catPoints) / maxCategoryPoints) * 100} 
-                />
-              </BarContainer>
-              <BarValue>{catPoints as number}</BarValue>
-            </BarChartRow>
-          ))
-        ) : (
-          <p style={{ textAlign: 'center', color: '#8e8e93', fontSize: '14px' }}>
-            Reporta o recolecta items para ganar puntos por categoría
-          </p>
-        )}
-      </ChartContainer>
+      {/* Divisiones */}
+      <CollapsibleSection>
+        <CollapsibleHeader onClick={() => setIsDivisionsOpen(!isDivisionsOpen)}>
+          <CollapsibleTitle>🏅 Divisiones</CollapsibleTitle>
+          <CollapsibleArrow $isOpen={isDivisionsOpen}>▼</CollapsibleArrow>
+        </CollapsibleHeader>
+        <CollapsibleContent $isOpen={isDivisionsOpen}>
+          <DivisionList>
+            {DIVISIONS.map((div) => {
+              const isCurrent = div.name === division
+              const isPast = points.total_points >= div.max
+              return (
+                <DivisionItem key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
+                  <DivisionName>
+                    {div.icon} {div.name}
+                    {isCurrent && ' (Tú)'}
+                  </DivisionName>
+                  <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
+                </DivisionItem>
+              )
+            })}
+          </DivisionList>
+        </CollapsibleContent>
+      </CollapsibleSection>
 
-      {/* Gráfica por Familia */}
-      <ChartContainer>
-        <ChartTitle>🏠 Actividad por Familia</ChartTitle>
-        <FamilySection>
+      {/* Puntos por Categoría (desplegable) */}
+      <CollapsibleSection>
+        <CollapsibleHeader onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
+          <CollapsibleTitle>
+            📊 Puntos por Categoría
+          </CollapsibleTitle>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <CollapsibleSummary>{totalCategories} categorías</CollapsibleSummary>
+            <CollapsibleArrow $isOpen={isCategoriesOpen}>▼</CollapsibleArrow>
+          </div>
+        </CollapsibleHeader>
+        <CollapsibleContent $isOpen={isCategoriesOpen}>
+          {Object.entries(points.category_points || {}).length > 0 ? (
+            Object.entries(points.category_points || {}).map(([category, catPoints]) => (
+              <BarChartRow key={category}>
+                <BarLabel>
+                  {CATEGORY_INFO[category]?.icon || '📦'} {CATEGORY_INFO[category]?.name || category}
+                </BarLabel>
+                <BarContainer>
+                  <BarFill 
+                    $color={CATEGORY_INFO[category]?.color || '#0071e3'} 
+                    $width={(Number(catPoints) / maxCategoryPoints) * 100} 
+                  />
+                </BarContainer>
+                <BarValue>{catPoints as number}</BarValue>
+              </BarChartRow>
+            ))
+          ) : (
+            <p style={{ textAlign: 'center', color: '#8e8e93', fontSize: '14px' }}>
+              Reporta o recolecta items para ganar puntos
+            </p>
+          )}
+        </CollapsibleContent>
+      </CollapsibleSection>
+
+      {/* Actividad por Familia (desplegable) */}
+      <CollapsibleSection>
+        <CollapsibleHeader onClick={() => setIsFamiliesOpen(!isFamiliesOpen)}>
+          <CollapsibleTitle>
+            🏠 Actividad por Familia
+          </CollapsibleTitle>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <CollapsibleSummary>{totalFamilies} familias</CollapsibleSummary>
+            <CollapsibleArrow $isOpen={isFamiliesOpen}>▼</CollapsibleArrow>
+          </div>
+        </CollapsibleHeader>
+        <CollapsibleContent $isOpen={isFamiliesOpen}>
           {Object.entries(points.family_reports || {}).map(([family, count]) => (
             <BarChartRow key={family}>
               <BarLabel>
@@ -240,8 +329,33 @@ export function PointsScreen() {
               <BarValue>{count as number}</BarValue>
             </BarChartRow>
           ))}
-        </FamilySection>
-      </ChartContainer>
+        </CollapsibleContent>
+      </CollapsibleSection>
+
+      <Divider />
+
+      {/* Cómo obtener puntos (desplegable) */}
+      <CollapsibleSection>
+        <CollapsibleHeader onClick={() => setIsInfoOpen(!isInfoOpen)}>
+          <CollapsibleTitle>
+            ℹ️ Cómo obtener puntos
+          </CollapsibleTitle>
+          <CollapsibleArrow $isOpen={isInfoOpen}>▼</CollapsibleArrow>
+        </CollapsibleHeader>
+        <CollapsibleContent $isOpen={isInfoOpen}>
+          <InfoList>
+            {POINTS_INFO.map((info, index) => (
+              <InfoItem key={index}>
+                <InfoIcon>{info.icon}</InfoIcon>
+                <InfoContent>
+                  <InfoTitle>{info.title}</InfoTitle>
+                  <InfoDetail>{info.detail}</InfoDetail>
+                </InfoContent>
+              </InfoItem>
+            ))}
+          </InfoList>
+        </CollapsibleContent>
+      </CollapsibleSection>
 
       <Divider />
 
@@ -259,7 +373,7 @@ export function PointsScreen() {
               <AchievementName>{achievement.name}</AchievementName>
               <AchievementDesc>{achievement.description}</AchievementDesc>
               {achievement.unlocked && (
-                <div style={{ fontSize: '12px', color: '#0071e3', marginTop: '4px', fontWeight: '600' }}>
+                <div style={{ fontSize: '12px', color: '#34c759', marginTop: '4px', fontWeight: '600' }}>
                   +{achievement.points} pts
                 </div>
               )}

@@ -26,7 +26,7 @@ export const Subtitle = styled.p`
 `
 
 export const PointsCard = styled.div`
-  background: linear-gradient(135deg, #0071e3 0%, #00c6ff 100%);
+  background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
   border-radius: 24px;
   padding: 24px;
   margin-bottom: 24px;
@@ -41,7 +41,7 @@ export const PointsCard = styled.div`
     right: -30%;
     width: 200px;
     height: 200px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
     border-radius: 50%;
   }
 `
@@ -294,29 +294,31 @@ export const BarChartRow = styled.div`
 `
 
 export const BarLabel = styled.div`
-  width: 80px;
-  font-size: 13px;
+  width: 100px;
+  min-width: 100px;
+  font-size: 12px;
   font-weight: 500;
   color: ${COLORS.black};
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  white-space: nowrap;
 `
 
 export const BarContainer = styled.div`
-  flex: 1;
-  height: 24px;
+  flex: 0.8;
+  height: 20px;
   background: #f0f0f0;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
 `
 
 export const BarFill = styled.div<{ $color: string; $width: number }>`
   height: 100%;
-  width: ${props => props.$width}%;
+  width: ${props => Math.min(props.$width, 100)}%;
   background: ${props => props.$color};
-  border-radius: 12px;
+  border-radius: 10px;
   transition: width 0.5s ease;
 `
 
@@ -349,4 +351,139 @@ export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
 
 export const FamilySection = styled.div`
   margin-top: 24px;
+`
+
+// Secciones desplegables
+export const CollapsibleSection = styled.div`
+  background: ${COLORS.allWhite};
+  border-radius: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px ${COLORS.shadow};
+  overflow: hidden;
+`
+
+export const CollapsibleHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  
+  &:hover {
+    background: #f8f8f8;
+  }
+`
+
+export const CollapsibleTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: ${COLORS.black};
+`
+
+export const CollapsibleSummary = styled.div`
+  font-size: 14px;
+  color: ${COLORS.greyDark};
+`
+
+export const CollapsibleArrow = styled.span<{ $isOpen?: boolean }>`
+  font-size: 12px;
+  transition: transform 0.2s ease;
+  transform: ${props => props.$isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+  color: ${COLORS.greyDark};
+`
+
+export const CollapsibleContent = styled.div<{ $isOpen?: boolean }>`
+  max-height: ${props => props.$isOpen ? '1000px' : '0'};
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: ${props => props.$isOpen ? '0 20px 20px' : '0 20px'};
+`
+
+// Divisiones
+export const DivisionsSection = styled.div`
+  margin-top: 24px;
+`
+
+export const DivisionList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+export const DivisionItem = styled.div<{ $isCurrent?: boolean; $isPast?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: ${props => {
+    if (props.$isCurrent) return 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
+    if (props.$isPast) return '#f0f0f0';
+    return '#f8f8f8';
+  }};
+  color: ${props => {
+    if (props.$isCurrent) return 'white';
+    if (props.$isPast) return COLORS.greyDark;
+    return '#999';
+  }};
+  border: ${props => props.$isCurrent ? '2px solid #28a745' : '1px solid #eee'};
+`
+
+export const DivisionName = styled.div`
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
+export const DivisionRange = styled.div`
+  font-size: 12px;
+  opacity: 0.8;
+`
+
+// Info de cómo obtener puntos
+export const InfoSection = styled.div`
+  margin-top: 24px;
+`
+
+export const InfoList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`
+
+export const InfoItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 12px;
+`
+
+export const InfoIcon = styled.div`
+  font-size: 24px;
+  flex-shrink: 0;
+`
+
+export const InfoContent = styled.div`
+  flex: 1;
+`
+
+export const InfoTitle = styled.div`
+  font-weight: 600;
+  font-size: 14px;
+  color: ${COLORS.black};
+  margin-bottom: 4px;
+`
+
+export const InfoDetail = styled.div`
+  font-size: 12px;
+  color: ${COLORS.greyDark};
+  line-height: 1.4;
 `
