@@ -304,6 +304,16 @@ export function AddItemScreen() {
         if (!photoResponse.ok) throw new Error('Error al subir la imagen')
       }
 
+      // Agregar puntos por reportar
+      await fetch(`${API_BASE_URL}/points/add-report`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ category, itemId })
+      })
+
       setSuccess(true)
       setTimeout(() => {
         navigate('/activity')

@@ -29,6 +29,12 @@ export function ClaimConfirmationScreen() {
   useEffect(() => {
     const performClaim = async () => {
       try {
+        // Primero obtener los datos del item para saber la categoría
+        const itemResponse = await fetch(`${API_BASE_URL}/items/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const item = await itemResponse.json()
+
         const response = await fetch(`${API_BASE_URL}/items/${id}/claim`, {
           method: 'POST',
           headers: {
@@ -41,6 +47,20 @@ export function ClaimConfirmationScreen() {
           const data = await response.json();
           throw new Error(data.error || 'No se pudo reclamar el tesoro.')
         }
+        
+        // Agregar puntos por reclamar
+        await fetch(`${API_BASE_URL}/points/add-collect`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ 
+            category: item.category, 
+            itemId: id,
+            createdAt: item.created_at 
+          })
+        })
         
         setLoading(false)
       } catch (err: any) {

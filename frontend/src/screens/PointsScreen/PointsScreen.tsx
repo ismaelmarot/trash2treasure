@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
+import { AchievementModal } from '@/components/AchievementModal'
 import {
   AchievementCard,
   AchievementDesc,
@@ -79,6 +80,18 @@ export function PointsScreen() {
   const [loading, setLoading] = useState(true)
   const [pointsData, setPointsData] = useState<any>(null)
   const [ranking, setRanking] = useState<any[]>([])
+  const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openAchievementModal = (achievement: any) => {
+    setSelectedAchievement(achievement)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedAchievement(null)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,7 +204,12 @@ export function PointsScreen() {
       <AchievementsSection>
         <AchievementsGrid>
           {achievements.map((achievement: any) => (
-            <AchievementCard key={achievement.id} $unlocked={achievement.unlocked}>
+            <AchievementCard 
+              key={achievement.id} 
+              $unlocked={achievement.unlocked}
+              onClick={() => openAchievementModal(achievement)}
+              style={{ cursor: 'pointer' }}
+            >
               <AchievementIcon>{achievement.icon}</AchievementIcon>
               <AchievementName>{achievement.name}</AchievementName>
               <AchievementDesc>{achievement.description}</AchievementDesc>
@@ -204,6 +222,12 @@ export function PointsScreen() {
           ))}
         </AchievementsGrid>
       </AchievementsSection>
+
+      <AchievementModal 
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        achievement={selectedAchievement}
+      />
     </Container>
   )
 }
