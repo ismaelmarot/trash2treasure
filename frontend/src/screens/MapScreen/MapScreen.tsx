@@ -18,7 +18,6 @@ import {
   CountdownWrapper,
   CrosshairContainer,
   DistanceGrid,
-  DotDivider,
   DragHandle,
   DragHandleContainer,
   EmptyIcon,
@@ -59,7 +58,8 @@ import {
   TopBarSegment,
   VerticalDivider,
   ViewButton,
-  ViewDetailButton
+  ViewDetailButton,
+  PublishedTime
 } from './MapScreen.styles'
 
 const getCategoryEmoji = (category: string) => {
@@ -526,15 +526,16 @@ export function MapScreen() {
                   <ItemName>{item.title}</ItemName>
                   <ItemDescription>{item.description}</ItemDescription>
                   <ItemMeta>
-                    <span>{getCategoryEmoji(item.category)}</span>
-                    <DotDivider />
                     <span>{Math.round(item.distance)}m</span>
-                    <DotDivider />
-                    <span>{new Date(item.created_at).toLocaleTimeString('es-ES', { 
+                  </ItemMeta>
+                  <PublishedTime>
+                    Pub: {new Date(item.created_at).toLocaleDateString('es-ES', { 
+                      day: 'numeric', 
+                      month: 'short',
                       hour: '2-digit',
                       minute: '2-digit'
-                    })}</span>
-                  </ItemMeta>
+                    })}
+                  </PublishedTime>
                   <CountdownWrapper>
                     <ItemCountdown createdAt={item.created_at} align="flex-start" />
                   </CountdownWrapper>
