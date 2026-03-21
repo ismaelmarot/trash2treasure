@@ -5,6 +5,7 @@ import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
 import { normalizeItems, getImageUrl } from '@/utils/imageUtils'
+import { useOfflineSync } from '@/hooks/useOfflineSync'
 import {
   ActionButton,
   ButtonGroup,
@@ -27,9 +28,11 @@ import {
   ItemTitle,
   LoadingSpinner,
   LoadingWrapper,
+  OfflineBanner,
   OwnerBadge,
   PlaceholderImage,
   Subtitle,
+  SyncButton,
   Tab,
   TabGroup,
   TagGroup,
@@ -68,6 +71,7 @@ export function ActivityScreen() {
   }
 
   const { token, user } = useAuth()
+  const { pendingCount, isSyncing, syncAll } = useOfflineSync()
 
   useEffect(() => {
     const getIPLocation = async () => {
@@ -191,6 +195,15 @@ export function ActivityScreen() {
         <Title>Actividad</Title>
         <Subtitle>Gestiona tus reportes y explora la comunidad</Subtitle>
       </Header>
+
+      {pendingCount > 0 && (
+        <OfflineBanner>
+          <span>⏳ {pendingCount} {pendingCount === 1 ? 'item pendiente' : 'items pendientes'} de sincronizar</span>
+          <SyncButton onClick={syncAll} disabled={isSyncing || !navigator.onLine}>
+            {isSyncing ? 'Sincronizando...' : 'Sincronizar ahora'}
+          </SyncButton>
+        </OfflineBanner>
+      )}
 
       <TabGroup>
         <Tab 

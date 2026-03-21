@@ -5,6 +5,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
+import { savePendingItem, isOnline, fileToBase64 } from '@/services/offlineDB'
 import {
   CameraControls,
   CameraModal,
@@ -224,6 +225,32 @@ export function AddItemScreen() {
       return
     }
 
+    // Si no hay conexión, guardar localmente
+    if (!isOnline()) {
+      try {
+        const imageBase64 = await fileToBase64(image)
+        await savePendingItem({
+          title,
+          description,
+          category,
+          latitude: location.lat,
+          longitude: location.lng,
+          imageBase64
+        })
+
+        setSuccess(true)
+        setTimeout(() => {
+          navigate('/activity')
+        }, 2500)
+      } catch (err: any) {
+        setError('Error al guardar offline: ' + err.message)
+      } finally {
+        setLoading(false)
+      }
+      return
+    }
+
+    // Conexión disponible, guardar en servidor
     try {
       const itemResponse = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
@@ -243,7 +270,6 @@ export function AddItemScreen() {
       const itemData = await itemResponse.json()
       if (!itemResponse.ok) throw new Error(itemData.error || 'Error al crear item')
 
-      // MongoDB devuelve _id, pero algunos endpoints usan id
       const itemId = itemData._id || itemData.id
       if (!itemId) throw new Error('Error: no se pudo obtener el ID del item')
 
@@ -265,11 +291,11 @@ export function AddItemScreen() {
       setSuccess(true)
       setTimeout(() => {
         navigate('/activity')
-      }, 2500);
+      }, 2500)
     } catch (err: any) {
       setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 

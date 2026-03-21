@@ -256,3 +256,38 @@ export const DistanceBadge = styled.span`
     font-weight: 500;
     margin-bottom: 4px;
 `
+
+export const OfflineBanner = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #FFF3CD;
+    border: 1px solid #FFE69C;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #664D03;
+`
+
+export const SyncButton = styled.button`
+    background: #664D03;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    
+    &:hover {
+        background: #554000;
+    }
+    
+    &:disabled {
+        background: #999;
+        cursor: not-allowed;
+    }
+`

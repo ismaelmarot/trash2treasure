@@ -1,0 +1,128 @@
+import { useState, useEffect, useCallback } from 'react'
+import { API_BASE_URL } from '@/constants'
+import {
+  getPendingItems,
+  markItemAsSynced,
+  removePendingItem,
+  getPendingCount,
+  isOnline,
+  base64ToFile,
+  type PendingItem
+} from '@/services/offlineDB'
+import { useAuth } from '@/hooks/useAuth'
+
+export function useOfflineSync() {
+  const [pendingCount, setPendingCount] = useState(0)
+  const [isSyncing, setIsSyncing] = useState(false)
+  const { token } = useAuth()
+
+  const updateCount = useCallback(async () => {
+    const count = await getPendingCount()
+    setPendingCount(count)
+  }, [])
+
+  const syncItem = useCallback(async (item: PendingItem): Promise<boolean> => {
+    if (!token) return false
+
+    try {
+      // 1. Crear el item en el backend
+      const itemResponse = await fetch(`${API_BASE_URL}/items`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: item.title,
+          description: item.description,
+          category: item.category,
+          latitude: item.latitude,
+          longitude: item.longitude
+        })
+      })
+
+      if (!itemResponse.ok) return false
+
+      const itemData = await itemResponse.json()
+      const itemId = itemData._id || itemData.id
+
+      // 2. Subir la foto si existe
+      if (item.imageBase64) {
+        const imageFile = base64ToFile(item.imageBase64, `photo-${Date.now()}.jpg`)
+        const formData = new FormData()
+        formData.append('image', imageFile)
+
+        const photoResponse = await fetch(`${API_BASE_URL}/items/${itemId}/photos`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        })
+
+        if (!photoResponse.ok) return false
+      }
+
+      // 3. Marcar como sincronizado
+      await markItemAsSynced(item.id)
+      // 4. Eliminar de pendientes
+      await removePendingItem(item.id)
+
+      return true
+    } catch (error) {
+      console.error('Error syncing item:', error)
+      return false
+    }
+  }, [token])
+
+  const syncAll = useCallback(async () => {
+    if (!isOnline() || !token || isSyncing) return
+
+    setIsSyncing(true)
+
+    try {
+      const pendingItems = await getPendingItems()
+
+      for (const item of pendingItems) {
+        const success = await syncItem(item)
+        if (!success) {
+          console.error('Failed to sync item:', item.id)
+        }
+      }
+
+      await updateCount()
+    } catch (error) {
+      console.error('Error during sync:', error)
+    } finally {
+      setIsSyncing(false)
+    }
+  }, [token, isSyncing, syncItem, updateCount])
+
+  // Sincronizar cuando vuelva la conexión
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log('Connection restored, syncing...')
+      syncAll()
+    }
+
+    window.addEventListener('online', handleOnline)
+
+    // Intentar sincronizar al cargar si hay conexión
+    if (isOnline()) {
+      syncAll()
+    }
+
+    updateCount()
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+    }
+  }, [syncAll, updateCount])
+
+  return {
+    pendingCount,
+    isSyncing,
+    syncAll,
+    updateCount
+  }
+}
