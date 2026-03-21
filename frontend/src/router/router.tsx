@@ -7,6 +7,7 @@ import {
   EditProfileScreen,
   ItemDetailScreen,
   MapScreen,
+  PointsScreen,
   ProfileScreen,
   SearchScreen,
   LoginScreen,
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
           {
             path: 'edit-profile',
             element: <EditProfileScreen />,
+          },
+          {
+            path: 'points',
+            element: <PointsScreen />,
           },
           {
             path: 'about',

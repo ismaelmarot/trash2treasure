@@ -1,0 +1,1 @@
+export { PointsScreen } from './PointsScreen'
