@@ -25,8 +25,12 @@ export function SplashScreen() {
   const [totalPoints, setTotalPoints] = useState(0)
   const [visibleLetters, setVisibleLetters] = useState(0)
 
+  const SPLASH_DURATION = 3000 // 3 segundos
+
   useEffect(() => {
-    // Animación letra a letra
+    // Calcular intervalo para que termine exactamente en SPLASH_DURATION
+    const interval = SPLASH_DURATION / USP_TEXT.length
+    
     const letterInterval = setInterval(() => {
       setVisibleLetters(prev => {
         if (prev >= USP_TEXT.length) {
@@ -35,7 +39,7 @@ export function SplashScreen() {
         }
         return prev + 1
       })
-    }, 40)
+    }, interval)
 
     return () => clearInterval(letterInterval)
   }, [])
