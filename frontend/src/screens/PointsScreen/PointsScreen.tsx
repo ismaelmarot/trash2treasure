@@ -266,8 +266,10 @@ export function PointsScreen() {
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division, achievements: unlockedAchievements } = pointsData
-  const unlockedIds = unlockedAchievements?.map((a: any) => a.achievement_id) || []
+  const { points, division, achievements: achievementsFromBackend } = pointsData
+
+  // Usar los logros del backend (que ya tienen unlocked calculado)
+  const achievements = achievementsFromBackend || ACHIEVEMENTS.map(a => ({ ...a, unlocked: false }))
 
   // Calcular totales
   const totalCategoryPoints = Object.values(points.category_points || {}).reduce((sum: number, v) => sum + (Number(v) || 0), 0)
@@ -454,15 +456,11 @@ export function PointsScreen() {
       <SectionTitle>🏅 Logros</SectionTitle>
       <AchievementsSection>
         <AchievementsGrid>
-          {ACHIEVEMENTS.map((achievement) => (
+          {achievements.map((achievement: any) => (
             <AchievementCard 
               key={achievement.id} 
-              $unlocked={unlockedIds.includes(achievement.id)}
-              onClick={() => openAchievementModal({
-                ...achievement,
-                unlocked: unlockedIds.includes(achievement.id),
-                unlocked_at: unlockedAchievements?.find((a: any) => a.achievement_id === achievement.id)?.unlocked_at
-              })}
+              $unlocked={achievement.unlocked}
+              onClick={() => openAchievementModal(achievement)}
             >
               <AchievementIcon>{achievement.icon}</AchievementIcon>
               <AchievementName>{achievement.name}</AchievementName>
