@@ -73,8 +73,16 @@ export function SplashScreen() {
     loadData()
   }, [isAuthenticated, token, navigate])
 
+  const skipSplash = () => {
+    if (isAuthenticated) {
+      navigate('/app')
+    } else {
+      navigate('/welcome')
+    }
+  }
+
   return (
-    <Container>
+    <Container onClick={skipSplash}>
       <AppIcon src={appIcon} alt="App logo" />
       <AppName>Trash2Treasure</AppName>
       <USP>
