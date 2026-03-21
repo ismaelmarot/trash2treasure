@@ -44,7 +44,26 @@ export const AppName = styled.h2`
   font-size: 34px;
   font-weight: 800;
   margin: 1rem 0 0;
+  background: linear-gradient(
+    90deg,
+    ${COLORS.black} 0%,
+    ${COLORS.black} 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    ${COLORS.black} 60%,
+    ${COLORS.black} 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   animation: ${slideUp} 0.8s ease 0.2s both;
+  
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  animation: ${slideUp} 0.8s ease 0.2s both, shimmer 2s ease-in-out infinite;
 `
 
 export const AppVersion = styled.span`
