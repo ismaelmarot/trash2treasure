@@ -116,29 +116,26 @@ export const CategoryChip = styled.button<{ $active: boolean }>`
 
 export const ResultsGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
 
-    @media (max-width: 480px) {
+    @media (min-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-
-    @media (max-width: 360px) {
-        grid-template-columns: 1fr;
+        gap: 20px;
     }
 `
 
-export const ItemCard = styled.div`
+export const ResultCard = styled.div`
     background: ${COLORS.allWhite};
     border-radius: ${SPACING.lg};
     overflow: hidden;
     box-shadow: 0 4px 20px ${COLORS.shadow};
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
     
     &:hover {
         transform: translateY(-6px);

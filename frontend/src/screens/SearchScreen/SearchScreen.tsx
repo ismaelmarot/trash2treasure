@@ -17,7 +17,7 @@ import {
   EmptyResults,
   Header,
   ImageWrapper,
-  ItemCard,
+  ResultCard,
   ItemContent,
   ItemDescription,
   ItemHeader,
@@ -178,7 +178,7 @@ export function SearchScreen() {
       ) : (
         <ResultsGrid>
           {filteredItems.map(item => (
-            <ItemCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
+            <ResultCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
               <ImageWrapper>
                 {item.main_image ? (
                   <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
@@ -224,7 +224,7 @@ export function SearchScreen() {
                         : '¡Lo quiero!'}
                 </ClaimButton>
               </ItemContent>
-            </ItemCard>
+            </ResultCard>
           ))}
           {filteredItems.length === 0 && (
             <EmptyResults>

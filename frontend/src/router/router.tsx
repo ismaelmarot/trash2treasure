@@ -3,6 +3,7 @@ import {
   ActivityScreen,
   AddItemScreen,
   ClaimConfirmationScreen,
+  EditItemScreen,
   ItemDetailScreen,
   MapScreen,
   ProfileScreen,
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
           {
             path: 'item/:id',
             element: <ItemDetailScreen />,
+          },
+          {
+            path: 'edit/:id',
+            element: <EditItemScreen />,
           },
           {
             path: 'claimed/:id',

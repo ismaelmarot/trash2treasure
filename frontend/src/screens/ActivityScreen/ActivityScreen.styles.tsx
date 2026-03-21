@@ -51,8 +51,13 @@ export const Tab = styled.button<{ $active: boolean }>`
 
 export const Grid = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
 `
 
 export const ItemCard = styled.div`
@@ -62,6 +67,7 @@ export const ItemCard = styled.div`
     box-shadow: 0 4px 20px ${COLORS.shadow};
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
     
     &:hover {
         transform: translateY(-6px);
@@ -230,6 +236,23 @@ export const DeleteButton = styled.button`
     &:hover {
         background: ${COLORS.danger};
         color: ${COLORS.allWhite};
+    }
+`
+
+export const EditButton = styled.button`
+    background: ${COLORS.info};
+    border: 1px solid ${COLORS.info};
+    color: ${COLORS.allWhite};
+    padding: ${SPACING.sm} ${SPACING.md};
+    border-radius: 34px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: #0055b3;
+        border-color: #0055b3;
     }
 `
 

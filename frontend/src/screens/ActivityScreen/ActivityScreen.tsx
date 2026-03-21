@@ -15,6 +15,7 @@ import {
   Container,
   DeleteButton,
   DistanceBadge,
+  EditButton,
   EmptyIcon,
   EmptyState,
   Grid,
@@ -272,9 +273,17 @@ export function ActivityScreen() {
                   <div />
                   <ButtonGroup>
                     {activeTab === 'mine' && (
-                      <DeleteButton onClick={(e) => handleDeleteClick(e, item.id)}>
-                        Eliminar
-                      </DeleteButton>
+                      <>
+                        <EditButton onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/edit/${item.id}`)
+                        }}>
+                          Editar
+                        </EditButton>
+                        <DeleteButton onClick={(e) => handleDeleteClick(e, item.id)}>
+                          Eliminar
+                        </DeleteButton>
+                      </>
                     )}
                     {activeTab === 'claimed' && item.claimed_by === user?.id && (
                       <UnclaimButton onClick={(e) => handleUnclaimClick(e, item.id)}>
