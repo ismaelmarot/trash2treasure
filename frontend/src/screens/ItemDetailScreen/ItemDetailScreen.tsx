@@ -28,6 +28,7 @@ import {
   NavigateButton,
   OwnerBadge,
   PlaceholderImage,
+  ProximityHint,
   SectionTitle,
   Title,
   UnclaimButton
@@ -257,6 +258,12 @@ export function ItemDetailScreen() {
                   ? `Acércate (${Math.round(distanceInMeters)}m)`
                   : '¡Lo quiero!'}
         </ClaimButton>
+
+        {!item.claimed_by && item.user_id !== user?.id && !isWithinRange && distanceInMeters !== null && (
+          <ProximityHint>
+            Debes estar a menos de 50m para reclamar este tesoro
+          </ProximityHint>
+        )}
       </ContentCard>
 
       <ConfirmationModal 

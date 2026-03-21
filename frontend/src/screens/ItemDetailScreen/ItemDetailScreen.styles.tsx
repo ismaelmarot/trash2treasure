@@ -230,6 +230,14 @@ export const ClaimButton = styled.button`
     }
 `
 
+export const ProximityHint = styled.p`
+    font-size: 13px;
+    color: ${COLORS.greyDark};
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 0;
+`
+
 export const UnclaimButton = styled.button`
     width: 100%;
     background: transparent;
