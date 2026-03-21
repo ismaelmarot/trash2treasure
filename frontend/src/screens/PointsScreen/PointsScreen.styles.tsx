@@ -433,19 +433,6 @@ export const DivisionItem = styled.div<{ $isCurrent?: boolean; $isPast?: boolean
   border: ${props => props.$isCurrent ? '2px solid #28a745' : '1px solid #eee'};
 `
 
-export const DivisionName = styled.div`
-  font-weight: 600;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`
-
-export const DivisionRange = styled.div`
-  font-size: 12px;
-  opacity: 0.8;
-`
-
 // Info de cómo obtener puntos
 export const InfoSection = styled.div`
   margin-top: 24px;
@@ -486,4 +473,117 @@ export const InfoDetail = styled.div`
   font-size: 12px;
   color: ${COLORS.greyDark};
   line-height: 1.4;
+`
+
+// Divisiones
+export const DivisionLevel = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  color: ${COLORS.black};
+  margin: 16px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+`
+
+export const DivisionGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+`
+
+export const DivisionCard = styled.div<{ $isCurrent?: boolean; $isPast?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: ${props => {
+    if (props.$isCurrent) return 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
+    if (props.$isPast) return '#f0f0f0';
+    return '#f8f8f8';
+  }};
+  color: ${props => {
+    if (props.$isCurrent) return 'white';
+    if (props.$isPast) return COLORS.greyDark;
+    return '#999';
+  }};
+  border: ${props => props.$isCurrent ? '2px solid #28a745' : '1px solid #eee'};
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateX(4px);
+  }
+`
+
+export const DivisionIcon = styled.div`
+  font-size: 24px;
+  flex-shrink: 0;
+`
+
+export const DivisionInfo = styled.div`
+  flex: 1;
+`
+
+export const DivisionName = styled.div`
+  font-weight: 600;
+  font-size: 14px;
+`
+
+export const DivisionRange = styled.div`
+  font-size: 12px;
+  opacity: 0.8;
+`
+
+export const ProgressBar = styled.div`
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+`
+
+export const ProgressFill = styled.div<{ $progress: number }>`
+  width: ${props => props.$progress}%;
+  height: 100%;
+  background: white;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+`
+
+// Tabs para Desafíos
+export const TabContainer = styled.div`
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 16px;
+`
+
+export const Tab = styled.button<{ $active: boolean }>`
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: ${props => props.$active ? 'white' : 'transparent'};
+  color: ${props => props.$active ? COLORS.black : COLORS.greyDark};
+  font-size: 14px;
+  font-weight: ${props => props.$active ? '600' : '500'};
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: ${COLORS.black};
+  }
+`
+
+export const TabContent = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `

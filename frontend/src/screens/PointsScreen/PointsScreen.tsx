@@ -19,13 +19,15 @@ import {
   CollapsibleContent,
   CollapsibleHeader,
   CollapsibleSection,
-  CollapsibleSummary,
   CollapsibleTitle,
   Container,
   Divider,
   DivisionBadge,
-  DivisionItem,
-  DivisionList,
+  DivisionCard,
+  DivisionGrid,
+  DivisionIcon,
+  DivisionInfo,
+  DivisionLevel,
   DivisionName,
   DivisionRange,
   Header,
@@ -41,6 +43,8 @@ import {
   PointsLabel,
   PointsValue,
   Position,
+  ProgressBar,
+  ProgressFill,
   RankingItem,
   RankingList,
   SectionTitle,
@@ -49,6 +53,9 @@ import {
   StatsRow,
   StatValue,
   Subtitle,
+  Tab,
+  TabContainer,
+  TabContent,
   Title,
   UserAvatar,
   UserDivision,
@@ -100,17 +107,98 @@ const FAMILY_INFO: Record<string, { icon: string; name: string; color: string }>
 }
 
 const DIVISIONS = [
-  { name: 'Curioso Verde', min: 0, max: 100, icon: '🌱' },
-  { name: 'Recolector Novato', min: 100, max: 200, icon: '♻️' },
-  { name: 'Semilla', min: 200, max: 400, icon: '🌿' },
-  { name: 'Eco Aprendiz', min: 400, max: 700, icon: '🌳' },
-  { name: 'Guardián del Bosque', min: 700, max: 1000, icon: '🌲' },
-  { name: 'Maestro del Reciclaje', min: 1000, max: 1500, icon: '🏆' },
-  { name: 'Defensor del Planeta', min: 1500, max: 2000, icon: '🌍' },
-  { name: 'Titán Verde', min: 2000, max: 2500, icon: '⚡' },
-  { name: 'Gaia Ascendido', min: 2500, max: 3000, icon: '🚀' },
-  { name: 'Leyenda Sustentable', min: 3000, max: Infinity, icon: '👑' }
+  { level: '🌱 Nivel bajo', items: [
+    { name: 'Curioso Verde', min: 0, max: 100, icon: '🌱' },
+    { name: 'Recolector Novato', min: 0, max: 200, icon: '♻️' },
+    { name: 'Semilla', min: 0, max: 150, icon: '🌿' },
+    { name: 'Despertando', min: 0, max: 200, icon: '☀️' }
+  ]},
+  { level: '♻️ Nivel medio bajo', items: [
+    { name: 'Eco Aprendiz', min: 200, max: 400, icon: '📚' },
+    { name: 'Separador Serial', min: 300, max: 600, icon: '📊' },
+    { name: 'Clasificador Ninja', min: 400, max: 700, icon: '🥷' },
+    { name: 'Anti Basura', min: 300, max: 600, icon: '🚫' }
+  ]},
+  { level: '🌿 Nivel medio', items: [
+    { name: 'Recuperador Urbano', min: 500, max: 900, icon: '🏙️' },
+    { name: 'Guardián del Bosque', min: 600, max: 1000, icon: '🌲' },
+    { name: 'Reutilizador Pro', min: 700, max: 1200, icon: '🔄' },
+    { name: 'Eco Hacker', min: 800, max: 1200, icon: '💻' }
+  ]},
+  { level: '🌳 Nivel medio alto', items: [
+    { name: 'Maestro del Reciclaje', min: 1000, max: 1500, icon: '🏆' },
+    { name: 'Alquimista de Residuos', min: 1200, max: 1700, icon: '⚗️' },
+    { name: 'Ingeniero Verde', min: 1300, max: 1800, icon: '🔧' },
+    { name: 'Transformador', min: 1200, max: 1600, icon: '⚡' }
+  ]},
+  { level: '🌎 Nivel alto', items: [
+    { name: 'Defensor del Planeta', min: 1500, max: 2000, icon: '🌍' },
+    { name: 'Titán Verde', min: 1800, max: 2500, icon: '💪' },
+    { name: 'Eco Estratega', min: 1700, max: 2300, icon: '🧠' },
+    { name: 'Señor del Compost', min: 2000, max: 2500, icon: '👑' }
+  ]},
+  { level: '🚀 Nivel épico', items: [
+    { name: 'Gaia Ascendido', min: 2000, max: Infinity, icon: '🚀' },
+    { name: 'Leyenda Sustentable', min: 2500, max: Infinity, icon: '⭐' },
+    { name: 'Arquitecto del Futuro', min: 3000, max: Infinity, icon: '🏗️' },
+    { name: 'Deidad del Reciclaje', min: 5000, max: Infinity, icon: '💫' }
+  ]}
 ]
+
+const ACHIEVEMENTS = [
+  { id: 'first_report', name: 'Primer Reporte', description: 'Reporta tu primer item', icon: '📸', points: 5 },
+  { id: 'first_collect', name: 'Primera Recolección', description: 'Recolecta tu primer item', icon: '♻️', points: 10 },
+  { id: 'reporter_10', name: 'Reportero', description: '10 items reportados', icon: '📸', points: 10 },
+  { id: 'reporter_50', name: 'Reportero Pro', description: '50 items reportados', icon: '📸', points: 25 },
+  { id: 'reporter_100', name: 'Reportero Master', description: '100 items reportados', icon: '📸', points: 50 },
+  { id: 'collector_10', name: 'Recolector', description: '10 items recolectados', icon: '♻️', points: 15 },
+  { id: 'collector_50', name: 'Recolector Pro', description: '50 items recolectados', icon: '♻️', points: 30 },
+  { id: 'collector_100', name: 'Recolector Master', description: '100 items recolectados', icon: '♻️', points: 60 },
+  { id: 'streak_3', name: 'Racha de 3', description: '3 días seguidos activo', icon: '🔥', points: 4 },
+  { id: 'streak_5', name: 'Racha de 5', description: '5 días seguidos activo', icon: '🔥', points: 6 },
+  { id: 'streak_10', name: 'Racha de 10', description: '10 días seguidos activo', icon: '🔥', points: 15 },
+  { id: 'eco_master', name: 'Eco Master', description: '5 items ECO en 1 día', icon: '🌱', points: 10 },
+  { id: 'tech_hunter', name: 'Tech Hunter', description: '3 items TECH en 1 día', icon: '⚡', points: 10 },
+  { id: 'heavy_duty', name: 'Heavy Duty', description: '2 items HEAVY en 1 día', icon: '🏗️', points: 10 },
+  { id: 'balanced_cleaner', name: 'Balanced Cleaner', description: '1 de cada familia en 1 día', icon: '🌍', points: 20 },
+  { id: 'family_diverse', name: 'Diversidad', description: 'Usa 4 familias distintas', icon: '🌈', points: 10 },
+  { id: 'speed_collector', name: 'Recolector Rápido', description: 'Recolecta en <1 hora', icon: '⚡', points: 3 },
+  { id: 'combo_2', name: 'Combo x2', description: '2 items misma familia', icon: '🔁', points: 2 },
+  { id: 'combo_3', name: 'Combo x3', description: '3 items misma familia', icon: '🔁', points: 4 },
+  { id: 'combo_5', name: 'Combo x5', description: '5 items misma familia', icon: '🔁', points: 7 }
+]
+
+const CHALLENGES = {
+  daily: [
+    { id: 'daily_report_3', name: 'Reportero Diario', description: 'Reporta 3 items', icon: '📸', target: 3, reward: 4, type: 'reports' },
+    { id: 'daily_report_5', name: 'Reportero Intenso', description: 'Reporta 5 items', icon: '📸', target: 5, reward: 7, type: 'reports' },
+    { id: 'daily_collect_3', name: 'Recolector Diario', description: 'Recolecta 3 items', icon: '♻️', target: 3, reward: 7, type: 'collected' },
+    { id: 'daily_collect_5', name: 'Recolector Intenso', description: 'Recolecta 5 items', icon: '♻️', target: 5, reward: 12, type: 'collected' },
+    { id: 'daily_families_2', name: 'Diversidad Diaria', description: 'Usa 2 familias', icon: '🌈', target: 2, reward: 10, type: 'families' },
+    { id: 'daily_families_3', name: 'Multifamilia', description: 'Usa 3 familias', icon: '🌈', target: 3, reward: 20, type: 'families' },
+    { id: 'daily_speed', name: 'Velocista', description: '3 items <6h', icon: '⚡', target: 3, reward: 3, type: 'speed' }
+  ],
+  weekly: [
+    { id: 'weekly_report_10', name: 'Reportero Semanal', description: '10 items esta semana', icon: '📸', target: 10, reward: 30, type: 'reports' },
+    { id: 'weekly_collect_10', name: 'Recolector Semanal', description: '10 items esta semana', icon: '♻️', target: 10, reward: 30, type: 'collected' },
+    { id: 'weekly_categories_5', name: 'Variado', description: '5 categorías esta semana', icon: '📊', target: 5, reward: 10, type: 'categories' },
+    { id: 'weekly_families_4', name: 'Multifamilia Semanal', description: '4 familias esta semana', icon: '🌈', target: 4, reward: 50, type: 'families' },
+    { id: 'weekly_streak', name: 'Racha Semanal', description: '7 días activo', icon: '🔥', target: 7, reward: 15, type: 'streak' }
+  ],
+  monthly: [
+    { id: 'monthly_report_50', name: 'Reportero Mensual', description: '50 items este mes', icon: '📸', target: 50, reward: 50, type: 'reports' },
+    { id: 'monthly_report_100', name: 'Reportero Elite', description: '100 items este mes', icon: '📸', target: 100, reward: 120, type: 'reports' },
+    { id: 'monthly_collect_50', name: 'Recolector Mensual', description: '50 items este mes', icon: '♻️', target: 50, reward: 100, type: 'collected' },
+    { id: 'monthly_collect_100', name: 'Recolector Elite', description: '100 items este mes', icon: '♻️', target: 100, reward: 240, type: 'collected' },
+    { id: 'monthly_families_5', name: 'Versatilidad', description: '50 items en 4+ familias', icon: '🌍', target: 50, reward: 400, type: 'families' }
+  ],
+  annual: [
+    { id: 'annual_eco_200', name: 'Eco Impact', description: '200 items ECO', icon: '🌱', target: 200, reward: 1000, type: 'eco' },
+    { id: 'annual_tech_100', name: 'Tech Guardian', description: '100 items TECH', icon: '⚡', target: 100, reward: 1200, type: 'tech' },
+    { id: 'annual_heavy_80', name: 'City Cleaner', description: '80 items HEAVY', icon: '🏗️', target: 80, reward: 1200, type: 'heavy' },
+    { id: 'annual_all_500', name: 'Legend Combo', description: '500 items + todas familias', icon: '👑', target: 500, reward: 2000, type: 'all' }
+  ]
+}
 
 const POINTS_INFO = [
   { icon: '📸', title: 'Reportar', detail: '+1 punto por cada reporte. +3 extra si la categoría es crítica (baterías, electrónicos, construcción, muebles)' },
@@ -130,6 +218,7 @@ export function PointsScreen() {
   const [ranking, setRanking] = useState<any[]>([])
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('daily')
   
   // Estados para secciones desplegables
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
@@ -174,14 +263,11 @@ export function PointsScreen() {
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division, achievements } = pointsData
+  const { points, division, achievements: unlockedAchievements } = pointsData
+  const unlockedIds = unlockedAchievements?.map((a: any) => a.achievement_id) || []
 
   const maxCategoryPoints = Math.max(...Object.values(points.category_points || {}).map(v => Number(v) || 0), 1)
   const maxFamilyReports = Math.max(...Object.values(points.family_reports || {}).map(v => Number(v) || 0), 1)
-  
-  // Totales para resumen
-  const totalCategories = Object.keys(points.category_points || {}).length
-  const totalFamilies = Object.values(points.family_reports || {}).filter(v => Number(v) > 0).length
 
   return (
     <Container>
@@ -250,34 +336,42 @@ export function PointsScreen() {
           <CollapsibleArrow $isOpen={isDivisionsOpen}>▼</CollapsibleArrow>
         </CollapsibleHeader>
         <CollapsibleContent $isOpen={isDivisionsOpen}>
-          <DivisionList>
-            {DIVISIONS.map((div) => {
-              const isCurrent = div.name === division
-              const isPast = points.total_points >= div.max
-              return (
-                <DivisionItem key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
-                  <DivisionName>
-                    {div.icon} {div.name}
-                    {isCurrent && ' (Tú)'}
-                  </DivisionName>
-                  <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
-                </DivisionItem>
-              )
-            })}
-          </DivisionList>
+          {DIVISIONS.map((level) => (
+            <div key={level.level}>
+              <DivisionLevel>{level.level}</DivisionLevel>
+              <DivisionGrid>
+                {level.items.map((div) => {
+                  const isCurrent = div.name === division
+                  const isPast = points.total_points >= div.max
+                  const progress = div.max === Infinity ? 100 : Math.min((points.total_points / div.max) * 100, 100)
+                  
+                  return (
+                    <DivisionCard key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
+                      <DivisionIcon>{div.icon}</DivisionIcon>
+                      <DivisionInfo>
+                        <DivisionName>{div.name}</DivisionName>
+                        <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
+                        {isCurrent && (
+                          <ProgressBar>
+                            <ProgressFill $progress={progress} />
+                          </ProgressBar>
+                        )}
+                      </DivisionInfo>
+                      {isCurrent && <span style={{ fontSize: '12px', color: '#34c759', fontWeight: '600' }}>Tú</span>}
+                    </DivisionCard>
+                  )
+                })}
+              </DivisionGrid>
+            </div>
+          ))}
         </CollapsibleContent>
       </CollapsibleSection>
 
       {/* Puntos por Categoría (desplegable) */}
       <CollapsibleSection>
         <CollapsibleHeader onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
-          <CollapsibleTitle>
-            📊 Puntos por Categoría
-          </CollapsibleTitle>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <CollapsibleSummary>{totalCategories} categorías</CollapsibleSummary>
-            <CollapsibleArrow $isOpen={isCategoriesOpen}>▼</CollapsibleArrow>
-          </div>
+          <CollapsibleTitle>📊 Puntos por Categoría</CollapsibleTitle>
+          <CollapsibleArrow $isOpen={isCategoriesOpen}>▼</CollapsibleArrow>
         </CollapsibleHeader>
         <CollapsibleContent $isOpen={isCategoriesOpen}>
           {Object.entries(points.category_points || {}).length > 0 ? (
@@ -296,7 +390,7 @@ export function PointsScreen() {
               </BarChartRow>
             ))
           ) : (
-            <p style={{ textAlign: 'center', color: '#8e8e93', fontSize: '14px' }}>
+            <p style={{ textAlign: 'center', color: '#8e8e93', fontSize: '14px', padding: '20px' }}>
               Reporta o recolecta items para ganar puntos
             </p>
           )}
@@ -306,13 +400,8 @@ export function PointsScreen() {
       {/* Actividad por Familia (desplegable) */}
       <CollapsibleSection>
         <CollapsibleHeader onClick={() => setIsFamiliesOpen(!isFamiliesOpen)}>
-          <CollapsibleTitle>
-            🏠 Actividad por Familia
-          </CollapsibleTitle>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <CollapsibleSummary>{totalFamilies} familias</CollapsibleSummary>
-            <CollapsibleArrow $isOpen={isFamiliesOpen}>▼</CollapsibleArrow>
-          </div>
+          <CollapsibleTitle>🏠 Actividad por Familia</CollapsibleTitle>
+          <CollapsibleArrow $isOpen={isFamiliesOpen}>▼</CollapsibleArrow>
         </CollapsibleHeader>
         <CollapsibleContent $isOpen={isFamiliesOpen}>
           {Object.entries(points.family_reports || {}).map(([family, count]) => (
@@ -334,12 +423,60 @@ export function PointsScreen() {
 
       <Divider />
 
+      {/* Logros */}
+      <SectionTitle>🏅 Logros</SectionTitle>
+      <AchievementsSection>
+        <AchievementsGrid>
+          {ACHIEVEMENTS.map((achievement) => (
+            <AchievementCard 
+              key={achievement.id} 
+              $unlocked={unlockedIds.includes(achievement.id)}
+              onClick={() => openAchievementModal({
+                ...achievement,
+                unlocked: unlockedIds.includes(achievement.id),
+                unlocked_at: unlockedAchievements?.find((a: any) => a.achievement_id === achievement.id)?.unlocked_at
+              })}
+            >
+              <AchievementIcon>{achievement.icon}</AchievementIcon>
+              <AchievementName>{achievement.name}</AchievementName>
+              <AchievementDesc>{achievement.description}</AchievementDesc>
+              <div style={{ fontSize: '12px', color: '#34c759', marginTop: '4px', fontWeight: '600' }}>
+                +{achievement.points} pts
+              </div>
+            </AchievementCard>
+          ))}
+        </AchievementsGrid>
+      </AchievementsSection>
+
+      <Divider />
+
+      {/* Desafíos con pestañas */}
+      <SectionTitle>🎯 Desafíos</SectionTitle>
+      <TabContainer>
+        <Tab $active={activeTab === 'daily'} onClick={() => setActiveTab('daily')}>Diario</Tab>
+        <Tab $active={activeTab === 'weekly'} onClick={() => setActiveTab('weekly')}>Semanal</Tab>
+        <Tab $active={activeTab === 'monthly'} onClick={() => setActiveTab('monthly')}>Mensual</Tab>
+        <Tab $active={activeTab === 'annual'} onClick={() => setActiveTab('annual')}>Anual</Tab>
+      </TabContainer>
+      <TabContent>
+        {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => (
+          <AchievementCard key={challenge.id} $unlocked={false}>
+            <AchievementIcon>{challenge.icon}</AchievementIcon>
+            <AchievementName>{challenge.name}</AchievementName>
+            <AchievementDesc>{challenge.description}</AchievementDesc>
+            <div style={{ fontSize: '12px', color: '#ff9500', marginTop: '4px', fontWeight: '600' }}>
+              +{challenge.reward} pts
+            </div>
+          </AchievementCard>
+        ))}
+      </TabContent>
+
+      <Divider />
+
       {/* Cómo obtener puntos (desplegable) */}
       <CollapsibleSection>
         <CollapsibleHeader onClick={() => setIsInfoOpen(!isInfoOpen)}>
-          <CollapsibleTitle>
-            ℹ️ Cómo obtener puntos
-          </CollapsibleTitle>
+          <CollapsibleTitle>ℹ️ Cómo obtener puntos</CollapsibleTitle>
           <CollapsibleArrow $isOpen={isInfoOpen}>▼</CollapsibleArrow>
         </CollapsibleHeader>
         <CollapsibleContent $isOpen={isInfoOpen}>
@@ -356,31 +493,6 @@ export function PointsScreen() {
           </InfoList>
         </CollapsibleContent>
       </CollapsibleSection>
-
-      <Divider />
-
-      {/* Logros */}
-      <SectionTitle>🏅 Logros</SectionTitle>
-      <AchievementsSection>
-        <AchievementsGrid>
-          {achievements.map((achievement: any) => (
-            <AchievementCard 
-              key={achievement.id} 
-              $unlocked={achievement.unlocked}
-              onClick={() => openAchievementModal(achievement)}
-            >
-              <AchievementIcon>{achievement.icon}</AchievementIcon>
-              <AchievementName>{achievement.name}</AchievementName>
-              <AchievementDesc>{achievement.description}</AchievementDesc>
-              {achievement.unlocked && (
-                <div style={{ fontSize: '12px', color: '#34c759', marginTop: '4px', fontWeight: '600' }}>
-                  +{achievement.points} pts
-                </div>
-              )}
-            </AchievementCard>
-          ))}
-        </AchievementsGrid>
-      </AchievementsSection>
 
       <AchievementModal 
         isOpen={isModalOpen}
