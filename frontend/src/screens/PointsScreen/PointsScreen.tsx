@@ -47,6 +47,7 @@ import {
   Position,
   ProgressBar,
   ProgressFill,
+  ProgressStats,
   RankingItem,
   RankingList,
   SectionTitle,
@@ -364,11 +365,12 @@ export function PointsScreen() {
                             <ProgressBar>
                               <ProgressFill $progress={progress} />
                             </ProgressBar>
-                            <div style={{ fontSize: '11px', opacity: 0.9, marginTop: '6px' }}>
-                              {pointsRemaining > 0 
+                            <ProgressStats>
+                              <span>{pointsFromMin} pts</span>
+                              <span>{pointsRemaining > 0 
                                 ? `${pointsRemaining} pts para siguiente nivel` 
-                                : 'Nivel máximo alcanzado'}
-                            </div>
+                                : 'Nivel máximo'}</span>
+                            </ProgressStats>
                           </>
                         )}
                       </DivisionInfo>

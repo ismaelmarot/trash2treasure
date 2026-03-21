@@ -563,6 +563,15 @@ export const ProgressFill = styled.div<{ $progress: number }>`
   transition: width 0.5s ease;
 `
 
+export const ProgressStats = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.9;
+`
+
 // Tabs para Desafíos
 export const TabContainer = styled.div`
   display: flex;
