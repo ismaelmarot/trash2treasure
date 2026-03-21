@@ -13,6 +13,7 @@ import {
   BarChartRow,
   BarContainer,
   BarFill,
+  BarHeader,
   BarLabel,
   BarValue,
   CollapsibleArrow,
@@ -25,6 +26,7 @@ import {
   DivisionBadge,
   DivisionCard,
   DivisionGrid,
+  DivisionHeader,
   DivisionIcon,
   DivisionInfo,
   DivisionLevel,
@@ -349,15 +351,17 @@ export function PointsScreen() {
                     <DivisionCard key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
                       <DivisionIcon>{div.icon}</DivisionIcon>
                       <DivisionInfo>
-                        <DivisionName>{div.name}</DivisionName>
-                        <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
+                        <DivisionHeader>
+                          <DivisionName>{div.name}</DivisionName>
+                          <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
+                        </DivisionHeader>
                         {isCurrent && (
                           <ProgressBar>
                             <ProgressFill $progress={progress} />
                           </ProgressBar>
                         )}
                       </DivisionInfo>
-                      {isCurrent && <span style={{ fontSize: '12px', color: '#34c759', fontWeight: '600' }}>Tú</span>}
+                      {isCurrent && <span style={{ fontSize: '12px', color: 'white', fontWeight: '600', marginLeft: '12px' }}>Tú</span>}
                     </DivisionCard>
                   )
                 })}
@@ -377,16 +381,18 @@ export function PointsScreen() {
           {Object.entries(points.category_points || {}).length > 0 ? (
             Object.entries(points.category_points || {}).map(([category, catPoints]) => (
               <BarChartRow key={category}>
-                <BarLabel>
-                  {CATEGORY_INFO[category]?.icon || '📦'} {CATEGORY_INFO[category]?.name || category}
-                </BarLabel>
+                <BarHeader>
+                  <BarLabel>
+                    {CATEGORY_INFO[category]?.icon || '📦'} {CATEGORY_INFO[category]?.name || category}
+                  </BarLabel>
+                  <BarValue>{catPoints as number} pts</BarValue>
+                </BarHeader>
                 <BarContainer>
                   <BarFill 
                     $color={CATEGORY_INFO[category]?.color || '#0071e3'} 
                     $width={(Number(catPoints) / maxCategoryPoints) * 100} 
                   />
                 </BarContainer>
-                <BarValue>{catPoints as number}</BarValue>
               </BarChartRow>
             ))
           ) : (
@@ -406,16 +412,18 @@ export function PointsScreen() {
         <CollapsibleContent $isOpen={isFamiliesOpen}>
           {Object.entries(points.family_reports || {}).map(([family, count]) => (
             <BarChartRow key={family}>
-              <BarLabel>
-                {FAMILY_INFO[family]?.icon || '📦'} {FAMILY_INFO[family]?.name || family}
-              </BarLabel>
+              <BarHeader>
+                <BarLabel>
+                  {FAMILY_INFO[family]?.icon || '📦'} {FAMILY_INFO[family]?.name || family}
+                </BarLabel>
+                <BarValue>{count as number}</BarValue>
+              </BarHeader>
               <BarContainer>
                 <BarFill 
                   $color={FAMILY_INFO[family]?.color || '#0071e3'} 
                   $width={(Number(count) / maxFamilyReports) * 100} 
                 />
               </BarContainer>
-              <BarValue>{count as number}</BarValue>
             </BarChartRow>
           ))}
         </CollapsibleContent>

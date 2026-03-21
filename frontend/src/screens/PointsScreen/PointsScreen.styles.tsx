@@ -26,7 +26,7 @@ export const Subtitle = styled.p`
 `
 
 export const PointsCard = styled.div`
-  background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+  background: ${COLORS.primaryDark};
   border-radius: 24px;
   padding: 24px;
   margin-bottom: 24px;
@@ -288,28 +288,31 @@ export const ChartTitle = styled.h3`
 
 export const BarChartRow = styled.div`
   display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+`
+
+export const BarHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  gap: 12px;
+  margin-bottom: 8px;
 `
 
 export const BarLabel = styled.div`
-  width: 100px;
-  min-width: 100px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: ${COLORS.black};
   display: flex;
   align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+  gap: 6px;
 `
 
 export const BarContainer = styled.div`
-  flex: 0.8;
-  height: 20px;
+  width: 100%;
+  height: 16px;
   background: #f0f0f0;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
   position: relative;
 `
@@ -318,16 +321,14 @@ export const BarFill = styled.div<{ $color: string; $width: number }>`
   height: 100%;
   width: ${props => Math.min(props.$width, 100)}%;
   background: ${props => props.$color};
-  border-radius: 10px;
+  border-radius: 8px;
   transition: width 0.5s ease;
 `
 
 export const BarValue = styled.div`
-  width: 50px;
   font-size: 14px;
   font-weight: 700;
   color: ${COLORS.black};
-  text-align: right;
 `
 
 // Logros con efecto zoom
@@ -495,11 +496,11 @@ export const DivisionGrid = styled.div`
 export const DivisionCard = styled.div<{ $isCurrent?: boolean; $isPast?: boolean }>`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 12px;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-radius: 35px;
   background: ${props => {
-    if (props.$isCurrent) return 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
+    if (props.$isCurrent) return COLORS.primaryDark;
     if (props.$isPast) return '#f0f0f0';
     return '#f8f8f8';
   }};
@@ -508,7 +509,7 @@ export const DivisionCard = styled.div<{ $isCurrent?: boolean; $isPast?: boolean
     if (props.$isPast) return COLORS.greyDark;
     return '#999';
   }};
-  border: ${props => props.$isCurrent ? '2px solid #28a745' : '1px solid #eee'};
+  border: ${props => props.$isCurrent ? '2px solid rgba(66, 165, 159, 0.5)' : '1px solid #eee'};
   transition: transform 0.2s ease;
   
   &:hover {
@@ -517,12 +518,22 @@ export const DivisionCard = styled.div<{ $isCurrent?: boolean; $isPast?: boolean
 `
 
 export const DivisionIcon = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   flex-shrink: 0;
+  margin-right: 12px;
 `
 
 export const DivisionInfo = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
+`
+
+export const DivisionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `
 
 export const DivisionName = styled.div`
@@ -537,9 +548,9 @@ export const DivisionRange = styled.div`
 
 export const ProgressBar = styled.div`
   width: 100%;
-  height: 6px;
+  height: 8px;
   background: rgba(255,255,255,0.3);
-  border-radius: 3px;
+  border-radius: 4px;
   margin-top: 8px;
   overflow: hidden;
 `
@@ -548,34 +559,31 @@ export const ProgressFill = styled.div<{ $progress: number }>`
   width: ${props => props.$progress}%;
   height: 100%;
   background: white;
-  border-radius: 3px;
+  border-radius: 4px;
   transition: width 0.5s ease;
 `
 
 // Tabs para Desafíos
 export const TabContainer = styled.div`
   display: flex;
-  background: #f0f0f0;
-  border-radius: 12px;
+  background: ${COLORS.grey};
   padding: 4px;
+  border-radius: 25px;
   margin-bottom: 16px;
 `
 
 export const Tab = styled.button<{ $active: boolean }>`
   flex: 1;
-  padding: 10px 12px;
+  padding: 10px;
+  border-radius: 25px;
   border: none;
-  background: ${props => props.$active ? 'white' : 'transparent'};
-  color: ${props => props.$active ? COLORS.black : COLORS.greyDark};
   font-size: 14px;
-  font-weight: ${props => props.$active ? '600' : '500'};
-  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
+  background: ${props => props.$active ? 'white' : 'transparent'};
+  color: ${props => props.$active ? COLORS.black : COLORS.primaryDark};
+  box-shadow: ${props => props.$active ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'};
   transition: all 0.2s ease;
-  
-  &:hover {
-    color: ${COLORS.black};
-  }
 `
 
 export const TabContent = styled.div`
