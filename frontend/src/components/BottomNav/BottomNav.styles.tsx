@@ -68,3 +68,25 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
     }
   }
 `
+
+export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${props => props.$hasImage ? 'transparent' : props.$bgColor || '#0071e3'};
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 2px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+`
+
+export const AvatarImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`

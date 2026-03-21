@@ -4,6 +4,7 @@ import {
   AddItemScreen,
   ClaimConfirmationScreen,
   EditItemScreen,
+  EditProfileScreen,
   ItemDetailScreen,
   MapScreen,
   ProfileScreen,
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
           {
             path: 'profile',
             element: <ProfileScreen />,
+          },
+          {
+            path: 'edit-profile',
+            element: <EditProfileScreen />,
           },
           {
             path: 'about',
