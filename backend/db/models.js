@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema({
   verification_code: { type: String },
   profile_image: { type: String }, // URL de la foto de perfil (Cloudinary)
   cloudinary_public_id: { type: String }, // Para poder borrar de Cloudinary
+  country: { type: String },
+  state: { type: String },
+  city: { type: String },
   created_at: { type: Date, default: Date.now },
 });
 

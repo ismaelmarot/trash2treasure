@@ -44,6 +44,9 @@ export function EditProfileScreen() {
   const { token, user, login } = useAuth()
 
   const [name, setName] = useState('')
+  const [country, setCountry] = useState('')
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
   const [profileImage, setProfileImage] = useState<string | null>(null)
   const [newImage, setNewImage] = useState<File | null>(null)
   const [newImagePreview, setNewImagePreview] = useState<string | null>(null)
@@ -67,6 +70,9 @@ export function EditProfileScreen() {
         })
         const data = await response.json()
         setName(data.name || '')
+        setCountry(data.country || '')
+        setState(data.state || '')
+        setCity(data.city || '')
         setProfileImage(data.profile_image || null)
       } catch (err) {
         console.error('Error fetching profile:', err)
@@ -162,14 +168,19 @@ export function EditProfileScreen() {
         }
       }
 
-      // Actualizar nombre
+      // Actualizar nombre y ubicación
       const response = await fetch(`${API_BASE_URL}/users/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ name: name.trim() })
+        body: JSON.stringify({ 
+          name: name.trim(),
+          country: country.trim(),
+          state: state.trim(),
+          city: city.trim()
+        })
       })
 
       const data = await response.json()
@@ -294,6 +305,33 @@ export function EditProfileScreen() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Tu nombre"
               required
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label>País</Label>
+            <Input
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              placeholder="Ej: Argentina"
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label>Provincia / Estado</Label>
+            <Input
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              placeholder="Ej: Buenos Aires"
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label>Ciudad</Label>
+            <Input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Ej: La Plata"
             />
           </InputGroup>
 

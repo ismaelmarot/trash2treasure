@@ -44,6 +44,7 @@ export function ProfileScreen() {
   const { user, token, logout: authLogout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const [pointsData, setPointsData] = useState<any>(null)
+  const [profileData, setProfileData] = useState<any>(null)
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -53,6 +54,13 @@ export function ProfileScreen() {
         .then(res => res.json())
         .then(data => setPointsData(data))
         .catch(err => console.error('Error fetching points:', err))
+
+      fetch(`${API_BASE_URL}/users/profile`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => setProfileData(data))
+        .catch(err => console.error('Error fetching profile:', err))
     }
   }, [isAuthenticated, token])
 
@@ -87,6 +95,11 @@ export function ProfileScreen() {
         </Avatar>
         <Name>{user?.name}</Name>
         <Email>{user?.email}</Email>
+        {profileData?.city && (
+          <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
+            📍 {profileData.city}{profileData.state && `, ${profileData.state}`}{profileData.country && `, ${profileData.country}`}
+          </div>
+        )}
         <EditProfileButton onClick={() => navigate('/edit-profile')}>
           Editar Perfil
         </EditProfileButton>

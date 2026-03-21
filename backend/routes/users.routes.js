@@ -197,7 +197,7 @@ const authenticateToken = (req, res, next) => {
 // Obtener perfil del usuario actual
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id, 'name email profile_image created_at');
+    const user = await User.findById(req.user.id, 'name email profile_image country state city created_at');
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (error) {
@@ -222,7 +222,7 @@ router.get('/check-name/:name', authenticateToken, async (req, res) => {
 // Actualizar perfil del usuario
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, country, state, city } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -238,8 +238,23 @@ router.put('/profile', authenticateToken, async (req, res) => {
       user.name = name;
     }
 
+    // Actualizar ubicación
+    if (country !== undefined) user.country = country;
+    if (state !== undefined) user.state = state;
+    if (city !== undefined) user.city = city;
+
     await user.save();
-    res.json({ message: 'Perfil actualizado correctamente', user: { name: user.name, email: user.email, profile_image: user.profile_image } });
+    res.json({ 
+      message: 'Perfil actualizado correctamente', 
+      user: { 
+        name: user.name, 
+        email: user.email, 
+        profile_image: user.profile_image,
+        country: user.country,
+        state: user.state,
+        city: user.city
+      } 
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
