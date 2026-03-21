@@ -398,9 +398,9 @@ export const CollapsibleArrow = styled.span<{ $isOpen?: boolean }>`
 `
 
 export const CollapsibleContent = styled.div<{ $isOpen?: boolean }>`
-  max-height: ${props => props.$isOpen ? '1000px' : '0'};
+  max-height: ${props => props.$isOpen ? '5000px' : '0'};
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.5s ease;
   padding: ${props => props.$isOpen ? '0 20px 20px' : '0 20px'};
 `
 
