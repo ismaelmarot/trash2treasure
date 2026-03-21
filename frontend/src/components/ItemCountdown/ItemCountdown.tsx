@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { ItemCountdownProps } from '../../interface'
+import type { ItemCountdownProps } from '@/interface'
 import { FaClock } from 'react-icons/fa'
 import { Container, ExpiredBadge, PostingLabel, Time, Wrapper } from './ItemCountdown.styles'
 
@@ -7,7 +7,7 @@ export function ItemCountdown({
   createdAt, 
   onExpire, 
   showIcon = true,
-  align = 'flex-end',
+  align = 'flex-start',
   direction = 'row'
 }: ItemCountdownProps) {
   const [timeLeft, setTimeLeft] = useState<string>('')
@@ -16,7 +16,7 @@ export function ItemCountdown({
   const [isExpired, setIsExpired] = useState(false)
 
   useEffect(() => {
-    // Si no hay createdAt, no hacemos nada
+    // if not createdAt, we do nothing
     if (!createdAt) {
       setTimeLeft('')
       setPostingTime('')
