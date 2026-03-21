@@ -221,7 +221,7 @@ export const DeleteButton = styled.button`
     border: 1px solid ${COLORS.danger};
     color: ${COLORS.danger};
     padding: ${SPACING.sm} ${SPACING.md};
-    border-radius: ${SPACING.lg};
+    border-radius: 34px;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
@@ -237,7 +237,7 @@ export const UnclaimButton = styled.button`
     background: ${COLORS.info};
     color: ${COLORS.allWhite};
     padding: ${SPACING.sm} ${SPACING.md};
-    border-radius: 25px;
+    border-radius: 34px;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;

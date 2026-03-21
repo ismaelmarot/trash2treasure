@@ -12,7 +12,7 @@ export const Container = styled.div`
 export const Card = styled.div`
     background: ${COLORS.allWhite};
     padding: 40px;
-    border-radius: 28px;
+    border-radius: 34px;
     width: 100%;
     max-width: 450px;
     text-align: center;
@@ -55,7 +55,7 @@ export const Subtitle = styled.p`
 
 export const InfoBox = styled.div`
     background: ${COLORS.allWhite};
-    border-radius: 20px;
+    border-radius: 34px;
     padding: 24px;
     text-align: left;
     margin-bottom: 32px;
@@ -100,7 +100,7 @@ export const PrimaryButton = styled.button`
     color: ${COLORS.allWhite};
     border: none;
     padding: 16px;
-    border-radius: 14px;
+    border-radius: 34px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
