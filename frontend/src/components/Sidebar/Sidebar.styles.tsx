@@ -68,3 +68,29 @@ export const StyledIcon = styled.span<{ $collapsed: boolean; $isLast?: boolean }
     transition: padding 0.2s ease;
   }
 `
+
+export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>`
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${props => props.$hasImage ? 'transparent' : props.$bgColor || '#0071e3'};
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+`
+
+export const AvatarImage = styled.img`
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+`
