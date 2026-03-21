@@ -27,7 +27,7 @@ export const Subtitle = styled.p`
 
 export const PointsCard = styled.div`
   background: ${COLORS.primaryDark};
-  border-radius: 24px;
+  border-radius: 25px;
   padding: 24px;
   margin-bottom: 24px;
   color: white;
@@ -82,7 +82,7 @@ export const StatsRow = styled.div`
 
 export const StatItem = styled.div`
   background: rgba(255,255,255,0.15);
-  border-radius: 16px;
+  border-radius: 25px;
   padding: 12px;
   text-align: center;
 `
@@ -334,7 +334,7 @@ export const BarValue = styled.div`
 // Logros con efecto zoom
 export const AchievementCard = styled.div<{ $unlocked?: boolean }>`
   background: ${props => props.$unlocked ? COLORS.allWhite : '#f8f8f8'};
-  border-radius: 16px;
+  border-radius: 25px;
   padding: 16px;
   text-align: center;
   box-shadow: 0 2px 12px ${COLORS.shadow};
@@ -357,7 +357,7 @@ export const FamilySection = styled.div`
 // Secciones desplegables
 export const CollapsibleSection = styled.div`
   background: ${COLORS.allWhite};
-  border-radius: 20px;
+  border-radius: 25px;
   margin-bottom: 16px;
   box-shadow: 0 2px 12px ${COLORS.shadow};
   overflow: hidden;
@@ -420,7 +420,7 @@ export const DivisionItem = styled.div<{ $isCurrent?: boolean; $isPast?: boolean
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-radius: 12px;
+  border-radius: 25px;
   background: ${props => {
     if (props.$isCurrent) return 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
     if (props.$isPast) return '#f0f0f0';
