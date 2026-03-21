@@ -526,7 +526,7 @@ export function MapScreen() {
                   <ItemName>{item.title}</ItemName>
                   <ItemDescription>{item.description}</ItemDescription>
                   <ItemMeta>
-                    <span>{Math.round(item.distance)}m</span>
+                    📍<span> {Math.round(item.distance)}m</span>
                   </ItemMeta>
                   <PublishedTime>
                     Pub: {new Date(item.created_at).toLocaleDateString('es-ES', { 
@@ -537,7 +537,7 @@ export function MapScreen() {
                     })}
                   </PublishedTime>
                   <CountdownWrapper>
-                    <ItemCountdown createdAt={item.created_at} align="flex-start" />
+                    <ItemCountdown createdAt={item.created_at} />
                   </CountdownWrapper>
                 </ItemInfo>
                 <ViewDetailButton 
