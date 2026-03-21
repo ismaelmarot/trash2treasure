@@ -233,10 +233,6 @@ export const AchievementsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
 `
 
 export const Loading = styled.div`
@@ -603,8 +599,4 @@ export const TabContent = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
 `
