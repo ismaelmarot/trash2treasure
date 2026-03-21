@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { appIcon } from '@/assets'
 import { API_BASE_URL } from '@/constants'
@@ -24,22 +24,19 @@ export function SplashScreen() {
   const { token, isAuthenticated } = useAuth()
   const [totalPoints, setTotalPoints] = useState(0)
   const [visibleLetters, setVisibleLetters] = useState(0)
-
-  const SPLASH_DURATION = 3000 // 3 segundos
+  const animationComplete = useRef(false)
 
   useEffect(() => {
-    // Calcular intervalo para que termine exactamente en SPLASH_DURATION
-    const interval = SPLASH_DURATION / USP_TEXT.length
-    
     const letterInterval = setInterval(() => {
       setVisibleLetters(prev => {
         if (prev >= USP_TEXT.length) {
           clearInterval(letterInterval)
+          animationComplete.current = true
           return prev
         }
         return prev + 1
       })
-    }, interval)
+    }, 50)
 
     return () => clearInterval(letterInterval)
   }, [])
@@ -58,13 +55,19 @@ export function SplashScreen() {
         }
       }
 
-      setTimeout(() => {
-        if (isAuthenticated) {
-          navigate('/app')
-        } else {
-          navigate('/welcome')
+      // Esperar a que la animación termine + 1 segundo extra
+      const checkAnimation = setInterval(() => {
+        if (animationComplete.current) {
+          clearInterval(checkAnimation)
+          setTimeout(() => {
+            if (isAuthenticated) {
+              navigate('/app')
+            } else {
+              navigate('/welcome')
+            }
+          }, 1000)
         }
-      }, 3000)
+      }, 100)
     }
 
     loadData()
