@@ -1,25 +1,56 @@
 # TRASH2TREASURE
 
-[![Icon Cap](/trash2treasure/raw/main/public/icons/app-icon.png)](/trash2treasure/blob/main/public/icons/app-icon.png)
+![App Icon](/public/icons/app-icon.png)
 
 **Trash2Treasure es una aplicación móvil de reciclaje comunitario donde los usuarios reportan objetos abandonados y otros usuarios pueden recolectarlos.**
 
 La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios ganar puntos, completar desafíos y desbloquear logros mientras contribuyen a un entorno más limpio.
 
-[![Version](https://img.shields.io/badge/version-1.0.0-orange?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure/blob/main/LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/trash2treasure?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure/commit/main)
-[![Coverage](https://img.shields.io/coverage/coverage-badge?logo=coverage&style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure)
+---
 
-[![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-5-purple?style=for-the-badge&logo=vite)](https://vitejs.dev)
-[![Node.js](https://img.shields.io/badge/Node.js-22-green?style=for-the-badge&logo=node.js)](https://nodejs.org)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Latest-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com)
-[![Express](https://img.shields.io/badge/Express-4-gray?style=for-the-badge&logo=express)](https://expressjs.com)
+## 🔗 LIVE DEMO
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-100%25-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![CSS](https://img.shields.io/badge/CSS-Styled--Components-pink?style=for-the-badge&logo=styledcomponents)](https://styled-components.com)
+| Service | URL | Status |
+|---------|-----|--------|
+| 🌐 **Frontend (Vercel)** | [https://trash2treasure.vercel.app](https://trash2treasure.vercel.app) | ![Vercel](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
+| ⚙️ **Backend (Render)** | [https://trash2treasure.onrender.com](https://trash2treasure.onrender.com) | ![Render](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
+
+---
+
+## 🛠️ INFRASTRUCTURE & SERVICES
+
+| Service | Badge | Description |
+|---------|-------|-------------|
+| **Frontend Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) | Hosting del frontend React con CDN global y SSL automático |
+| **Backend Deployment** | ![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black) | Hosting del backend Node.js/Express con auto-deploy |
+| **Database** | ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) | Base de datos NoSQL en la nube (MongoDB Atlas) |
+| **Image Storage** | ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white) | Almacenamiento y transformación de imágenes |
+| **Email Service** | ![SendGrid](https://img.shields.io/badge/SendGrid-1A82E2?style=for-the-badge&logo=sendgrid&logoColor=white) | Servicio de envío de emails transaccionales |
+| **Analytics** | ![Vercel Analytics](https://img.shields.io/badge/Vercel_Analytics-000000?style=for-the-badge&logo=vercel&logoColor=white) | Analíticas de visitantes y rendimiento |
+| **UX/UI Design** | ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white) | Diseño de interfaces y prototipado |
+
+### Design Tools
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+
+---
+
+## 📋 BADGES
+
+### Project Info
+![Version](https://img.shields.io/badge/version-1.0.0-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/trash2treasure?style=for-the-badge)
+
+### Frontend Stack
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Styled Components](https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
+
+### Backend Stack
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
 ---
 
