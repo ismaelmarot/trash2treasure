@@ -74,42 +74,58 @@ const getPeriodStart = (type) => {
 
 // Obtener o crear UserPoints
 const getOrCreateUserPoints = async (userId) => {
-  let userPoints = await UserPoints.findOne({ user_id: userId });
-  if (!userPoints) {
-    userPoints = new UserPoints({ user_id: userId });
-    await userPoints.save();
+  try {
+    let userPoints = await UserPoints.findOne({ user_id: userId });
+    if (!userPoints) {
+      userPoints = new UserPoints({ user_id: userId });
+      await userPoints.save();
+    }
+    
+    // Inicializar campos con defaults si no existen
+    let needsSave = false;
+    if (userPoints.daily_reports === undefined) { userPoints.daily_reports = 0; needsSave = true; }
+    if (userPoints.daily_collected === undefined) { userPoints.daily_collected = 0; needsSave = true; }
+    if (!userPoints.family_reports) { userPoints.family_reports = {}; needsSave = true; }
+    if (!userPoints.daily_family_reports) { userPoints.daily_family_reports = {}; needsSave = true; }
+    if (!userPoints.daily_category_reports) { userPoints.daily_category_reports = {}; needsSave = true; }
+    if (userPoints.weekly_reports === undefined) { userPoints.weekly_reports = 0; needsSave = true; }
+    if (userPoints.weekly_collected === undefined) { userPoints.weekly_collected = 0; needsSave = true; }
+    if (userPoints.weekly_reports_prev === undefined) { userPoints.weekly_reports_prev = 0; needsSave = true; }
+    if (userPoints.weekly_collected_prev === undefined) { userPoints.weekly_collected_prev = 0; needsSave = true; }
+    
+    // Resetear contadores semanales si es nueva semana
+    const weekStart = getPeriodStart('weekly');
+    const lastWeekReset = userPoints.last_weekly_reset ? new Date(userPoints.last_weekly_reset) : null;
+    
+    if (!lastWeekReset || weekStart > lastWeekReset) {
+      userPoints.weekly_reports_prev = userPoints.weekly_reports || 0;
+      userPoints.weekly_collected_prev = userPoints.weekly_collected || 0;
+      userPoints.weekly_reports = 0;
+      userPoints.weekly_collected = 0;
+      userPoints.last_weekly_reset = weekStart;
+      needsSave = true;
+    }
+    
+    // Resetear contadores mensuales si es nuevo mes
+    const monthStart = getPeriodStart('monthly');
+    const lastMonthReset = userPoints.last_monthly_reset ? new Date(userPoints.last_monthly_reset) : null;
+    
+    if (!lastMonthReset || monthStart > lastMonthReset) {
+      userPoints.monthly_reports = 0;
+      userPoints.monthly_collected = 0;
+      userPoints.last_monthly_reset = monthStart;
+      needsSave = true;
+    }
+    
+    if (needsSave) {
+      await userPoints.save();
+    }
+    
+    return userPoints;
+  } catch (error) {
+    console.error('Error in getOrCreateUserPoints:', error);
+    throw error;
   }
-  
-  if (userPoints.daily_reports === undefined) userPoints.daily_reports = 0;
-  if (userPoints.daily_collected === undefined) userPoints.daily_collected = 0;
-  if (userPoints.family_reports === undefined) userPoints.family_reports = {};
-  if (userPoints.daily_family_reports === undefined) userPoints.daily_family_reports = {};
-  if (userPoints.daily_category_reports === undefined) userPoints.daily_category_reports = {};
-  
-  // Resetear contadores semanales si es nueva semana
-  const now = new Date();
-  const weekStart = getPeriodStart('weekly');
-  const lastWeekReset = userPoints.last_weekly_reset ? new Date(userPoints.last_weekly_reset) : null;
-  
-  if (!lastWeekReset || weekStart > lastWeekReset) {
-    userPoints.weekly_reports_prev = userPoints.weekly_reports || 0;
-    userPoints.weekly_collected_prev = userPoints.weekly_collected || 0;
-    userPoints.weekly_reports = 0;
-    userPoints.weekly_collected = 0;
-    userPoints.last_weekly_reset = weekStart;
-  }
-  
-  // Resetear contadores mensuales si es nuevo mes
-  const monthStart = getPeriodStart('monthly');
-  const lastMonthReset = userPoints.last_monthly_reset ? new Date(userPoints.last_monthly_reset) : null;
-  
-  if (!lastMonthReset || monthStart > lastMonthReset) {
-    userPoints.monthly_reports = 0;
-    userPoints.monthly_collected = 0;
-    userPoints.last_monthly_reset = monthStart;
-  }
-  
-  return userPoints;
 };
 
 // Actualizar progreso de un desafío
@@ -309,7 +325,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const scoreChange = weeklyScore - prevScore;
     
     res.json({
-      points: userPoints,
+      points: userPoints.toObject ? userPoints.toObject() : userPoints,
       division,
       achievements: allAchievements,
       challengeProgress,

@@ -121,7 +121,7 @@ export function PointsScreen() {
   }, [fetchData])
 
   if (loading) return <Loading>Cargando...</Loading>
-  if (!pointsData) return <Loading>Error al cargar datos</Loading>
+  if (!pointsData || !pointsData.points) return <Loading>Error al cargar datos</Loading>
 
   const { points, division, ecoScore } = pointsData
 
