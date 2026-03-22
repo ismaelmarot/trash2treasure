@@ -72,7 +72,7 @@ export const CategoryBadge = styled.span`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 2px 12px;
+    padding: 4px 14px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
@@ -133,7 +133,7 @@ export const MetaRow = styled.div`
 export const DistanceBadge = styled.span`
     display: inline-flex;
     align-items: center;
-    padding: 2px 12px;
+    padding: 4px 14px;
     border-radius: 35px;
     font-size: 13px;
     font-weight: 700;
@@ -143,7 +143,7 @@ export const DistanceBadge = styled.span`
 
 export const Header = styled.div`
     ${flex('row', 'center', 'flex-start')}
-    margin: 1rem 0 .5rem;
+    margin: 2rem 0 1rem;
     border-top: 2px solid ${COLORS.grey};
 `
 
