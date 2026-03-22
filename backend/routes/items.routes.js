@@ -36,8 +36,31 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
+// Middleware de autenticación opcional
+const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  const jwt = require('jsonwebtoken');
+  const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
+  
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) {
+      req.user = null;
+    } else {
+      req.user = user;
+    }
+    next();
+  });
+};
+
 // Obtener items (con filtros opcional)
-router.get('/', async (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const { category, search, type } = req.query;
     let filter = {};
@@ -53,13 +76,13 @@ router.get('/', async (req, res) => {
       ];
     }
 
-    if (type === 'claimed') {
+    if (type === 'claimed' && req.user) {
       // Items reclamados por el usuario + Items del usuario que fueron reclamados por otros
       filter.$or = [
         { claimed_by: req.user.id },
         { user_id: req.user.id, claimed_by: { $exists: true, $ne: null } }
       ];
-    } else if (type === 'mine') {
+    } else if (type === 'mine' && req.user) {
       // Solo items reportados por el usuario
       filter.user_id = req.user.id;
     }
