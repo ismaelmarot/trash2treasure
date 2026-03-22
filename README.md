@@ -12,7 +12,7 @@ La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios gana
 
 | Service | URL | Status |
 |---------|-----|--------|
-| 🌐 **Frontend (Vercel)** | [https://trash2treasure.vercel.app](https://trash2treasure.vercel.app) | ![Vercel](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
+| 🌐 **Frontend (Vercel)** | [https://trash2treasure-app.vercel.app](https://trash2treasure-app.vercel.app) | ![Vercel](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
 | ⚙️ **Backend (Render)** | [https://trash2treasure.onrender.com](https://trash2treasure.onrender.com) | ![Render](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
 
 ---
