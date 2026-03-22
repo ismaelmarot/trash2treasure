@@ -273,6 +273,7 @@ export const BarChartRow = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
+  padding: 0 8px;
 `
 
 export const BarHeader = styled.div`
