@@ -250,7 +250,7 @@ export function PointsScreen() {
                 return (
                   <div key={tier.id} style={{ 
                     background: '#f5f5f5', 
-                    borderRadius: '12px',
+                    borderRadius: '35px',
                     overflow: 'hidden'
                   }}>
                     <div 
@@ -267,7 +267,7 @@ export function PointsScreen() {
                         justifyContent: 'space-between', 
                         alignItems: 'center',
                         cursor: 'pointer',
-                        background: '#42c5a5',
+                        background: '#2eb890',
                         color: 'white'
                       }}
                     >
@@ -294,24 +294,24 @@ export function PointsScreen() {
                             <div key={level.name} style={{ 
                               padding: '10px',
                               background: 'white',
-                              borderRadius: '8px',
+                              borderRadius: '35px',
                               marginBottom: '8px',
-                              border: isCurrent ? '2px solid #42c5a5' : '1px solid #e0e0e0'
+                              border: isCurrent ? '2px solid #2eb890' : '1px solid #e0e0e0'
                             }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#42c5a5' : '#666' }}>
+                                <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#2eb890' : '#666' }}>
                                   {isPast ? '✓ ' : isCurrent ? '→ ' : ''}{level.name}
                                 </span>
                                 <span style={{ fontSize: '12px', color: '#666' }}>
                                   {level.max === Infinity ? `${level.min}+ pts` : `${level.min}–${level.max} pts`}
                                 </span>
                               </div>
-                              <div style={{ height: '8px', background: 'white', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e0e0e0', marginBottom: '6px' }}>
-                                <div style={{ height: '100%', width: `${percentage}%`, background: '#42c5a5', borderRadius: '3px', transition: 'width 0.3s' }} />
+                              <div style={{ height: '8px', background: 'white', borderRadius: '35px', overflow: 'hidden', border: '1px solid #e0e0e0', marginBottom: '6px' }}>
+                                <div style={{ height: '100%', width: `${percentage}%`, background: '#2eb890', borderRadius: '35px', transition: 'width 0.3s' }} />
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#666' }}>
                                 <span>{pointsInLevel} pts</span>
-                                <span style={{ color: isPast ? '#34c759' : '#42c5a5' }}>
+                                <span style={{ color: isPast ? '#34c759' : '#2eb890' }}>
                                   {isPast ? 'Completado ✓' : `Faltan ${pointsRemaining} pts`}
                                 </span>
                               </div>
