@@ -3,9 +3,8 @@ import { flex, size } from '@/mixins'
 import { COLORS } from '@/constants'
 
 export const Container = styled.div`
-    background: ${COLORS.white};
+    background:${COLORS.allWhite};
     min-height: 100vh;
-    padding-bottom: 40px;
 `
 
 export const BackButton = styled.button`
@@ -13,7 +12,7 @@ export const BackButton = styled.button`
     top: 20px;
     right: 20px;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.9);
+    background:${COLORS.allWhite};
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: none;
@@ -60,9 +59,7 @@ export const PlaceholderImage = styled.div`
 export const BadgeRow = styled.div`
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
     margin-bottom: 16px;
-    padding: 0 4px;
 `
 
 export const MetaInfo = styled.div`
@@ -131,8 +128,6 @@ export const ContentCard = styled.div`
 export const MetaRow = styled.div`
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
 `
 
 export const DistanceBadge = styled.span`
@@ -173,7 +168,7 @@ export const SectionTitle = styled.h2`
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 12px;
+    margin: 1rem 0 .3rem;
     color: ${COLORS.grey};
 `
 

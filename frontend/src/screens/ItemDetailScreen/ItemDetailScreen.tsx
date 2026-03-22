@@ -198,9 +198,19 @@ export function ItemDetailScreen() {
 
         {item.claimed_by && (
           <div style={{ fontSize: '14px', fontWeight: '600', color: '#ff9500', marginTop: '8px' }}>
-            {item.claimed_by === user?.id 
-              ? 'Reclamado por mí' 
-              : `Reclamado por ${typeof item.claimed_by === 'object' && 'name' in item.claimed_by ? (item.claimed_by as any).name : 'Otro usuario'}`}
+            {(() => {
+              const claimedById = typeof item.claimed_by === 'object' && '_id' in item.claimed_by 
+                ? (item.claimed_by as any)._id 
+                : item.claimed_by;
+              const claimedByName = typeof item.claimed_by === 'object' && 'name' in item.claimed_by 
+                ? (item.claimed_by as any).name 
+                : null;
+              
+              if (claimedById === user?.id) {
+                return 'Reclamado por mí';
+              }
+              return `Reclamado por: ${claimedByName || 'Otro usuario'}`;
+            })()}
           </div>
         )}
 
