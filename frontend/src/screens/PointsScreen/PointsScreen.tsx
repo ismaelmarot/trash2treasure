@@ -19,8 +19,6 @@ import {
   Container,
   DivisionBadge,
   EcoScoreCard,
-  EcoScoreGrade,
-  EcoScoreHeader,
   EcoScoreSubtitle,
   EcoScoreTitle,
   EcoScoreTrend,
@@ -158,16 +156,14 @@ export function PointsScreen() {
 
           {ecoScore && (
             <EcoScoreCard $bgColor={ecoScore.gradeColor}>
-              <EcoScoreHeader>
-                <EcoScoreGrade>
-                  <EcoScoreLetter>{ecoScore.grade}</EcoScoreLetter>
-                </EcoScoreGrade>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
                 <EcoScoreTrend $trend={ecoScore.trend}>
                   {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
                   {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
                 </EcoScoreTrend>
-              </EcoScoreHeader>
-              <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
+              </div>
+              <EcoScoreLetter>{ecoScore.grade}</EcoScoreLetter>
               <EcoScoreSubtitle>{ecoScore.message}</EcoScoreSubtitle>
             </EcoScoreCard>
           )}
