@@ -207,7 +207,7 @@ export function PointsScreen() {
           )}
 
           {activeSummaryTab === 'level' && (
-            <TabContent style={{ gridTemplateColumns: '1fr', gap: '12px' }}>
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '12px', padding: '0 8px' }}>
               {[
                 { id: 'bajo', icon: '🌱', name: 'Nivel bajo', levels: [
                   { name: 'Curioso Verde', min: 0, max: 100 },
