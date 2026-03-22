@@ -31,13 +31,14 @@ export const normalizeItem = (item: any): any => {
     userId = null;
   }
   
-  // Para claimed_by, si es null o undefined, mantener null
-  let claimedById = null;
+  // Para claimed_by, mantener el objeto completo (con _id y name) si está poblado
+  let claimedBy = null;
   if (item.claimed_by) {
     if (typeof item.claimed_by === 'object' && item.claimed_by._id) {
-      claimedById = item.claimed_by._id;
+      // Mantener el objeto completo con _id y name
+      claimedBy = item.claimed_by;
     } else {
-      claimedById = item.claimed_by;
+      claimedBy = item.claimed_by;
     }
   }
   
@@ -45,7 +46,7 @@ export const normalizeItem = (item: any): any => {
     ...item,
     id,
     user_id: userId,
-    claimed_by: claimedById
+    claimed_by: claimedBy
   };
 };
 

@@ -27,7 +27,6 @@ import {
   NavigateButton,
   PlaceholderImage,
   ProximityHint,
-  SectionTitle,
   Title,
   UnclaimButton
 } from './ItemDetailScreen.styles'
@@ -197,7 +196,7 @@ export function ItemDetailScreen() {
         )}
 
         {item.claimed_by && (
-          <div style={{ fontSize: '14px', fontWeight: '600', color: '#ff9500', marginTop: '8px' }}>
+          <div style={{ fontSize: '14px', fontWeight: '600', color: '#ff9500', margin: '.2rem 0 1rem' }}>
             {(() => {
               const claimedById = typeof item.claimed_by === 'object' && '_id' in item.claimed_by 
                 ? (item.claimed_by as any)._id 
@@ -214,6 +213,15 @@ export function ItemDetailScreen() {
           </div>
         )}
 
+        <span style={{ fontSize: '13px', color: '#888' }}>
+          Publicado: {new Date(item.created_at).toLocaleDateString('es-ES', { 
+            day: 'numeric', 
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </span>
+
         <Header>
           <Title>{item.title}</Title>
         </Header>
@@ -223,17 +231,7 @@ export function ItemDetailScreen() {
         <MetaRow>
           <ItemCountdown createdAt={item.created_at} align="flex-start" />
         </MetaRow>
-
-        <span style={{ fontSize: '13px', color: '#888' }}>
-          Publicado: {new Date(item.created_at).toLocaleDateString('es-ES', { 
-            day: 'numeric', 
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-          })}
-        </span>
-        
-        <SectionTitle>Ubicación</SectionTitle>
+    
         <MapWrapper>
           {item.latitude != null && item.longitude != null ? (
             <MapContainer 

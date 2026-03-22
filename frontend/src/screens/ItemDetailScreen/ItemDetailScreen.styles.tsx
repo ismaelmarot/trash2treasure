@@ -143,7 +143,7 @@ export const DistanceBadge = styled.span`
 
 export const Header = styled.div`
     ${flex('row', 'center', 'flex-start')}
-    margin: 2rem 0 1rem;
+    margin: .2rem  0 .5rem;
     border-top: 2px solid ${COLORS.grey};
 `
 
@@ -175,7 +175,7 @@ export const SectionTitle = styled.h2`
 export const MapWrapper = styled.div`
     ${size('100%', '180px')}
     border-radius: 16px;
-    margin-bottom: 28px;
+    margin: 1rem 0;
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 `
