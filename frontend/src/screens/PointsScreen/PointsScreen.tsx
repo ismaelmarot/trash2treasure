@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { API_BASE_URL, COLORS } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
@@ -11,35 +10,15 @@ import {
   AchievementsGrid,
   AchievementsSection,
   AvatarImage,
-  BarChartRow,
-  BarContainer,
-  BarFill,
-  BarHeader,
-  BarLabel,
-  BarValue,
   Container,
-  Divider,
   DivisionBadge,
-  DivisionCard,
-  DivisionGrid,
-  DivisionHeader,
-  DivisionIcon,
-  DivisionInfo,
-  DivisionLevel,
-  DivisionName,
-  DivisionRange,
   Header,
   Loading,
   PointsCard,
   PointsHeader,
   PointsLabel,
   PointsValue,
-  Position,
-  ProgressBar,
-  ProgressFill,
-  ProgressStats,
   RankingItem,
-  SectionTitle,
   StatItem,
   StatLabel,
   StatsRow,
@@ -53,7 +32,8 @@ import {
   UserDivision,
   UserInfo,
   UserName,
-  UserPoints
+  UserPoints,
+  Position,
 } from './PointsScreen.styles'
 
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
@@ -66,142 +46,23 @@ function getAvatarColor(name: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-const CATEGORY_INFO: Record<string, { icon: string; name: string; color: string }> = {
-  organic: { icon: '🍏', name: 'Orgánico', color: '#34c759' },
-  garden: { icon: '🌿', name: 'Jardín', color: '#30d158' },
-  recycle: { icon: '♻️', name: 'Reciclaje', color: '#00c7be' },
-  electronics: { icon: '📱', name: 'Electrónicos', color: '#5856d6' },
-  batteries: { icon: '🔋', name: 'Baterías', color: '#ff9500' },
-  construction: { icon: '🧱', name: 'Construcción', color: '#af52de' },
-  furniture: { icon: '🪑', name: 'Muebles', color: '#8e8e93' },
-  wood: { icon: '🪵', name: 'Madera', color: '#a2845e' },
-  cardboard: { icon: '📦', name: 'Cartón', color: '#bf8f68' },
-  paper: { icon: '📄', name: 'Papel', color: '#ffd60a' },
-  plastic: { icon: '🧴', name: 'Plástico', color: '#64d2ff' },
-  bottle: { icon: '🍾', name: 'Botellas', color: '#5ac8fa' },
-  glass: { icon: '🪟', name: 'Vidrio', color: '#a0d8ef' },
-  clothes: { icon: '👕', name: 'Ropa', color: '#ff375f' },
-  books: { icon: '📚', name: 'Libros', color: '#ff6b6b' },
-  carton: { icon: '📦', name: 'Cartón', color: '#bf8f68' },
-  botellas: { icon: '🍾', name: 'Botellas', color: '#5ac8fa' },
-  metal: { icon: '🔩', name: 'Metal', color: '#8e8e93' },
-  mixto: { icon: '♻️', name: 'Mixto', color: '#00c7be' },
-  otros: { icon: '✨', name: 'Otros', color: '#ffd60a' }
-}
-
-const FAMILY_INFO: Record<string, { icon: string; name: string; color: string }> = {
-  eco: { icon: '🌱', name: 'ECO', color: '#34c759' },
-  tech: { icon: '⚡', name: 'TECH', color: '#5856d6' },
-  heavy: { icon: '🏗️', name: 'HEAVY', color: '#af52de' },
-  packaging: { icon: '📦', name: 'PACKAGING', color: '#bf8f68' },
-  reuse: { icon: '👕', name: 'REUSE', color: '#ff375f' },
-  special: { icon: '✨', name: 'SPECIAL', color: '#ffd60a' }
-}
-
-const DIVISIONS = [
-  { level: '🌱 Nivel bajo', items: [
-    { name: 'Curioso Verde', min: 0, max: 100, icon: '🌱' },
-    { name: 'Recolector Novato', min: 0, max: 200, icon: '♻️' },
-    { name: 'Semilla', min: 0, max: 150, icon: '🌿' },
-    { name: 'Despertando', min: 0, max: 200, icon: '☀️' }
-  ]},
-  { level: '♻️ Nivel medio bajo', items: [
-    { name: 'Eco Aprendiz', min: 200, max: 400, icon: '📚' },
-    { name: 'Separador Serial', min: 300, max: 600, icon: '📊' },
-    { name: 'Clasificador Ninja', min: 400, max: 700, icon: '🥷' },
-    { name: 'Anti Basura', min: 300, max: 600, icon: '🚫' }
-  ]},
-  { level: '🌿 Nivel medio', items: [
-    { name: 'Recuperador Urbano', min: 500, max: 900, icon: '🏙️' },
-    { name: 'Guardián del Bosque', min: 600, max: 1000, icon: '🌲' },
-    { name: 'Reutilizador Pro', min: 700, max: 1200, icon: '🔄' },
-    { name: 'Eco Hacker', min: 800, max: 1200, icon: '💻' }
-  ]},
-  { level: '🌳 Nivel medio alto', items: [
-    { name: 'Maestro del Reciclaje', min: 1000, max: 1500, icon: '🏆' },
-    { name: 'Alquimista de Residuos', min: 1200, max: 1700, icon: '⚗️' },
-    { name: 'Ingeniero Verde', min: 1300, max: 1800, icon: '🔧' },
-    { name: 'Transformador', min: 1200, max: 1600, icon: '⚡' }
-  ]},
-  { level: '🌎 Nivel alto', items: [
-    { name: 'Defensor del Planeta', min: 1500, max: 2000, icon: '🌍' },
-    { name: 'Titán Verde', min: 1800, max: 2500, icon: '💪' },
-    { name: 'Eco Estratega', min: 1700, max: 2300, icon: '🧠' },
-    { name: 'Señor del Compost', min: 2000, max: 2500, icon: '👑' }
-  ]},
-  { level: '🚀 Nivel épico', items: [
-    { name: 'Gaia Ascendido', min: 2000, max: Infinity, icon: '🚀' },
-    { name: 'Leyenda Sustentable', min: 2500, max: Infinity, icon: '⭐' },
-    { name: 'Arquitecto del Futuro', min: 3000, max: Infinity, icon: '🏗️' },
-    { name: 'Deidad del Reciclaje', min: 5000, max: Infinity, icon: '💫' }
-  ]}
-]
-
-const ACHIEVEMENTS = [
-  { id: 'first_report', name: 'Primer Reporte', description: 'Reporta tu primer item', icon: '📸', points: 5 },
-  { id: 'first_collect', name: 'Primera Recolección', description: 'Recolecta tu primer item', icon: '♻️', points: 10 },
-  { id: 'reporter_5', name: 'Primer Paso', description: '5 items reportados', icon: '📸', points: 5 },
-  { id: 'reporter_10', name: 'Reportero', description: '10 items reportados', icon: '📸', points: 10 },
-  { id: 'reporter_25', name: 'Reportero Junior', description: '25 items reportados', icon: '📸', points: 15 },
-  { id: 'reporter_50', name: 'Reportero Pro', description: '50 items reportados', icon: '📸', points: 25 },
-  { id: 'reporter_75', name: 'Reportero Senior', description: '75 items reportados', icon: '📸', points: 35 },
-  { id: 'reporter_100', name: 'Reportero Master', description: '100 items reportados', icon: '📸', points: 50 },
-  { id: 'reporter_200', name: 'Reportero Legendario', description: '200 items reportados', icon: '📸', points: 100 },
-  { id: 'reporter_500', name: 'Maestro Reportero', description: '500 items reportados', icon: '📸', points: 250 },
-  { id: 'collector_5', name: 'Primera Misión', description: '5 items recolectados', icon: '♻️', points: 8 },
-  { id: 'collector_10', name: 'Recolector', description: '10 items recolectados', icon: '♻️', points: 15 },
-  { id: 'collector_25', name: 'Recolector Junior', description: '25 items recolectados', icon: '♻️', points: 20 },
-  { id: 'collector_50', name: 'Recolector Pro', description: '50 items recolectados', icon: '♻️', points: 30 },
-  { id: 'collector_75', name: 'Recolector Senior', description: '75 items recolectados', icon: '♻️', points: 45 },
-  { id: 'collector_100', name: 'Recolector Master', description: '100 items recolectados', icon: '♻️', points: 60 },
-  { id: 'collector_200', name: 'Recolector Legendario', description: '200 items recolectados', icon: '♻️', points: 120 },
-  { id: 'collector_500', name: 'Maestro Recolector', description: '500 items recolectados', icon: '♻️', points: 300 },
-  { id: 'streak_3', name: 'Racha de 3', description: '3 días seguidos activo', icon: '🔥', points: 4 },
-  { id: 'streak_5', name: 'Racha de 5', description: '5 días seguidos activo', icon: '🔥', points: 6 },
-  { id: 'streak_7', name: 'Una Semana', description: '7 días seguidos activo', icon: '🔥', points: 8 },
-  { id: 'streak_10', name: 'Racha de 10', description: '10 días seguidos activo', icon: '🔥', points: 15 },
-  { id: 'streak_14', name: 'Dos Semanas', description: '14 días seguidos activo', icon: '🔥', points: 20 },
-  { id: 'streak_30', name: 'Un Mes', description: '30 días seguidos activo', icon: '🔥', points: 50 },
-  { id: 'streak_60', name: 'Dos Meses', description: '60 días seguidos activo', icon: '🔥', points: 120 },
-  { id: 'streak_100', name: 'Cien Días', description: '100 días seguidos activo', icon: '🔥', points: 250 },
-  { id: 'eco_master', name: 'Eco Master', description: '5 items ECO en 1 día', icon: '🌱', points: 10 },
-  { id: 'eco_warrior', name: 'Eco Warrior', description: '20 items ECO reportados', icon: '🌱', points: 25 },
-  { id: 'tech_hunter', name: 'Tech Hunter', description: '3 items TECH en 1 día', icon: '⚡', points: 10 },
-  { id: 'tech_expert', name: 'Tech Expert', description: '15 items TECH reportados', icon: '⚡', points: 25 },
-  { id: 'heavy_duty', name: 'Heavy Duty', description: '2 items HEAVY en 1 día', icon: '🏗️', points: 10 },
-  { id: 'heavy_lifter', name: 'Heavy Lifter', description: '10 items HEAVY reportados', icon: '🏗️', points: 25 },
-  { id: 'packaging_master', name: 'Packaging Master', description: '30 items PACKAGING reportados', icon: '📦', points: 25 },
-  { id: 'reuse_champion', name: 'Reuse Champion', description: '15 items REUSE reportados', icon: '👕', points: 25 },
-  { id: 'balanced_cleaner', name: 'Balanced Cleaner', description: '1 de cada familia en 1 día', icon: '🌍', points: 20 },
-  { id: 'family_diverse', name: 'Diversidad', description: 'Usa 4 familias distintas', icon: '🌈', points: 10 },
-  { id: 'variety_3', name: 'Tres Familias', description: 'Reporta items de 3 familias diferentes', icon: '🌈', points: 10 },
-  { id: 'variety_4', name: 'Cuatro Familias', description: 'Reporta items de 4 familias diferentes', icon: '🌈', points: 15 },
-  { id: 'variety_5', name: 'Cinco Familias', description: 'Reporta items de 5 familias diferentes', icon: '🌈', points: 20 },
-  { id: 'variety_6', name: 'Todas las Familias', description: 'Reporta items de las 6 familias', icon: '🌈', points: 30 },
-  { id: 'speed_collector', name: 'Recolector Rápido', description: 'Recolecta en <1 hora', icon: '⚡', points: 3 },
-  { id: 'speed_3', name: 'Triple Rápido', description: 'Recolecta 3 items en menos de 6 horas', icon: '⚡', points: 10 },
-  { id: 'speed_5', name: 'Quíntuple Rápido', description: 'Recolecta 5 items en menos de 6 horas', icon: '⚡', points: 20 },
-  { id: 'flash_collect', name: 'Flash Collect', description: 'Recolecta 1 item en menos de 30 minutos', icon: '⚡', points: 5 },
-  { id: 'combo_2', name: 'Combo x2', description: '2 items misma familia', icon: '🔁', points: 2 },
-  { id: 'combo_3', name: 'Combo x3', description: '3 items misma familia', icon: '🔁', points: 4 },
-  { id: 'combo_5', name: 'Combo x5', description: '5 items misma familia', icon: '🔁', points: 7 },
-  { id: 'night_owl', name: 'Búho Nocturno', description: 'Reporta un item entre 00:00 y 06:00', icon: '🦉', points: 5 },
-  { id: 'early_bird', name: 'Madrugador', description: 'Reporta un item entre 05:00 y 07:00', icon: '🐦', points: 5 },
-  { id: 'weekend_warrior', name: 'Guerrero del Fin de Semana', description: 'Reporta 5 items en un fin de semana', icon: '📅', points: 15 },
-  { id: 'birthday_gift', name: 'Regalo de Cumpleaños', description: 'Reporta un item en tu cumpleaños', icon: '🎂', points: 10 }
-]
-
 export function PointsScreen() {
   const { token, user } = useAuth()
-  const location = useLocation()
+  const containerRef = useRef<HTMLDivElement>(null)
+  
+  const [activeSection, setActiveSection] = useState(0)
   const [loading, setLoading] = useState(true)
   const [pointsData, setPointsData] = useState<any>(null)
   const [ranking, setRanking] = useState<any[]>([])
+  const [achievements, setAchievements] = useState<any[]>([])
+  const [challenges, setChallenges] = useState<any[]>([])
+  const [challengeProgress, setChallengeProgress] = useState<any>({})
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState('daily')
   const [activeStatsTab, setActiveStatsTab] = useState('ranking')
+  const [activeChallengeTab, setActiveChallengeTab] = useState('daily')
   const [refreshKey, setRefreshKey] = useState(0)
+  const [sectionLoaded, setSectionLoaded] = useState<{[key: number]: boolean}>({ 0: false, 1: false, 2: false })
 
   const openAchievementModal = (achievement: any) => {
     setSelectedAchievement(achievement)
@@ -213,68 +74,70 @@ export function PointsScreen() {
     setSelectedAchievement(null)
   }
 
-  const refreshData = useCallback(async () => {
+  const fetchBasicData = useCallback(async () => {
     if (!token) return
-    setLoading(true)
     try {
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await pointsRes.json()
       setPointsData(data)
+      setAchievements(data.achievements || [])
+      setChallenges(data.challenges || [])
+      setChallengeProgress(data.challengeProgress || {})
+    } catch (err) {
+      console.error('Error fetching points data:', err)
+    }
+  }, [token])
 
+  const fetchRanking = useCallback(async () => {
+    if (!token) return
+    try {
       const rankingRes = await fetch(`${API_BASE_URL}/points/ranking`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       if (rankingRes.ok) {
         const rankingData = await rankingRes.json()
         setRanking(rankingData.ranking || [])
-      } else {
-        setRanking([])
       }
     } catch (err) {
-      console.error('Error fetching points data:', err)
-    } finally {
-      setLoading(false)
+      console.error('Error fetching ranking:', err)
     }
   }, [token])
 
-  // Refrescar cuando cambia de ruta (al volver a esta pantalla)
   useEffect(() => {
-    refreshData()
-  }, [refreshKey, location.pathname, refreshData])
+    const loadSection = async () => {
+      setLoading(true)
+      await fetchBasicData()
+      if (activeSection === 0) {
+        await fetchRanking()
+      }
+      setLoading(false)
+      setSectionLoaded(prev => ({ ...prev, [activeSection]: true }))
+    }
+    loadSection()
+  }, [refreshKey, activeSection, fetchBasicData, fetchRanking])
 
-  // Exponer función de refresh globalmente para otras pantallas
   useEffect(() => {
-    (window as any).refreshPointsData = () => {
+    if (!sectionLoaded[activeSection]) {
       setRefreshKey(k => k + 1)
     }
-    return () => {
-      delete (window as any).refreshPointsData
-    }
-  }, [])
+  }, [activeSection])
 
-  if (loading) return <Loading>Cargando...</Loading>
+  if (loading && !sectionLoaded[activeSection]) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division, achievements: achievementsFromBackend, challengeProgress: progressFromBackend, challenges } = pointsData
+  const { points, division } = pointsData
 
-  // Usar los logros del backend (que ya tienen unlocked calculado)
-  const achievements = achievementsFromBackend || ACHIEVEMENTS.map(a => ({ ...a, unlocked: false }))
-  const challengeProgress = progressFromBackend || {}
+  const sectionTitles = ['Eco Points', 'Logros', 'Desafíos']
 
-  // Calcular totales
-  const totalCategoryPoints = Object.values(points.category_points || {}).reduce((sum: number, v) => sum + (Number(v) || 0), 0)
-  const totalFamilyReports = Object.values(points.family_reports || {}).reduce((sum: number, v) => sum + (Number(v) || 0), 0)
-
-  return (
-    <Container>
+  const renderEcoPoints = () => (
+    <>
       <Header>
         <Title>🌿 Eco Points</Title>
         <Subtitle>Tu impacto en la comunidad</Subtitle>
       </Header>
 
-      {/* Tarjeta de puntos principal */}
       <PointsCard>
         <PointsHeader>
           <div>
@@ -295,15 +158,11 @@ export function PointsScreen() {
         </StatsRow>
       </PointsCard>
 
-      {/* Pestañas de Stats */}
       <TabContainer>
         <Tab $active={activeStatsTab === 'ranking'} onClick={() => setActiveStatsTab('ranking')}>Ranking</Tab>
-        <Tab $active={activeStatsTab === 'divisions'} onClick={() => setActiveStatsTab('divisions')}>Divisiones</Tab>
-        <Tab $active={activeStatsTab === 'categories'} onClick={() => setActiveStatsTab('categories')}>Categorías</Tab>
-        <Tab $active={activeStatsTab === 'families'} onClick={() => setActiveStatsTab('families')}>Familias</Tab>
+        <Tab $active={activeStatsTab === 'stats'} onClick={() => setActiveStatsTab('stats')}>Stats</Tab>
       </TabContainer>
 
-      {/* Ranking */}
       {activeStatsTab === 'ranking' && (
         <TabContent style={{ gridTemplateColumns: '1fr' }}>
           {ranking.map((item, index) => (
@@ -334,116 +193,41 @@ export function PointsScreen() {
         </TabContent>
       )}
 
-      {/* Divisiones */}
-      {activeStatsTab === 'divisions' && (
-        <TabContent style={{ gridTemplateColumns: '1fr' }}>
-          {DIVISIONS.map((level) => (
-            <div key={level.level}>
-              <DivisionLevel>{level.level}</DivisionLevel>
-              <DivisionGrid>
-                {level.items.map((div) => {
-                  const isCurrent = div.name === division
-                  const isPast = points.total_points >= div.max
-                  const pointsFromMin = points.total_points - div.min
-                  const pointsToMax = div.max - div.min
-                  const progress = div.max === Infinity ? 100 : Math.min((pointsFromMin / pointsToMax) * 100, 100)
-                  const pointsRemaining = div.max === Infinity ? 0 : Math.max(div.max - points.total_points, 0)
-                  
-                  return (
-                    <DivisionCard key={div.name} $isCurrent={isCurrent} $isPast={isPast}>
-                      <DivisionIcon $isCurrent={isCurrent}>{div.icon}</DivisionIcon>
-                      <DivisionInfo>
-                        <DivisionHeader>
-                          <DivisionName>{div.name}</DivisionName>
-                          <DivisionRange>{div.min} - {div.max === Infinity ? '∞' : div.max} pts</DivisionRange>
-                        </DivisionHeader>
-                        {isCurrent && (
-                          <>
-                            <ProgressBar>
-                              <ProgressFill $progress={progress} />
-                            </ProgressBar>
-                            <ProgressStats>
-                              <span>{pointsFromMin} pts</span>
-                              <span>{pointsRemaining > 0 
-                                ? `${pointsRemaining} pts para siguiente nivel` 
-                                : 'Nivel máximo'}</span>
-                            </ProgressStats>
-                          </>
-                        )}
-                      </DivisionInfo>
-                      {isCurrent && <span style={{ fontSize: '12px', color: 'white', fontWeight: '600', marginLeft: '12px' }}>Tú</span>}
-                    </DivisionCard>
-                  )
-                })}
-              </DivisionGrid>
-            </div>
-          ))}
-        </TabContent>
-      )}
-
-      {/* Puntos por Categoría */}
-      {activeStatsTab === 'categories' && (
-        <TabContent style={{ gridTemplateColumns: '1fr' }}>
-          <div style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>
-            Total: {totalCategoryPoints} pts
+      {activeStatsTab === 'stats' && (
+        <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+          <div style={{ textAlign: 'center', padding: '16px', background: '#f5f5f5', borderRadius: '12px' }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Top Categorías</div>
+            {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 3).map(([cat, pts]) => (
+              <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+                <span style={{ textTransform: 'capitalize' }}>{cat}</span>
+                <span style={{ fontWeight: 'bold' }}>{String(pts)} pts</span>
+              </div>
+            ))}
           </div>
-          {Object.entries(points.category_points || {}).length > 0 ? (
-            Object.entries(points.category_points || {}).map(([category, catPoints]) => (
-              <BarChartRow key={category}>
-                <BarHeader>
-                  <BarLabel>
-                    {CATEGORY_INFO[category]?.icon || '📦'} {CATEGORY_INFO[category]?.name || category}
-                  </BarLabel>
-                  <BarValue>{catPoints as number} pts</BarValue>
-                </BarHeader>
-                <BarContainer>
-                  <BarFill 
-                    $color={CATEGORY_INFO[category]?.color || '#0071e3'} 
-                    $width={(Number(catPoints) / totalCategoryPoints) * 100} 
-                  />
-                </BarContainer>
-              </BarChartRow>
-            ))
-          ) : (
-            <p style={{ textAlign: 'center', color: '#8e8e93', fontSize: '14px', padding: '20px' }}>
-              Reporta o recolecta items para ganar puntos
-            </p>
-          )}
-        </TabContent>
-      )}
-
-      {/* Actividad por Familia */}
-      {activeStatsTab === 'families' && (
-        <TabContent style={{ gridTemplateColumns: '1fr' }}>
-          <div style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600', color: COLORS.primaryDark }}>
-            Total: {totalFamilyReports} items
+          <div style={{ textAlign: 'center', padding: '16px', background: '#f5f5f5', borderRadius: '12px' }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Por Familia</div>
+            {Object.entries(points.family_reports || {}).map(([family, count]) => (
+              <div key={family} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+                <span style={{ textTransform: 'capitalize' }}>{family}</span>
+                <span style={{ fontWeight: 'bold' }}>{String(count)} items</span>
+              </div>
+            ))}
           </div>
-          {Object.entries(points.family_reports || {}).map(([family, count]) => (
-            <BarChartRow key={family}>
-              <BarHeader>
-                <BarLabel>
-                  {FAMILY_INFO[family]?.icon || '📦'} {FAMILY_INFO[family]?.name || family}
-                </BarLabel>
-                <BarValue>{count as number}</BarValue>
-              </BarHeader>
-              <BarContainer>
-                <BarFill 
-                  $color={FAMILY_INFO[family]?.color || '#0071e3'} 
-                  $width={(Number(count) / totalFamilyReports) * 100} 
-                />
-              </BarContainer>
-            </BarChartRow>
-          ))}
         </TabContent>
       )}
+    </>
+  )
 
-      <Divider />
+  const renderLogros = () => (
+    <>
+      <Header>
+        <Title>🏆 Logros</Title>
+        <Subtitle>Tu historial de reconocimientos</Subtitle>
+      </Header>
 
-      {/* Logros */}
-      <SectionTitle>🏅 Logros</SectionTitle>
       <AchievementsSection>
         <AchievementsGrid>
-          {achievements.map((achievement: any) => (
+          {achievements.map((achievement) => (
             <AchievementCard 
               key={achievement.id} 
               $unlocked={achievement.unlocked}
@@ -459,19 +243,25 @@ export function PointsScreen() {
           ))}
         </AchievementsGrid>
       </AchievementsSection>
+    </>
+  )
 
-      <Divider />
+  const renderDesafios = () => (
+    <>
+      <Header>
+        <Title>🎯 Desafíos</Title>
+        <Subtitle>Completa para ganar estrellas y copas</Subtitle>
+      </Header>
 
-      {/* Desafíos con pestañas */}
-      <SectionTitle>🎯 Desafíos</SectionTitle>
       <TabContainer>
-        <Tab $active={activeTab === 'daily'} onClick={() => setActiveTab('daily')}>Diario</Tab>
-        <Tab $active={activeTab === 'weekly'} onClick={() => setActiveTab('weekly')}>Semanal</Tab>
-        <Tab $active={activeTab === 'monthly'} onClick={() => setActiveTab('monthly')}>Mensual</Tab>
-        <Tab $active={activeTab === 'annual'} onClick={() => setActiveTab('annual')}>Anual</Tab>
+        <Tab $active={activeChallengeTab === 'daily'} onClick={() => setActiveChallengeTab('daily')}>Diario</Tab>
+        <Tab $active={activeChallengeTab === 'weekly'} onClick={() => setActiveChallengeTab('weekly')}>Semanal</Tab>
+        <Tab $active={activeChallengeTab === 'monthly'} onClick={() => setActiveChallengeTab('monthly')}>Mensual</Tab>
+        <Tab $active={activeChallengeTab === 'annual'} onClick={() => setActiveChallengeTab('annual')}>Anual</Tab>
       </TabContainer>
+
       <TabContent>
-        {(challenges || []).filter((c: any) => c.type === activeTab).map((challenge: any) => {
+        {(challenges || []).filter((c: any) => c.type === activeChallengeTab).map((challenge: any) => {
           const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
           const isActive = progress.completed_this_period
           
@@ -503,6 +293,64 @@ export function PointsScreen() {
           )
         })}
       </TabContent>
+    </>
+  )
+
+  const sections = [renderEcoPoints(), renderLogros(), renderDesafios()]
+
+  return (
+    <Container ref={containerRef}>
+      {/* Indicador de sección */}
+      <div style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 100 }}>
+        {sectionTitles.map((title, idx) => (
+          <div
+            key={idx}
+            onClick={() => {
+              setActiveSection(idx)
+              containerRef.current?.scrollTo({ top: idx * window.innerHeight, behavior: 'smooth' })
+            }}
+            style={{
+              padding: '4px 12px',
+              borderRadius: '12px',
+              background: idx === activeSection ? COLORS.primary : '#ddd',
+              color: idx === activeSection ? 'white' : '#666',
+              fontSize: '12px',
+              fontWeight: idx === activeSection ? 'bold' : 'normal',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+          >
+            {title}
+          </div>
+        ))}
+      </div>
+
+      <div 
+        ref={containerRef as any}
+        onScroll={(e: any) => {
+          const scrollTop = e.target.scrollTop
+          const sectionHeight = window.innerHeight
+          const newSection = Math.round(scrollTop / sectionHeight)
+          if (newSection !== activeSection && newSection >= 0 && newSection <= 2) {
+            setActiveSection(newSection)
+          }
+        }}
+        style={{ 
+          overflowY: 'auto', 
+          height: 'calc(100vh - 60px)',
+          scrollSnapType: 'y mandatory'
+        }}
+      >
+        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '80px' }}>
+          {sections[0]}
+        </div>
+        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '80px' }}>
+          {sections[1]}
+        </div>
+        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '80px' }}>
+          {sections[2]}
+        </div>
+      </div>
 
       <AchievementModal 
         isOpen={isModalOpen}
