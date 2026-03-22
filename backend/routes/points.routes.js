@@ -190,23 +190,23 @@ initializeChallenges();
 // Obtener puntos del usuario actual
 router.get('/my-points', authenticateToken, async (req, res) => {
   try {
-    console.log('my-points called for user:', req.user?.id);
+    console.log('Step 1: my-points called for user:', req.user?.id);
     
     if (!req.user || !req.user.id) {
-      console.error('User not authenticated:', req.user);
+      console.error('Step 1 FAIL: User not authenticated');
       return res.status(401).json({ error: 'User not authenticated' });
     }
     
+    console.log('Step 2: Getting userPoints...');
     const userPoints = await getOrCreateUserPoints(req.user.id);
+    console.log('Step 2 done, userPoints:', !!userPoints);
     
     if (!userPoints) {
-      console.error('UserPoints not found for user:', req.user.id);
+      console.error('Step 2 FAIL: UserPoints not found');
       return res.status(500).json({ error: 'UserPoints not found' });
     }
     
-    console.log('UserPoints found:', userPoints.total_points);
-    
-    // Calcular división actual
+    console.log('Step 3: Calculating division...');
     let division = 'Curioso Verde';
     for (const div of DIVISIONS) {
       if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
@@ -214,8 +214,10 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         break;
       }
     }
+    console.log('Step 3 done, division:', division);
     
     // Paralelizar queries de logros
+    console.log('Step 4: Getting achievements...');
     const [achievements] = await Promise.all([
       Achievement.find({ user_id: req.user.id })
     ]);
@@ -227,8 +229,10 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       unlocked: unlockedAchievementIds.includes(ach.id),
       unlocked_at: achievements.find(a => a.achievement_id === ach.id)?.unlocked_at
     }));
+    console.log('Step 4 done, achievements count:', allAchievements.length);
     
     // Usar contadores de userPoints en lugar de query a Item
+    console.log('Step 5: Processing challenges...');
     const now = new Date();
     const dailyStart = getPeriodStart('daily');
     const weeklyStart = getPeriodStart('weekly');
@@ -341,7 +345,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       };
     }
     
-    console.log('Challenges processed, calculating Eco Score...');
+    console.log('Step 5 done. Calculating Eco Score...');
     
     // Calcular Eco Score semanal
     const weeklyReports = userPoints.weekly_reports || 0;
@@ -446,9 +450,9 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       console.error('Error converting family_reports:', e);
     }
     
-    console.log('Sending response with category_points:', categoryPointsConverted);
+    console.log('Sending response...');
     
-    res.json({
+    const response = {
       points: {
         ...pointsObj,
         category_points: categoryPointsConverted,
@@ -476,7 +480,11 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same',
         message: gradeMessage
       }
-    });
+    };
+    
+    console.log('Response prepared, sending...');
+    res.json(response);
+    console.log('Response sent successfully');
   } catch (error) {
     console.error('Error in my-points:', error);
     res.status(500).json({ error: error.message });
