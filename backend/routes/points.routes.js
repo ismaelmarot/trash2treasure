@@ -144,6 +144,23 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     // Resetear contadores temporales si es necesario
     resetCountersIfNeeded(userPoints);
+    
+    // Recalcular daily_reports desde los items reales creados hoy
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+    
+    const todayItemsCount = await Item.countDocuments({
+      user_id: req.user.id,
+      created_at: { $gte: todayStart, $lt: tomorrowStart }
+    });
+    
+    // Usar el máximo entre el contador almacenado y los items reales (por si acaso)
+    if (todayItemsCount > userPoints.daily_reports) {
+      userPoints.daily_reports = todayItemsCount;
+    }
+    
     await userPoints.save();
     
     // Calcular división actual
