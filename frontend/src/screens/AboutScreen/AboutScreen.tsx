@@ -125,10 +125,10 @@ export function AboutScreen() {
 
         <Footer>
           <FooterLinks>
-            <FooterLink onClick={() => navigate('/legal/privacy')}>Privacy Policy</FooterLink>
-            <FooterLink onClick={() => navigate('/legal/terms')}>Terms of Use</FooterLink>
-            <FooterLink onClick={() => navigate('/legal/legal')}>Legal</FooterLink>
-            <FooterLink onClick={() => navigate('/sitemap')}>Site Map</FooterLink>
+            <FooterLink onClick={() => navigate('/app/legal/privacy')}>Privacy Policy</FooterLink>
+            <FooterLink onClick={() => navigate('/app/legal/terms')}>Terms of Use</FooterLink>
+            <FooterLink onClick={() => navigate('/app/legal/legal')}>Legal</FooterLink>
+            <FooterLink onClick={() => navigate('/app/sitemap')}>Site Map</FooterLink>
           </FooterLinks>
           <FooterBottom>
             <FooterText>Hecho con pasión por un futuro más sostenible.</FooterText>
