@@ -13,21 +13,20 @@ import {
   GoOut,
   IconChevron,
   IconCircle,
-  LogoutButton,
   MenuIconWrapper,
   MenuItem,
   MenuLabel,
   Name,
-  Section,
-  SectionTitle,
-  ExitText,
   PointsCard,
   PointsLabel,
   PointsValue,
-  StatsRow,
+  Section,
+  SectionTitle,
   StatItem,
+  StatLabel,
   StatValue,
-  StatLabel
+  StatsRow,
+  ExitText,
 } from './ProfileScreen.style'
 
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
@@ -128,7 +127,7 @@ export function ProfileScreen() {
 
       <Section>
       <SectionTitle>Aplicación</SectionTitle>
-        <MenuItem onClick={() => navigate('/about')}>
+        <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
             <IconCircle />
           </MenuIconWrapper>
@@ -139,12 +138,10 @@ export function ProfileScreen() {
 
       <Section>
         <SectionTitle>Configuración</SectionTitle>
-        <MenuItem onClick={() => navigate('/about')}>
+        <MenuItem onClick={logout}>
             <ExitText>Cerrar Sesión</ExitText>
           <MenuIconWrapper>
-            <LogoutButton onClick={logout}>
-              <GoOut />
-            </LogoutButton>
+            <GoOut />
           </MenuIconWrapper>
           </MenuItem>
       </Section>
