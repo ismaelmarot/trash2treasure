@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { API_BASE_URL, COLORS } from '@/constants'
+import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
 import {
@@ -300,30 +300,21 @@ export function PointsScreen() {
 
   return (
     <Container ref={containerRef}>
-      {/* Indicador de sección */}
-      <div style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 100 }}>
+      {/* Indicador de sección con estilo Tab */}
+      <TabContainer style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: 'auto', minWidth: '280px' }}>
         {sectionTitles.map((title, idx) => (
-          <div
+          <Tab
             key={idx}
+            $active={idx === activeSection}
             onClick={() => {
               setActiveSection(idx)
               containerRef.current?.scrollTo({ top: idx * window.innerHeight, behavior: 'smooth' })
             }}
-            style={{
-              padding: '4px 12px',
-              borderRadius: '12px',
-              background: idx === activeSection ? COLORS.primary : '#ddd',
-              color: idx === activeSection ? 'white' : '#666',
-              fontSize: '12px',
-              fontWeight: idx === activeSection ? 'bold' : 'normal',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
           >
             {title}
-          </div>
+          </Tab>
         ))}
-      </div>
+      </TabContainer>
 
       <div 
         ref={containerRef as any}
