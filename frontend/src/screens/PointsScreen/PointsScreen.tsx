@@ -65,6 +65,7 @@ export function PointsScreen() {
   const [activeTab, setActiveTab] = useState('summary')
   const [activeChallengePeriod, setActiveChallengePeriod] = useState('daily')
   const [activeSummaryTab, setActiveSummaryTab] = useState('categories')
+  const [expandedLevels, setExpandedLevels] = useState<string[]>(['bajo'])
 
   const openAchievementModal = (achievement: any) => {
     setSelectedAchievement(achievement)
@@ -206,201 +207,119 @@ export function PointsScreen() {
           )}
 
           {activeSummaryTab === 'level' && (
-            <TabContent style={{ gridTemplateColumns: '1fr', gap: '16px' }}>
-              {/* Nivel bajo */}
-              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#666', marginBottom: '4px' }}>🌱 Nivel bajo</div>
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '12px' }}>
               {[
-                { name: 'Curioso Verde', min: 0, max: 100 },
-                { name: 'Recolector Novato', min: 0, max: 200 },
-                { name: 'Semilla', min: 0, max: 150 },
-                { name: 'Despertando', min: 0, max: 200 },
-              ].map((level) => {
-                const isCurrent = level.name === division
-                const isPast = points.total_points >= level.max
-                const percentage = Math.min(points.total_points / level.max * 100, 100)
-                const levelColor = isCurrent ? '#27ae60' : isPast ? '#34c759' : '#ccc'
-                
+                { id: 'bajo', icon: '🌱', name: 'Nivel bajo', levels: [
+                  { name: 'Curioso Verde', min: 0, max: 100 },
+                  { name: 'Recolector Novato', min: 0, max: 200 },
+                  { name: 'Semilla', min: 0, max: 150 },
+                  { name: 'Despertando', min: 0, max: 200 },
+                ]},
+                { id: 'mediobajo', icon: '♻️', name: 'Nivel medio bajo', levels: [
+                  { name: 'Eco Aprendiz', min: 200, max: 400 },
+                  { name: 'Separador Serial', min: 300, max: 600 },
+                  { name: 'Clasificador Ninja', min: 400, max: 700 },
+                  { name: 'Anti Basura', min: 300, max: 600 },
+                ]},
+                { id: 'medio', icon: '🌿', name: 'Nivel medio', levels: [
+                  { name: 'Recuperador Urbano', min: 500, max: 900 },
+                  { name: 'Guardián del Bosque', min: 600, max: 1000 },
+                  { name: 'Reutilizador Pro', min: 700, max: 1200 },
+                  { name: 'Eco Hacker', min: 800, max: 1200 },
+                ]},
+                { id: 'medioalto', icon: '🌳', name: 'Nivel medio alto', levels: [
+                  { name: 'Maestro del Reciclaje', min: 1000, max: 1500 },
+                  { name: 'Alquimista de Residuos', min: 1200, max: 1700 },
+                  { name: 'Ingeniero Verde', min: 1300, max: 1800 },
+                  { name: 'Transformador', min: 1200, max: 1600 },
+                ]},
+                { id: 'alto', icon: '🌎', name: 'Nivel alto', levels: [
+                  { name: 'Defensor del Planeta', min: 1500, max: 2000 },
+                  { name: 'Titán Verde', min: 1800, max: 2500 },
+                  { name: 'Eco Estratega', min: 1700, max: 2300 },
+                  { name: 'Señor del Compost', min: 1800, max: 2500 },
+                ]},
+                { id: 'epico', icon: '🚀', name: 'Nivel épico', levels: [
+                  { name: 'Gaia Ascendido', min: 2000, max: Infinity },
+                  { name: 'Leyenda Sustentable', min: 2500, max: Infinity },
+                  { name: 'Arquitecto del Futuro', min: 3000, max: Infinity },
+                  { name: 'Deidad del Reciclaje', min: 4000, max: Infinity },
+                ]},
+              ].map((tier) => {
+                const isExpanded = expandedLevels.includes(tier.id)
                 return (
-                  <div key={level.name} style={{ 
-                    padding: '12px', 
-                    background: isCurrent ? '#e8f5e9' : '#f5f5f5', 
+                  <div key={tier.id} style={{ 
+                    background: '#f5f5f5', 
                     borderRadius: '12px',
-                    border: isCurrent ? '2px solid #27ae60' : 'none'
+                    overflow: 'hidden'
                   }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#27ae60' : '#999' }}>
-                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
+                    <div 
+                      onClick={() => {
+                        if (isExpanded) {
+                          setExpandedLevels(expandedLevels.filter(e => e !== tier.id))
+                        } else {
+                          setExpandedLevels([...expandedLevels, tier.id])
+                        }
+                      }}
+                      style={{ 
+                        padding: '14px 16px', 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        background: '#42c5a5',
+                        color: 'white'
+                      }}
+                    >
+                      <span style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>{tier.icon}</span> {tier.name}
                       </span>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{level.max}+ pts</span>
-                    </div>
-                    <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percentage}%`, background: levelColor, borderRadius: '3px' }} />
-                    </div>
-                  </div>
-                )
-              })}
-
-              {/* Nivel medio bajo */}
-              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#666', marginBottom: '4px', marginTop: '8px' }}>♻️ Nivel medio bajo</div>
-              {[
-                { name: 'Eco Aprendiz', min: 200, max: 400 },
-                { name: 'Separador Serial', min: 300, max: 600 },
-                { name: 'Clasificador Ninja', min: 400, max: 700 },
-                { name: 'Anti Basura', min: 300, max: 600 },
-              ].map((level) => {
-                const isCurrent = level.name === division
-                const isPast = points.total_points >= level.max
-                const percentage = Math.min(Math.max(0, (points.total_points - level.min) / (level.max - level.min) * 100), 100)
-                const levelColor = isCurrent ? '#27ae60' : isPast ? '#34c759' : '#ccc'
-                
-                return (
-                  <div key={level.name} style={{ 
-                    padding: '12px', 
-                    background: isCurrent ? '#e8f5e9' : '#f5f5f5', 
-                    borderRadius: '12px',
-                    border: isCurrent ? '2px solid #27ae60' : 'none'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#27ae60' : '#999' }}>
-                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
+                      <span style={{ fontSize: '12px', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s' }}>
+                        ▼
                       </span>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{level.min}–{level.max} pts</span>
                     </div>
-                    <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percentage}%`, background: levelColor, borderRadius: '3px' }} />
-                    </div>
-                  </div>
-                )
-              })}
-
-              {/* Nivel medio */}
-              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#666', marginBottom: '4px', marginTop: '8px' }}>🌿 Nivel medio</div>
-              {[
-                { name: 'Recuperador Urbano', min: 500, max: 900 },
-                { name: 'Guardián del Bosque', min: 600, max: 1000 },
-                { name: 'Reutilizador Pro', min: 700, max: 1200 },
-                { name: 'Eco Hacker', min: 800, max: 1200 },
-              ].map((level) => {
-                const isCurrent = level.name === division
-                const isPast = points.total_points >= level.max
-                const percentage = Math.min(Math.max(0, (points.total_points - level.min) / (level.max - level.min) * 100), 100)
-                const levelColor = isCurrent ? '#27ae60' : isPast ? '#34c759' : '#ccc'
-                
-                return (
-                  <div key={level.name} style={{ 
-                    padding: '12px', 
-                    background: isCurrent ? '#e8f5e9' : '#f5f5f5', 
-                    borderRadius: '12px',
-                    border: isCurrent ? '2px solid #27ae60' : 'none'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#27ae60' : '#999' }}>
-                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
-                      </span>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{level.min}–{level.max} pts</span>
-                    </div>
-                    <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percentage}%`, background: levelColor, borderRadius: '3px' }} />
-                    </div>
-                  </div>
-                )
-              })}
-
-              {/* Nivel medio alto */}
-              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#666', marginBottom: '4px', marginTop: '8px' }}>🌳 Nivel medio alto</div>
-              {[
-                { name: 'Maestro del Reciclaje', min: 1000, max: 1500 },
-                { name: 'Alquimista de Residuos', min: 1200, max: 1700 },
-                { name: 'Ingeniero Verde', min: 1300, max: 1800 },
-                { name: 'Transformador', min: 1200, max: 1600 },
-              ].map((level) => {
-                const isCurrent = level.name === division
-                const isPast = points.total_points >= level.max
-                const percentage = Math.min(Math.max(0, (points.total_points - level.min) / (level.max - level.min) * 100), 100)
-                const levelColor = isCurrent ? '#27ae60' : isPast ? '#34c759' : '#ccc'
-                
-                return (
-                  <div key={level.name} style={{ 
-                    padding: '12px', 
-                    background: isCurrent ? '#e8f5e9' : '#f5f5f5', 
-                    borderRadius: '12px',
-                    border: isCurrent ? '2px solid #27ae60' : 'none'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#27ae60' : '#999' }}>
-                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
-                      </span>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{level.min}–{level.max} pts</span>
-                    </div>
-                    <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percentage}%`, background: levelColor, borderRadius: '3px' }} />
-                    </div>
-                  </div>
-                )
-              })}
-
-              {/* Nivel alto */}
-              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#666', marginBottom: '4px', marginTop: '8px' }}>🌎 Nivel alto</div>
-              {[
-                { name: 'Defensor del Planeta', min: 1500, max: 2000 },
-                { name: 'Titán Verde', min: 1800, max: 2500 },
-                { name: 'Eco Estratega', min: 1700, max: 2300 },
-                { name: 'Señor del Compost', min: 1800, max: 2500 },
-              ].map((level) => {
-                const isCurrent = level.name === division
-                const isPast = points.total_points >= level.max
-                const percentage = Math.min(Math.max(0, (points.total_points - level.min) / (level.max - level.min) * 100), 100)
-                const levelColor = isCurrent ? '#27ae60' : isPast ? '#34c759' : '#ccc'
-                
-                return (
-                  <div key={level.name} style={{ 
-                    padding: '12px', 
-                    background: isCurrent ? '#e8f5e9' : '#f5f5f5', 
-                    borderRadius: '12px',
-                    border: isCurrent ? '2px solid #27ae60' : 'none'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#27ae60' : '#999' }}>
-                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
-                      </span>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{level.min}–{level.max} pts</span>
-                    </div>
-                    <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percentage}%`, background: levelColor, borderRadius: '3px' }} />
-                    </div>
-                  </div>
-                )
-              })}
-
-              {/* Nivel épico */}
-              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#666', marginBottom: '4px', marginTop: '8px' }}>🚀 Nivel épico</div>
-              {[
-                { name: 'Gaia Ascendido', min: 2000, max: Infinity },
-                { name: 'Leyenda Sustentable', min: 2500, max: Infinity },
-                { name: 'Arquitecto del Futuro', min: 3000, max: Infinity },
-                { name: 'Deidad del Reciclaje', min: 4000, max: Infinity },
-              ].map((level) => {
-                const isCurrent = level.name === division
-                const isPast = points.total_points >= level.min
-                const percentage = level.max === Infinity ? Math.min(points.total_points / level.min * 100, 100) : 100
-                const levelColor = isCurrent ? '#27ae60' : isPast ? '#34c759' : '#ccc'
-                
-                return (
-                  <div key={level.name} style={{ 
-                    padding: '12px', 
-                    background: isCurrent ? '#e8f5e9' : '#f5f5f5', 
-                    borderRadius: '12px',
-                    border: isCurrent ? '2px solid #27ae60' : 'none'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#27ae60' : '#999' }}>
-                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
-                      </span>
-                      <span style={{ fontSize: '12px', color: '#666' }}>{level.min}+ pts</span>
-                    </div>
-                    <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percentage}%`, background: levelColor, borderRadius: '3px' }} />
-                    </div>
+                    
+                    {isExpanded && (
+                      <div style={{ padding: '12px' }}>
+                        {tier.levels.map((level) => {
+                          const isCurrent = level.name === division
+                          const isPast = level.max === Infinity ? points.total_points >= level.min : points.total_points >= level.max
+                          const percentage = level.max === Infinity 
+                            ? Math.min(points.total_points / level.min * 100, 100)
+                            : Math.min(Math.max(0, (points.total_points - level.min) / (level.max - level.min) * 100), 100)
+                          const pointsInLevel = Math.max(0, points.total_points - level.min)
+                          const pointsRemaining = level.max === Infinity ? level.min - points.total_points : Math.max(0, level.max - points.total_points)
+                          
+                          return (
+                            <div key={level.name} style={{ 
+                              padding: '10px',
+                              background: 'white',
+                              borderRadius: '8px',
+                              marginBottom: '8px',
+                              border: isCurrent ? '2px solid #42c5a5' : '1px solid #e0e0e0'
+                            }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#42c5a5' : '#666' }}>
+                                  {isPast ? '✓ ' : isCurrent ? '→ ' : ''}{level.name}
+                                </span>
+                                <span style={{ fontSize: '12px', color: '#666' }}>
+                                  {level.max === Infinity ? `${level.min}+ pts` : `${level.min}–${level.max} pts`}
+                                </span>
+                              </div>
+                              <div style={{ height: '8px', background: 'white', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e0e0e0', marginBottom: '6px' }}>
+                                <div style={{ height: '100%', width: `${percentage}%`, background: '#42c5a5', borderRadius: '3px', transition: 'width 0.3s' }} />
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#666' }}>
+                                <span>{pointsInLevel} pts</span>
+                                <span style={{ color: isPast ? '#34c759' : '#42c5a5' }}>
+                                  {isPast ? 'Completado ✓' : `Faltan ${pointsRemaining} pts`}
+                                </span>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
                   </div>
                 )
               })}
