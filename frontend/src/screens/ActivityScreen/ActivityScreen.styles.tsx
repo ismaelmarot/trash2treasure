@@ -106,14 +106,13 @@ export const TagGroup = styled.div`
 `
 
 export const CategoryBadge = styled.span`
-    background: ${COLORS.allWhite};
+    background: #0071e3;
     padding: 4px 10px;
-    border-radius: 10px;
+    border-radius: 35px;
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
-    color: ${COLORS.black};
-    border: 1px solid ${COLORS.allWhite};
+    color: white;
 `
 
 export const OwnerBadge = styled.span`

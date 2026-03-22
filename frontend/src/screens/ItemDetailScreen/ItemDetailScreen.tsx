@@ -4,10 +4,15 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { ItemProps } from '@/interface'
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
 import { getImageUrl, normalizeItem } from '@/utils/imageUtils'
+
+const getCategoryIcon = (category: string): string => {
+  const cat = CATEGORIES.find(c => c.id === category);
+  return cat ? cat.icon : '📦';
+}
 import {
   BackButton,
   BadgeRow,
@@ -183,7 +188,7 @@ export function ItemDetailScreen() {
 
       <ContentCard>
         <BadgeRow>
-          <CategoryBadge>{item.category}</CategoryBadge>
+          <CategoryBadge>{getCategoryIcon(item.category)} {item.category}</CategoryBadge>
           <div style={{ marginLeft: 'auto' }}>
             {distance && <DistanceBadge>📍 {distance}</DistanceBadge>}
           </div>

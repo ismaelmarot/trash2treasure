@@ -73,13 +73,13 @@ export const CategoryBadge = styled.span`
     align-items: center;
     justify-content: center;
     padding: 4px 14px;
-    border-radius: 20px;
+    border-radius: 35px;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: ${COLORS.black};
-    background: ${COLORS.grey};
+    color: white;
+    background: #0071e3;
 `
 
 export const TagGroup = styled.div`

@@ -5,6 +5,11 @@ import type { ItemProps } from '@/interface'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { ItemCountdown } from '@/components'
 import { getImageUrl, normalizeItems } from '@/utils/imageUtils'
+
+const getCategoryIcon = (category: string): string => {
+  const cat = CATEGORIES.find(c => c.id === category);
+  return cat ? cat.icon : '📦';
+}
 import {
   CategoriesBar,
   CategoryBadge,
@@ -188,7 +193,7 @@ export function SearchScreen() {
                   <PlaceholderImage>📦</PlaceholderImage>
                 )}
                 <TagGroup>
-                  <CategoryBadge>{item.category}</CategoryBadge>
+                  <CategoryBadge>{getCategoryIcon(item.category)} {item.category}</CategoryBadge>
                   {item.user_id === user?.id && <OwnerBadge>Mío</OwnerBadge>}
                   {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
                   {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}

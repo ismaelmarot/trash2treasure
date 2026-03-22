@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import type { ItemProps } from '@/interface'
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, CATEGORIES } from '@/constants'
+
+const getCategoryIcon = (category: string): string => {
+  const cat = CATEGORIES.find(c => c.id === category);
+  return cat ? cat.icon : '📦';
+}
 import { useAuth } from '@/hooks'
 import { ConfirmationModal, ItemCountdown } from '@/components'
 import { normalizeItems, getImageUrl } from '@/utils/imageUtils'
@@ -251,7 +256,7 @@ export function ActivityScreen() {
                   <PlaceholderImage>📦</PlaceholderImage>
                 )}
                 <TagGroup>
-                  <CategoryBadge>{item.category}</CategoryBadge>
+                  <CategoryBadge>{getCategoryIcon(item.category)} {item.category}</CategoryBadge>
                   {item.user_id === user?.id && <OwnerBadge>Mío</OwnerBadge>}
                   {item.claimed_by === user?.id && <ClaimedBadge>Reclamado por mí</ClaimedBadge>}
                   {item.claimed_by && item.claimed_by !== user?.id && <ClaimedBadge $others>RECLAMADO</ClaimedBadge>}
