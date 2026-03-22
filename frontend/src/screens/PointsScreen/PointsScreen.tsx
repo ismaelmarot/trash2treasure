@@ -202,62 +202,6 @@ const ACHIEVEMENTS = [
   { id: 'birthday_gift', name: 'Regalo de Cumpleaños', description: 'Reporta un item en tu cumpleaños', icon: '🎂', points: 10 }
 ]
 
-const CHALLENGES = {
-  daily: [
-    { id: 'daily_report_3', name: 'Reportero Diario', description: 'Reporta 3 items', icon: '📸', target: 3, reward: 4, type: 'reports' },
-    { id: 'daily_report_5', name: 'Reportero Intenso', description: 'Reporta 5 items', icon: '📸', target: 5, reward: 7, type: 'reports' },
-    { id: 'daily_collect_3', name: 'Recolector Diario', description: 'Recolecta 3 items', icon: '♻️', target: 3, reward: 7, type: 'collected' },
-    { id: 'daily_collect_5', name: 'Recolector Intenso', description: 'Recolecta 5 items', icon: '♻️', target: 5, reward: 12, type: 'collected' },
-    { id: 'daily_families_2', name: 'Diversidad Diaria', description: 'Usa 2 familias', icon: '🌈', target: 2, reward: 10, type: 'families' },
-    { id: 'daily_families_3', name: 'Multifamilia', description: 'Usa 3 familias', icon: '🌈', target: 3, reward: 20, type: 'families' },
-    { id: 'daily_speed', name: 'Velocista', description: '3 items <6h', icon: '⚡', target: 3, reward: 3, type: 'speed' },
-    { id: 'daily_variety', name: 'Diversidad Diaria', description: 'Reporta items de 2 categorías diferentes', icon: '📊', target: 2, reward: 5, type: 'variety' },
-    { id: 'daily_both', name: 'Doble Misión', description: 'Reporta 1 y recolecta 1 item', icon: '🎯', target: 1, reward: 6, type: 'both' },
-    { id: 'daily_eco', name: 'Eco Diario', description: 'Reporta 2 items ECO', icon: '🌱', target: 2, reward: 4, type: 'eco' },
-    { id: 'daily_tech', name: 'Tech Diario', description: 'Reporta 1 item TECH', icon: '⚡', target: 1, reward: 4, type: 'tech' },
-    { id: 'daily_heavy', name: 'Heavy Diario', description: 'Reporta 1 item HEAVY', icon: '🏗️', target: 1, reward: 5, type: 'heavy' }
-  ],
-  weekly: [
-    { id: 'weekly_report_10', name: 'Reportero Semanal', description: '10 items esta semana', icon: '📸', target: 10, reward: 30, type: 'reports' },
-    { id: 'weekly_collect_10', name: 'Recolector Semanal', description: '10 items esta semana', icon: '♻️', target: 10, reward: 30, type: 'collected' },
-    { id: 'weekly_categories_5', name: 'Variado', description: '5 categorías esta semana', icon: '📊', target: 5, reward: 10, type: 'categories' },
-    { id: 'weekly_families_4', name: 'Multifamilia Semanal', description: '4 familias esta semana', icon: '🌈', target: 4, reward: 50, type: 'families' },
-    { id: 'weekly_streak', name: 'Racha Semanal', description: '7 días activo', icon: '🔥', target: 7, reward: 15, type: 'streak' },
-    { id: 'weekly_eco_5', name: 'Semana Verde', description: 'Reporta 5 items ECO', icon: '🌱', target: 5, reward: 15, type: 'eco' },
-    { id: 'weekly_tech_3', name: 'Semana Tech', description: 'Reporta 3 items TECH', icon: '⚡', target: 3, reward: 15, type: 'tech' },
-    { id: 'weekly_heavy_2', name: 'Semana Pesada', description: 'Reporta 2 items HEAVY', icon: '🏗️', target: 2, reward: 15, type: 'heavy' },
-    { id: 'weekly_packaging_5', name: 'Semana Packaging', description: 'Reporta 5 items PACKAGING', icon: '📦', target: 5, reward: 15, type: 'packaging' },
-    { id: 'weekly_reuse_3', name: 'Semana Reuse', description: 'Reporta 3 items REUSE', icon: '👕', target: 3, reward: 15, type: 'reuse' },
-    { id: 'weekly_variety', name: 'Semana Diversa', description: 'Usa 3 familias diferentes', icon: '🌈', target: 3, reward: 20, type: 'variety' },
-    { id: 'weekly_streak_5', name: 'Racha de 5', description: '5 días activo en la semana', icon: '🔥', target: 5, reward: 10, type: 'streak' },
-    { id: 'weekly_collect_5', name: 'Recolector Semanal', description: 'Recolecta 5 items', icon: '♻️', target: 5, reward: 15, type: 'collected' },
-    { id: 'weekly_speed', name: 'Velocista Semanal', description: 'Recolecta 3 items en menos de 6 horas', icon: '⚡', target: 3, reward: 15, type: 'speed' }
-  ],
-  monthly: [
-    { id: 'monthly_report_50', name: 'Reportero Mensual', description: '50 items este mes', icon: '📸', target: 50, reward: 50, type: 'reports' },
-    { id: 'monthly_report_100', name: 'Reportero Elite', description: '100 items este mes', icon: '📸', target: 100, reward: 120, type: 'reports' },
-    { id: 'monthly_collect_50', name: 'Recolector Mensual', description: '50 items este mes', icon: '♻️', target: 50, reward: 100, type: 'collected' },
-    { id: 'monthly_collect_100', name: 'Recolector Elite', description: '100 items este mes', icon: '♻️', target: 100, reward: 240, type: 'collected' },
-    { id: 'monthly_families_5', name: 'Versatilidad', description: '50 items en 4+ familias', icon: '🌍', target: 50, reward: 400, type: 'families' },
-    { id: 'monthly_eco_15', name: 'Mes Verde', description: 'Reporta 15 items ECO', icon: '🌱', target: 15, reward: 40, type: 'eco' },
-    { id: 'monthly_tech_10', name: 'Mes Tech', description: 'Reporta 10 items TECH', icon: '⚡', target: 10, reward: 40, type: 'tech' },
-    { id: 'monthly_heavy_5', name: 'Mes Pesado', description: 'Reporta 5 items HEAVY', icon: '🏗️', target: 5, reward: 40, type: 'heavy' },
-    { id: 'monthly_packaging_15', name: 'Mes Packaging', description: 'Reporta 15 items PACKAGING', icon: '📦', target: 15, reward: 40, type: 'packaging' },
-    { id: 'monthly_reuse_10', name: 'Mes Reuse', description: 'Reporta 10 items REUSE', icon: '👕', target: 10, reward: 40, type: 'reuse' },
-    { id: 'monthly_variety', name: 'Mes Diverso', description: 'Usa 4 familias diferentes', icon: '🌈', target: 4, reward: 50, type: 'variety' },
-    { id: 'monthly_streak_15', name: 'Racha de 15', description: '15 días activo en el mes', icon: '🔥', target: 15, reward: 30, type: 'streak' },
-    { id: 'monthly_collect_15', name: 'Recolector Mensual', description: 'Recolecta 15 items', icon: '♻️', target: 15, reward: 40, type: 'collected' },
-    { id: 'monthly_speed', name: 'Velocista Mensual', description: 'Recolecta 10 items en menos de 6 horas', icon: '⚡', target: 10, reward: 40, type: 'speed' },
-    { id: 'monthly_all_families', name: 'Todas las Familias', description: 'Usa las 6 familias en el mes', icon: '🌍', target: 6, reward: 60, type: 'all_families' }
-  ],
-  annual: [
-    { id: 'annual_eco_200', name: 'Eco Impact', description: '200 items ECO', icon: '🌱', target: 200, reward: 1000, type: 'eco' },
-    { id: 'annual_tech_100', name: 'Tech Guardian', description: '100 items TECH', icon: '⚡', target: 100, reward: 1200, type: 'tech' },
-    { id: 'annual_heavy_80', name: 'City Cleaner', description: '80 items HEAVY', icon: '🏗️', target: 80, reward: 1200, type: 'heavy' },
-    { id: 'annual_all_500', name: 'Legend Combo', description: '500 items + todas familias', icon: '👑', target: 500, reward: 2000, type: 'all' }
-  ]
-}
-
 const POINTS_INFO = [
   { icon: '📸', title: 'Reportar', detail: '+1 punto por cada reporte. +3 extra si la categoría es crítica (baterías, electrónicos, construcción, muebles)' },
   { icon: '♻️', title: 'Recolectar', detail: '+3 puntos por cada recolección. +3 extra si la categoría es crítica. +1 a +3 extra por rapidez (<3h: +1, <1h: +3)' },
@@ -338,7 +282,7 @@ export function PointsScreen() {
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division, achievements: achievementsFromBackend, challengeProgress: progressFromBackend } = pointsData
+  const { points, division, achievements: achievementsFromBackend, challengeProgress: progressFromBackend, challenges } = pointsData
 
   // Usar los logros del backend (que ya tienen unlocked calculado)
   const achievements = achievementsFromBackend || ACHIEVEMENTS.map(a => ({ ...a, unlocked: false }))
@@ -552,8 +496,8 @@ export function PointsScreen() {
         <Tab $active={activeTab === 'annual'} onClick={() => setActiveTab('annual')}>Anual</Tab>
       </TabContainer>
       <TabContent>
-        {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => {
-          const progress = challengeProgress[challenge.id] || { completed: 0, stars: 7, trophies: 0, completed_this_period: false }
+        {(challenges || []).filter((c: any) => c.type === activeTab).map((challenge: any) => {
+          const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
           const isActive = progress.completed_this_period
           return (
             <AchievementCard 
@@ -567,7 +511,7 @@ export function PointsScreen() {
                 points: challenge.reward,
                 unlocked: isActive,
                 stars: progress.stars,
-                filled: progress.completed,
+                filled: progress.current_progress,
                 trophies: progress.trophies,
                 type: 'challenge'
               })}
