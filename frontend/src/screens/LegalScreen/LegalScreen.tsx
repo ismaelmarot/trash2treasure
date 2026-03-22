@@ -179,7 +179,7 @@ export function LegalScreen() {
             <CategorySection>
               <CategoryTitle>Hardware y Software</CategoryTitle>
               <CategoryList>
-                <CategoryItem onClick={() => navigate('/legal/license')}>
+                <CategoryItem onClick={() => navigate('/app/legal/license')}>
                   <span>Software License Agreements</span>
                   <ICONS.arrowRight color="#c7c7cc" size={14} />
                 </CategoryItem>
@@ -189,15 +189,15 @@ export function LegalScreen() {
             <CategorySection>
               <CategoryTitle>Servicios de Internet y Políticas</CategoryTitle>
               <CategoryList>
-                <CategoryItem onClick={() => navigate('/legal/privacy')}>
+                <CategoryItem onClick={() => navigate('/app/legal/privacy')}>
                   <span>Privacy Policy</span>
                   <ICONS.arrowRight color="#c7c7cc" size={14} />
                 </CategoryItem>
-                <CategoryItem onClick={() => navigate('/legal/terms')}>
+                <CategoryItem onClick={() => navigate('/app/legal/terms')}>
                   <span>Terms of Use</span>
                   <ICONS.arrowRight color="#c7c7cc" size={14} />
                 </CategoryItem>
-                <CategoryItem onClick={() => navigate('/legal/ethics')}>
+                <CategoryItem onClick={() => navigate('/app/legal/ethics')}>
                   <span>Ethics & Compliance</span>
                   <ICONS.arrowRight color="#c7c7cc" size={14} />
                 </CategoryItem>
@@ -207,11 +207,11 @@ export function LegalScreen() {
             <CategorySection>
               <CategoryTitle>Propiedad Intelectual</CategoryTitle>
               <CategoryList>
-                <CategoryItem onClick={() => navigate('/legal/ip')}>
+                <CategoryItem onClick={() => navigate('/app/legal/ip')}>
                   <span>Copyright & Trademarks</span>
                   <ICONS.arrowRight color="#c7c7cc" size={14} />
                 </CategoryItem>
-                <CategoryItem onClick={() => navigate('/legal/attributions')}>
+                <CategoryItem onClick={() => navigate('/app/legal/attributions')}>
                   <span>Atribuciones de Terceros</span>
                   <ICONS.arrowRight color="#c7c7cc" size={14} />
                 </CategoryItem>
