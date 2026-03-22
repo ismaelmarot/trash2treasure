@@ -515,6 +515,7 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     
     const family = CATEGORY_FAMILIES[category] || 'special';
     userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
+    userPoints.category_points[category] = (userPoints.category_points[category] || 0) + points;
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);
