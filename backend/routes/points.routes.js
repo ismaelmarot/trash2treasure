@@ -190,7 +190,21 @@ initializeChallenges();
 // Obtener puntos del usuario actual
 router.get('/my-points', authenticateToken, async (req, res) => {
   try {
+    console.log('my-points called for user:', req.user?.id);
+    
+    if (!req.user || !req.user.id) {
+      console.error('User not authenticated:', req.user);
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+    
     const userPoints = await getOrCreateUserPoints(req.user.id);
+    
+    if (!userPoints) {
+      console.error('UserPoints not found for user:', req.user.id);
+      return res.status(500).json({ error: 'UserPoints not found' });
+    }
+    
+    console.log('UserPoints found:', userPoints.total_points);
     
     // Calcular división actual
     let division = 'Curioso Verde';
@@ -216,12 +230,19 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     // Usar contadores de userPoints en lugar de query a Item
     const now = new Date();
-    const periodStart = getPeriodStart('daily');
+    const dailyStart = getPeriodStart('daily');
+    const weeklyStart = getPeriodStart('weekly');
+    const monthlyStart = getPeriodStart('monthly');
+    const annualStart = getPeriodStart('annual');
     
-    // Obtener progresos de desafíos en paralelo
-    const challengeProgressPromises = CHALLENGE_DEFINITIONS.map(challenge => 
-      getOrCreateChallengeProgress(req.user.id, challenge, periodStart)
-    );
+    // Obtener progresos de desafíos en paralelo (cada uno con su período)
+    const challengeProgressPromises = CHALLENGE_DEFINITIONS.map(challenge => {
+      const periodStart = challenge.type === 'daily' ? dailyStart
+        : challenge.type === 'weekly' ? weeklyStart
+        : challenge.type === 'monthly' ? monthlyStart
+        : annualStart;
+      return getOrCreateChallengeProgress(req.user.id, challenge, periodStart);
+    });
     const existingProgress = await Promise.all(challengeProgressPromises);
     const progressMap = {};
     existingProgress.forEach((p, i) => {
@@ -240,6 +261,10 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     for (const challenge of CHALLENGE_DEFINITIONS) {
       let progress = 0;
+      const periodStart = challenge.type === 'daily' ? dailyStart
+        : challenge.type === 'weekly' ? weeklyStart
+        : challenge.type === 'monthly' ? monthlyStart
+        : annualStart;
       
       // Calcular progreso según la categoría usando contadores
       switch (challenge.category) {
@@ -286,6 +311,10 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       
       // Actualizar progreso en la DB
       const userProgress = progressMap[challenge.id];
+      if (!userProgress) {
+        console.error('No progress found for challenge:', challenge.id);
+        continue;
+      }
       userProgress.current_progress = progress;
       userProgress.last_updated = now;
       
@@ -311,6 +340,8 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         type: challenge.type
       };
     }
+    
+    console.log('Challenges processed, calculating Eco Score...');
     
     // Calcular Eco Score semanal
     const weeklyReports = userPoints.weekly_reports || 0;
