@@ -18,14 +18,9 @@ import {
   BarValue,
   Container,
   DivisionBadge,
-  EcoScoreBar,
   EcoScoreCard,
   EcoScoreGrade,
   EcoScoreHeader,
-  EcoScoreIcon,
-  EcoScorePercentile,
-  EcoScoreProgress,
-  EcoScoreProgressFill,
   EcoScoreSubtitle,
   EcoScoreTitle,
   EcoScoreTrend,
@@ -166,7 +161,6 @@ export function PointsScreen() {
               <EcoScoreHeader>
                 <EcoScoreGrade>
                   <EcoScoreLetter>{ecoScore.grade}</EcoScoreLetter>
-                  <EcoScoreIcon>🌱</EcoScoreIcon>
                 </EcoScoreGrade>
                 <EcoScoreTrend $trend={ecoScore.trend}>
                   {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
@@ -174,13 +168,7 @@ export function PointsScreen() {
                 </EcoScoreTrend>
               </EcoScoreHeader>
               <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
-              <EcoScoreSubtitle>{ecoScore.message}</EcoScoreSubtitle>
-              <EcoScoreBar>
-                <EcoScoreProgress>
-                  <EcoScoreProgressFill $width={ecoScore.percentile} />
-                </EcoScoreProgress>
-                <EcoScorePercentile>Top {ecoScore.percentile}%</EcoScorePercentile>
-              </EcoScoreBar>
+              <EcoScoreSubtitle>Arriba de {ecoScore.percentile}% de recicladores</EcoScoreSubtitle>
             </EcoScoreCard>
           )}
 
