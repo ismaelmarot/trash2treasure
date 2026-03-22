@@ -170,7 +170,7 @@ export function PointsScreen() {
 
           <TabContainer>
             <Tab $active={activeSummaryTab === 'categories'} onClick={() => setActiveSummaryTab('categories')}>Categorías</Tab>
-            <Tab $active={activeSummaryTab === 'families'} onClick={() => setActiveSummaryTab('families')}>Familia</Tab>
+            <Tab $active={activeSummaryTab === 'families'} onClick={() => setActiveSummaryTab('families')}>Familias</Tab>
             <Tab $active={activeSummaryTab === 'level'} onClick={() => setActiveSummaryTab('level')}>Nivel</Tab>
           </TabContainer>
 

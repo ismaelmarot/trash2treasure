@@ -85,7 +85,8 @@ const getOrCreateUserPoints = async (userId) => {
     let needsSave = false;
     if (userPoints.daily_reports === undefined) { userPoints.daily_reports = 0; needsSave = true; }
     if (userPoints.daily_collected === undefined) { userPoints.daily_collected = 0; needsSave = true; }
-    if (!userPoints.family_reports) { userPoints.family_reports = {}; needsSave = true; }
+    // No sobreescribir family_reports si ya tiene valores
+    if (!userPoints.family_reports) { userPoints.family_reports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 }; needsSave = true; }
     if (!userPoints.daily_family_reports) { userPoints.daily_family_reports = {}; needsSave = true; }
     if (!userPoints.daily_category_reports) { userPoints.daily_category_reports = {}; needsSave = true; }
     if (userPoints.weekly_reports === undefined) { userPoints.weekly_reports = 0; needsSave = true; }
@@ -427,9 +428,8 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
     
+    // category_points es un Map, convertirlo
     const categoryPointsConverted = {};
-    const familyReportsConverted = {};
-    
     try {
       if (userPoints.category_points && typeof userPoints.category_points.forEach === 'function') {
         userPoints.category_points.forEach((value, key) => {
@@ -440,17 +440,8 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       console.error('Error converting category_points:', e);
     }
     
-    try {
-      if (userPoints.family_reports && typeof userPoints.family_reports.forEach === 'function') {
-        userPoints.family_reports.forEach((value, key) => {
-          familyReportsConverted[key] = value;
-        });
-      }
-    } catch (e) {
-      console.error('Error converting family_reports:', e);
-    }
-    
-    console.log('Sending response...');
+    // family_reports ya es un objeto, no necesita conversión
+    const familyReportsConverted = userPoints.family_reports || {};
     
     const response = {
       points: {
