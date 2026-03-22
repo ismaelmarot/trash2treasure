@@ -287,7 +287,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       weekly_collected: { $gt: weeklyCollected },
       user_id: { $ne: null }
     });
-    const percentile = Math.round(((usersAbove + usersSameLevel / 2) / totalUsers) * 100);
+    const percentile = totalUsers > 0 ? Math.round(((usersAbove + usersSameLevel / 2) / totalUsers) * 100) : 100;
     
     // Determinar grade basado en score
     let grade, gradeColor;
