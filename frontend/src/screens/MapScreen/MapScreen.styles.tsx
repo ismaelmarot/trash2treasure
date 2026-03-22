@@ -610,11 +610,13 @@ export const Spinner = styled.div`
 `
 
 export const PopupContent = styled.div`
-    min-width: 200px;
-    max-width: 240px;
-    padding: 4px;
+    min-width: 240px;
+    max-width: 280px;
+    padding: 12px;
+    padding-top: 36px;
     border-radius: 34px;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
 `
 
 export const PopupImage = styled.img`
