@@ -331,13 +331,13 @@ export function PointsScreen() {
           scrollSnapType: 'y mandatory'
         }}
       >
-        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '80px' }}>
+        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '70px' }}>
           {sections[0]}
         </div>
-        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '80px' }}>
+        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '70px' }}>
           {sections[1]}
         </div>
-        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '80px' }}>
+        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '70px' }}>
           {sections[2]}
         </div>
       </div>

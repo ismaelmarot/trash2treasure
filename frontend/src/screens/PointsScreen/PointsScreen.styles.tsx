@@ -9,7 +9,7 @@ export const Container = styled.div`
 `
 
 export const Header = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 `
 
 export const Title = styled.h1`
