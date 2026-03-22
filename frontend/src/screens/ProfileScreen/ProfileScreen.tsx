@@ -27,9 +27,31 @@ import {
   StatValue,
   StatsRow,
   ExitText,
+  CollapsibleSection,
+  CollapsibleHeader,
+  CollapsibleTitle,
+  CollapsibleArrow,
+  CollapsibleContent,
+  InfoList,
+  InfoItem,
+  InfoIcon,
+  InfoContent,
+  InfoTitle,
+  InfoDetail,
 } from './ProfileScreen.style'
 
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
+
+const POINTS_INFO = [
+  { icon: '📸', title: 'Reportar', detail: '+1 punto por cada reporte. +3 extra si la categoría es crítica (baterías, electrónicos, construcción, muebles)' },
+  { icon: '♻️', title: 'Recolectar', detail: '+3 puntos por cada recolección. +3 extra si la categoría es crítica. +1 a +3 extra por rapidez (<3h: +1, <1h: +3)' },
+  { icon: '⏱️', title: 'Bonus por tiempo', detail: '<1 hora: +3 puntos extra. <3 horas: +1 punto extra' },
+  { icon: '🔥', title: 'Streak diario', detail: '3 días: +4 pts. 5 días: +6 pts. 10 días: +15 pts' },
+  { icon: '🔁', title: 'Combo misma familia', detail: '2 items: +2 pts. 3 items: +4 pts. 5 items: +7 pts' },
+  { icon: '🌈', title: 'Combo mixto', detail: '2 familias: +4 pts. 3 familias: +8 pts. 4 familias: +10 pts' },
+  { icon: '🥇', title: 'First del día', detail: 'Primero en reportar: +5 pts. Primero en recolectar: +6 pts' },
+  { icon: '🏆', title: 'Top del día', detail: '1°: +20 pts. 2°: +15 pts. 3°: +10 pts' }
+]
 
 function getAvatarColor(name: string): string {
   let hash = 0
@@ -44,6 +66,7 @@ export function ProfileScreen() {
   const navigate = useNavigate()
   const [pointsData, setPointsData] = useState<any>(null)
   const [profileData, setProfileData] = useState<any>(null)
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -125,6 +148,26 @@ export function ProfileScreen() {
           </StatItem>
         </StatsRow>
       </Section>
+
+      <CollapsibleSection>
+        <CollapsibleHeader onClick={() => setIsInfoOpen(!isInfoOpen)}>
+          <CollapsibleTitle>ℹ️ Cómo obtener puntos</CollapsibleTitle>
+          <CollapsibleArrow $isOpen={isInfoOpen}>▼</CollapsibleArrow>
+        </CollapsibleHeader>
+        <CollapsibleContent $isOpen={isInfoOpen}>
+          <InfoList>
+            {POINTS_INFO.map((info, index) => (
+              <InfoItem key={index}>
+                <InfoIcon>{info.icon}</InfoIcon>
+                <InfoContent>
+                  <InfoTitle>{info.title}</InfoTitle>
+                  <InfoDetail>{info.detail}</InfoDetail>
+                </InfoContent>
+              </InfoItem>
+            ))}
+          </InfoList>
+        </CollapsibleContent>
+      </CollapsibleSection>
 
       <Section>
       <SectionTitle>Aplicación</SectionTitle>

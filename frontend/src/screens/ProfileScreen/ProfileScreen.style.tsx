@@ -195,3 +195,78 @@ export const StatLabel = styled.div`
     font-size: 12px;
     color: ${COLORS.greyDark};
 `
+
+export const CollapsibleSection = styled.div`
+    width: 100%;
+    max-width: 40rem;
+    margin-bottom: ${SPACING.xxl};
+    text-align: left;
+`
+
+export const CollapsibleHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: ${SPACING.md};
+    background: #f5f5f5;
+    border-radius: ${SPACING.lg};
+    cursor: pointer;
+`
+
+export const CollapsibleTitle = styled.span`
+    font-size: 14px;
+    font-weight: 600;
+    color: ${COLORS.black};
+`
+
+export const CollapsibleArrow = styled.span<{ $isOpen: boolean }>`
+    font-size: 12px;
+    transition: transform 0.3s;
+    transform: rotate(${props => props.$isOpen ? '180deg' : '0deg'});
+    color: ${COLORS.greyDark};
+`
+
+export const CollapsibleContent = styled.div<{ $isOpen: boolean }>`
+    max-height: ${props => props.$isOpen ? '500px' : '0'};
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: ${COLORS.white};
+    border-radius: ${SPACING.lg};
+    margin-top: ${SPACING.sm};
+`
+
+export const InfoList = styled.div`
+    padding: ${SPACING.md};
+`
+
+export const InfoItem = styled.div`
+    display: flex;
+    gap: ${SPACING.md};
+    padding: ${SPACING.sm} 0;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+        border-bottom: none;
+    }
+`
+
+export const InfoIcon = styled.span`
+    font-size: 1.2rem;
+    flex-shrink: 0;
+`
+
+export const InfoContent = styled.div`
+    flex: 1;
+`
+
+export const InfoTitle = styled.div`
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 2px;
+`
+
+export const InfoDetail = styled.div`
+    font-size: 11px;
+    color: ${COLORS.greyDark};
+    line-height: 1.4;
+`
