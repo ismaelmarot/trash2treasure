@@ -13,7 +13,6 @@ import {
   BadgeRow,
   CategoryBadge,
   ClaimButton,
-  ClaimStatusBadge,
   Container,
   ContentCard,
   Description,
@@ -26,7 +25,6 @@ import {
   MapWrapper,
   MetaRow,
   NavigateButton,
-  OwnerBadge,
   PlaceholderImage,
   ProximityHint,
   SectionTitle,
@@ -187,29 +185,43 @@ export function ItemDetailScreen() {
       <ContentCard>
         <BadgeRow>
           <CategoryBadge>{item.category}</CategoryBadge>
-          {distance && <DistanceBadge>📍 {distance}</DistanceBadge>}
-          {item.user_id === user?.id && <OwnerBadge>Mi Reporte</OwnerBadge>}
-          {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
-          {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>RECLAMADO</ClaimStatusBadge>}
+          <div style={{ marginLeft: 'auto' }}>
+            {distance && <DistanceBadge>📍 {distance}</DistanceBadge>}
+          </div>
         </BadgeRow>
+
+        {item.user_id === user?.id && (
+          <div style={{ fontSize: '14px', fontWeight: '600', color: '#34c759', marginTop: '8px' }}>
+            MI REPORTE
+          </div>
+        )}
+
+        {item.claimed_by && (
+          <div style={{ fontSize: '14px', fontWeight: '600', color: '#ff9500', marginTop: '8px' }}>
+            {item.claimed_by === user?.id 
+              ? 'Reclamado por mí' 
+              : `Reclamado por ${typeof item.claimed_by === 'object' && 'name' in item.claimed_by ? (item.claimed_by as any).name : 'Otro usuario'}`}
+          </div>
+        )}
 
         <Header>
           <Title>{item.title}</Title>
         </Header>
 
+        <Description>{item.description || 'Sin descripción adicional.'}</Description>
+
         <MetaRow>
           <ItemCountdown createdAt={item.created_at} align="flex-start" />
-          <span style={{ fontSize: '13px', color: '#888', marginLeft: '12px' }}>
-            Publicado: {new Date(item.created_at).toLocaleDateString('es-ES', { 
-              day: 'numeric', 
-              month: 'short',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
-          </span>
         </MetaRow>
 
-        <Description>{item.description || 'Sin descripción adicional.'}</Description>
+        <span style={{ fontSize: '13px', color: '#888' }}>
+          Publicado: {new Date(item.created_at).toLocaleDateString('es-ES', { 
+            day: 'numeric', 
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </span>
         
         <SectionTitle>Ubicación</SectionTitle>
         <MapWrapper>
