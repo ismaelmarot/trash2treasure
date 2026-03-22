@@ -3,7 +3,7 @@ import { flex, size } from '@/mixins'
 import { COLORS } from '@/constants'
 
 export const Container = styled.div`
-    background: #ffffff;
+    background: ${COLORS.white};
     min-height: 100vh;
     padding-bottom: 40px;
 `
