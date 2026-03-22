@@ -60,6 +60,7 @@ import {
   ViewButton,
   ViewDetailButton,
   PublishedTime,
+  ClaimedBadgeSidebar,
 } from './MapScreen.styles'
 
 const getCategoryEmoji = (category: string) => {
@@ -524,6 +525,7 @@ export function MapScreen() {
                 />
                 <ItemInfo>
                   <ItemName>{item.title}</ItemName>
+                  {item.claimed_by && <ClaimedBadgeSidebar>Reclamado</ClaimedBadgeSidebar>}
                   <ItemDescription>{item.description}</ItemDescription>
                   <ItemMeta>
                     <span>📍{Math.round(item.distance)}m</span>

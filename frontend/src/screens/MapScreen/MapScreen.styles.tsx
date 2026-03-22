@@ -288,6 +288,17 @@ export const ItemMeta = styled.div`
     margin-top: 4px;
 `
 
+export const ClaimedBadgeSidebar = styled.span`
+    font-size: 10px;
+    font-weight: 600;
+    background: #ff9500;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+    display: inline-block;
+`
+
 export const DotDivider = styled.span`
     width: 3px;
     height: 3px;
