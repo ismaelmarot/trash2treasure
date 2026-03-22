@@ -151,15 +151,45 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const tomorrowStart = new Date(todayStart);
     tomorrowStart.setDate(tomorrowStart.getDate() + 1);
     
-    const todayItemsCount = await Item.countDocuments({
+    const todayItems = await Item.find({
       user_id: req.user.id,
       created_at: { $gte: todayStart, $lt: tomorrowStart }
     });
+    
+    const todayItemsCount = todayItems.length;
     
     // Usar el máximo entre el contador almacenado y los items reales (por si acaso)
     if (todayItemsCount > userPoints.daily_reports) {
       userPoints.daily_reports = todayItemsCount;
     }
+    
+    // Recalcular daily_family_reports desde los items reales
+    const familyCountMap = {};
+    const categoryCountMap = {};
+    for (const item of todayItems) {
+      const family = CATEGORY_FAMILIES[item.category] || 'special';
+      familyCountMap[family] = (familyCountMap[family] || 0) + 1;
+      categoryCountMap[item.category] = (categoryCountMap[item.category] || 0) + 1;
+    }
+    
+    // Actualizar daily_family_reports
+    for (const [family, count] of Object.entries(familyCountMap)) {
+      const current = userPoints.daily_family_reports.get(family) || 0;
+      if (count > current) {
+        userPoints.daily_family_reports.set(family, count);
+      }
+    }
+    
+    // Actualizar daily_category_reports
+    for (const [category, count] of Object.entries(categoryCountMap)) {
+      const current = userPoints.daily_category_reports.get(category) || 0;
+      if (count > current) {
+        userPoints.daily_category_reports.set(category, count);
+      }
+    }
+    
+    userPoints.markModified('daily_family_reports');
+    userPoints.markModified('daily_category_reports');
     
     await userPoints.save();
     
@@ -518,6 +548,14 @@ router.post('/add-report', authenticateToken, async (req, res) => {
       }
     }
     
+    // Marcar Maps como modificados para que se guarden correctamente
+    userPoints.markModified('category_points');
+    userPoints.markModified('category_reports');
+    userPoints.markModified('daily_family_reports');
+    userPoints.markModified('daily_category_reports');
+    userPoints.markModified('weekly_family_reports');
+    userPoints.markModified('weekly_category_reports');
+    
     await userPoints.save();
     
     // Verificar logros
@@ -651,6 +689,15 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
         break;
       }
     }
+    
+    // Marcar Maps como modificados para que se guarden correctamente
+    userPoints.markModified('category_points');
+    userPoints.markModified('category_reports');
+    userPoints.markModified('category_collected');
+    userPoints.markModified('daily_family_reports');
+    userPoints.markModified('daily_category_reports');
+    userPoints.markModified('weekly_family_reports');
+    userPoints.markModified('weekly_category_reports');
     
     await userPoints.save();
     
