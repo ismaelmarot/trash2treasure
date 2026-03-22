@@ -128,6 +128,31 @@ const getOrCreateUserPoints = async (userId) => {
   }
 };
 
+// Obtener o crear progreso de desafío
+const getOrCreateChallengeProgress = async (userId, challenge, periodStart) => {
+  let progress = await UserChallengeProgress.findOne({
+    user_id: userId,
+    challenge_id: challenge.id,
+    period_start: periodStart
+  });
+  
+  if (!progress) {
+    progress = new UserChallengeProgress({
+      user_id: userId,
+      challenge_id: challenge.id,
+      period_start: periodStart,
+      period_type: challenge.type,
+      current_progress: 0,
+      stars: 0,
+      trophies: 0,
+      completed: false
+    });
+    await progress.save();
+  }
+  
+  return progress;
+};
+
 // Actualizar progreso de un desafío
 const updateChallengeProgress = async (userId, challenge, periodStart, newProgress) => {
   let progress = await getOrCreateChallengeProgress(userId, challenge, periodStart);
