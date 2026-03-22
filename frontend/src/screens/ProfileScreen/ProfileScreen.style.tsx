@@ -106,11 +106,11 @@ export const LogoutButton = styled.button`
 
 export const MenuItem = styled.div`
     ${flex('row','center','space-between')}
+    margin-bottom: 1rem;
     padding: ${SPACING.sm} ${SPACING.md};
     border-radius: ${SPACING.xl};
     background: ${COLORS.white};
     cursor: pointer;
-    gap: ${SPACING.sm};
 `
 
 export const MenuIconWrapper = styled.div`
