@@ -247,11 +247,14 @@ export function PointsScreen() {
                 ]},
               ].map((tier) => {
                 const isExpanded = expandedLevels.includes(tier.id)
+                const isCurrentTier = tier.levels.some(l => l.name === division)
                 return (
                   <div key={tier.id} style={{ 
                     background: '#f5f5f5', 
                     borderRadius: '35px',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    opacity: isCurrentTier ? 1 : 0.5,
+                    filter: isCurrentTier ? 'none' : 'grayscale(100%)',
                   }}>
                     <div 
                       onClick={() => {
