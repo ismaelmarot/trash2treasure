@@ -161,22 +161,34 @@ npm install
 
 ### 4. Setup environment variables
 
-**Backend (.env in /backend)**
+**Copy the example files and configure your secrets:**
 
-```env
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/trash2treasure
-JWT_SECRET=your_jwt_secret_here
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+```bash
+# Backend
+cp backend/.env.example backend/.env
+
+# Frontend
+cp frontend/.env.example frontend/.env
 ```
 
-**Frontend (.env in /frontend)**
+**Then edit each `.env` file with your own values:**
 
-```env
-VITE_API_URL=http://localhost:3000/api
-```
+**Backend (/backend/.env)**
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Server port (default: 3000) |
+| `MONGODB_URI` | MongoDB connection string (local or Atlas) |
+| `JWT_SECRET` | Secret key for JWT tokens (generate a strong random string) |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
+
+**Frontend (/frontend/.env)**
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | Backend API URL |
+
+> ⚠️ **Important:** Never commit your `.env` files to version control. They are already in `.gitignore`.
 
 ### 5. Run development servers
 
@@ -428,6 +440,26 @@ flowchart TD
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0.0 | 22/03/2026 | Initial release - Core app with reporting, collecting, points, challenges, achievements, ranking, and Eco Score |
+
+---
+
+## 🔒 SECURITY
+
+This project is designed to be safe for public deployment:
+
+- **Environment Variables**: All sensitive data (API keys, database URLs, JWT secrets) are stored in `.env` files which are gitignored
+- **Template Files**: `.env.example` files are provided as templates for configuration
+- **No Hardcoded Secrets**: The codebase contains no hardcoded credentials
+- **Password Hashing**: User passwords are hashed using bcrypt
+- **JWT Authentication**: Secure token-based authentication with expiration
+
+### For Production Deployment
+
+1. Generate strong random values for all secrets
+2. Use a secure MongoDB Atlas cluster with IP whitelist
+3. Enable Cloudinary security features (unsigned uploads disabled)
+4. Set up proper CORS configuration
+5. Use HTTPS for all communications
 
 ---
 

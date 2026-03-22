@@ -1,23 +1,47 @@
 # dependencies
-node_modules
+node_modules/
 
 # logs
-logs
+logs/
 *.log
 npm-debug.log*
 
-# env
+# environment variables (NEVER COMMIT THESE)
 .env
+.env.local
+.env.development
+.env.production
+backend/.env
+frontend/.env
 
-# build
-dist
-build
+# build outputs
+dist/
+build/
+*.tgz
 
 # system files
 .DS_Store
+Thumbs.db
 
-# uploads (imagenes temporales)
+# IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# uploads (temporary images)
 backend/uploads/*
+!backend/uploads/.gitkeep
 
-# sqlite database
-backend/db/database.db
+# test coverage
+coverage/
+
+# temp files
+*.tmp
+*.temp
+.cache/
+
+# private files
+*.private
+credentials.json
+service-account.json
