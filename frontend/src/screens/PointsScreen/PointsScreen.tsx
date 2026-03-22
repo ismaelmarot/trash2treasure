@@ -323,7 +323,7 @@ export function PointsScreen() {
   // Refrescar cuando cambia de ruta (al volver a esta pantalla)
   useEffect(() => {
     refreshData()
-  }, [refreshKey, location.pathname])
+  }, [refreshKey, location.pathname, refreshData])
 
   // Exponer función de refresh globalmente para otras pantallas
   useEffect(() => {

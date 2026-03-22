@@ -163,6 +163,9 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     await userPoints.save();
     
+    // Verificar y desbloquear logros (por si se hicieron reportes antes de add-report)
+    await checkAchievements(req.user.id, userPoints);
+    
     // Calcular división actual
     let division = 'Curioso Verde';
     for (const div of DIVISIONS) {
