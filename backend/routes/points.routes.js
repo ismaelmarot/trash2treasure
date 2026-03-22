@@ -421,16 +421,32 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const prevScore = prevWeeklyScore + (prevWeeklyCollected * 2);
     const scoreChange = weeklyScore - prevScore;
     
-    const pointsObj = userPoints.toObject();
-    const categoryPointsConverted = userPoints.category_points && typeof userPoints.category_points.toJSON === 'function' 
-      ? Object.fromEntries(userPoints.category_points) 
-      : (pointsObj.category_points || {});
-    const familyReportsConverted = userPoints.family_reports && typeof userPoints.family_reports.toJSON === 'function'
-      ? Object.fromEntries(userPoints.family_reports)
-      : (pointsObj.family_reports || {});
+    const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
     
-    console.log('category_points raw:', userPoints.category_points);
-    console.log('category_points converted:', categoryPointsConverted);
+    const categoryPointsConverted = {};
+    const familyReportsConverted = {};
+    
+    try {
+      if (userPoints.category_points && typeof userPoints.category_points.forEach === 'function') {
+        userPoints.category_points.forEach((value, key) => {
+          categoryPointsConverted[key] = value;
+        });
+      }
+    } catch (e) {
+      console.error('Error converting category_points:', e);
+    }
+    
+    try {
+      if (userPoints.family_reports && typeof userPoints.family_reports.forEach === 'function') {
+        userPoints.family_reports.forEach((value, key) => {
+          familyReportsConverted[key] = value;
+        });
+      }
+    } catch (e) {
+      console.error('Error converting family_reports:', e);
+    }
+    
+    console.log('Sending response with category_points:', categoryPointsConverted);
     
     res.json({
       points: {
