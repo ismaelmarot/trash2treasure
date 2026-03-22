@@ -67,11 +67,11 @@ export const InputGroup = styled.div`
 `
 
 export const Label = styled.label<{ required?: boolean }>`
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 600;
-    padding-left: 4px;
-    margin-top: 1rem;
+    margin-top: 2rem;
     color: ${COLORS.black};
+    text-align: center;
     
     ${({ required }) => required && `
         &::after {
@@ -257,7 +257,8 @@ export const CoordsText = styled.p`
     font-size: 11px;
     color: ${COLORS.greyDark};
     text-align: right;
-    margin: 4px 2rem;
+    padding-right: 1rem;
+    width: 100%;
 `
 
 export const HiddenInput = styled.input`
@@ -273,6 +274,11 @@ export const ErrorMessage = styled.p`
     border: 1px solid ${COLORS.shadow};
 `
 
+export const ContainerSubmitButton = styled.div`
+    ${flex('column','center','center')};
+    margin: 2.5rem 0 0rem;
+`
+
 export const SubmitButton = styled.button`
     background: ${COLORS.info};
     color: ${COLORS.allWhite};
@@ -282,7 +288,6 @@ export const SubmitButton = styled.button`
     font-size: 17px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 8px;
     transition: all 0.2s ease;
     
     &:hover {

@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { COLORS } from '@/constants'
 
 export const BottomNavContainer = styled.nav`
   background: rgba(255, 255, 255, 0.85); /* Apple Glass base */
@@ -19,7 +20,7 @@ export const BottomNavContainer = styled.nav`
 
 export const BottomNavItem = styled.button<{ $active: boolean }>`
   border: none;
-  background: ${({ $active }) => ($active ? 'rgba(0, 113, 227, 0.1)' : 'none')};
+  background: ${({ $active }) => ($active ? COLORS.primaryDark : 'none')};
   border-radius: 34px;
   cursor: pointer;
   display: flex;
@@ -32,7 +33,7 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
   height: auto;
   padding: 8px 4px;
   margin: 0 2px;
-  color: ${({ $active }) => ($active ? '#0071e3' : '#8e8e93')};
+  color: ${({ $active }) => ($active ? 'white' : '#8e8e93')};
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   font-size: 11px;
@@ -55,15 +56,16 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: ${({ $active }) => ($active ? '#0071e3' : '#1d1d1f')};
+    background: ${({ $active }) => ($active ? COLORS.primaryDark : 'rgba(0, 0, 0, 0.05)')};
+    color: ${({ $active }) => ($active ? 'white' : '#1d1d1f')};
     svg {
       transform: scale(1.1);
     }
   }
 
   &:active {
-    background: rgba(0, 113, 227, 0.15);
+    background: ${COLORS.primaryDark};
+    color: white;
     svg {
       transform: scale(0.95);
     }

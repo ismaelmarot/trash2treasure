@@ -16,6 +16,7 @@ import {
   CaptureInner,
   Card,
   Container,
+  ContainerSubmitButton,
   CoordsText,
   DividerVertical,
   ErrorMessage,
@@ -470,9 +471,11 @@ export function AddItemScreen() {
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <SubmitButton type='submit' disabled={loading || !isFormValid}>
-            {loading ? 'Publicando...' : 'Publicar Tesoro'}
-          </SubmitButton>
+          <ContainerSubmitButton>
+            <SubmitButton type='submit' disabled={loading || !isFormValid}>
+              {loading ? 'Publicando...' : 'Publicar Tesoro'}
+            </SubmitButton>
+          </ContainerSubmitButton>
         </Form>
           </>
         )}
