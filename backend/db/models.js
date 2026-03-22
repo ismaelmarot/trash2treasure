@@ -254,6 +254,10 @@ itemSchema.index({ user_id: 1 });
 itemSchema.index({ claimed_by: 1 });
 itemSchema.index({ latitude: 1, longitude: 1 });
 itemSchema.index({ created_at: -1 });
+itemSchema.index({ user_id: 1, created_at: -1 }); // Compound index para stats por período
+
+// Índices para UserPoints
+userPointsSchema.index({ total_points: -1 }); // Para ranking
 
 ratingSchema.index({ item_id: 1, user_id: 1 }, { unique: true });
 
