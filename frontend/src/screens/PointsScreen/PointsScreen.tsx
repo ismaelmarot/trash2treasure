@@ -58,6 +58,7 @@ export function PointsScreen() {
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('summary')
+  const [activeChallengePeriod, setActiveChallengePeriod] = useState('daily')
 
   const openAchievementModal = (achievement: any) => {
     setSelectedAchievement(achievement)
@@ -212,10 +213,13 @@ export function PointsScreen() {
       {activeTab === 'challenges' && (
         <>
           <TabContainer>
-            <Tab $active={true} onClick={() => {}}>Diario</Tab>
+            <Tab $active={activeChallengePeriod === 'daily'} onClick={() => setActiveChallengePeriod('daily')}>Diario</Tab>
+            <Tab $active={activeChallengePeriod === 'weekly'} onClick={() => setActiveChallengePeriod('weekly')}>Semanal</Tab>
+            <Tab $active={activeChallengePeriod === 'monthly'} onClick={() => setActiveChallengePeriod('monthly')}>Mensual</Tab>
+            <Tab $active={activeChallengePeriod === 'annual'} onClick={() => setActiveChallengePeriod('annual')}>Anual</Tab>
           </TabContainer>
           <TabContent>
-            {challenges.filter((c: any) => c.type === 'daily').map((challenge: any) => {
+            {challenges.filter((c: any) => c.type === activeChallengePeriod).map((challenge: any) => {
               const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
               const isActive = progress.completed_this_period
               
