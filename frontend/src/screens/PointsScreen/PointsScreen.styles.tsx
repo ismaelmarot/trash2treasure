@@ -250,7 +250,8 @@ export const EcoScoreTrend = styled.div<{ $trend: string }>`
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: ${props => props.$trend === 'up' ? '#2ecc71' : props.$trend === 'down' ? '#e74c3c' : '#ccc'};
+  font-weight: 600;
+  color: white;
 `
 
 export const EcoScoreMessage = styled.div`
