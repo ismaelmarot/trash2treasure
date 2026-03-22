@@ -499,6 +499,12 @@ export function PointsScreen() {
         {(challenges || []).filter((c: any) => c.type === activeTab).map((challenge: any) => {
           const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
           const isActive = progress.completed_this_period
+          // Progress capped at target
+          const displayProgress = Math.min(progress.current_progress, challenge.target)
+          // Estrellas: mostrar solo las ganadas en color
+          const earnedStars = progress.stars
+          const totalSlots = challenge.max_stars
+          
           return (
             <AchievementCard 
               key={challenge.id} 
@@ -511,16 +517,36 @@ export function PointsScreen() {
                 points: challenge.reward,
                 unlocked: isActive,
                 stars: progress.stars,
-                filled: progress.current_progress,
+                filled: displayProgress,
                 trophies: progress.trophies,
+                max_stars: challenge.max_stars,
                 type: 'challenge'
               })}
             >
               <AchievementIcon $unlocked={isActive}>{challenge.icon}</AchievementIcon>
               <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
               <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
-              <div style={{ fontSize: '12px', color: isActive ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
-                +{challenge.reward} pts
+              
+              {/* Barra de progreso */}
+              <div style={{ marginTop: '6px', height: '6px', background: '#eee', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${(displayProgress / challenge.target) * 100}%`, background: isActive ? '#34c759' : '#ccc', borderRadius: '3px', transition: 'width 0.3s' }} />
+              </div>
+              
+              {/* Progreso texto */}
+              <div style={{ fontSize: '10px', color: isActive ? '#34c759' : '#999', marginTop: '2px', textAlign: 'center' }}>
+                {displayProgress}/{challenge.target}
+              </div>
+              
+              {/* Estrellas */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '2px', marginTop: '4px' }}>
+                {Array.from({ length: totalSlots }, (_, i) => (
+                  <span key={i} style={{ fontSize: '12px', color: i < earnedStars ? '#FFD700' : '#ddd' }}>
+                    ★
+                  </span>
+                ))}
+                {progress.trophies > 0 && (
+                  <span style={{ fontSize: '12px', marginLeft: '4px' }}>🏆×{progress.trophies}</span>
+                )}
               </div>
             </AchievementCard>
           )
