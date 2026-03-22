@@ -239,7 +239,7 @@ export function ActivityScreen() {
               ? 'Aún no has reportado ningún tesoro.' 
               : 'Aún no has reclamado ningún tesoro.'}
           </p>
-          <ActionButton onClick={() => navigate(activeTab === 'mine' ? '/add' : '/search')}>
+          <ActionButton onClick={() => navigate(activeTab === 'mine' ? '/app/add' : '/app/search')}>
             {activeTab === 'mine' ? 'Reportar mi primer tesoro' : 'Ir a explorar tesoros'}
           </ActionButton>
         </EmptyState>
