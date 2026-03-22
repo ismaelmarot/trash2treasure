@@ -249,14 +249,9 @@ export function PointsScreen() {
                 const isExpanded = expandedLevels.includes(tier.id)
                 const isCurrentTier = tier.levels.some(l => l.name === division)
                 return (
-                  <div key={tier.id} style={{ 
-                    background: '#f5f5f5', 
-                    borderRadius: '35px',
-                    overflow: 'hidden',
-                    opacity: isCurrentTier ? 1 : 0.5,
-                    filter: isCurrentTier ? 'none' : 'grayscale(100%)',
-                  }}>
+                  <>
                     <div 
+                      key={`header-${tier.id}`}
                       onClick={() => {
                         if (isExpanded) {
                           setExpandedLevels(expandedLevels.filter(e => e !== tier.id))
@@ -271,7 +266,10 @@ export function PointsScreen() {
                         alignItems: 'center',
                         cursor: 'pointer',
                         background: 'rgba(66, 165, 159, 1)',
-                        color: 'rgba(26, 26, 26, 1)'
+                        color: 'rgba(26, 26, 26, 1)',
+                        borderRadius: '35px',
+                        opacity: isCurrentTier ? 1 : 0.5,
+                        filter: isCurrentTier ? 'none' : 'grayscale(100%)',
                       }}
                     >
                       <span style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -283,7 +281,7 @@ export function PointsScreen() {
                     </div>
                     
                     {isExpanded && (
-                      <div style={{ padding: '12px' }}>
+                      <div style={{ padding: '12px 0' }}>
                         {tier.levels.map((level) => {
                           const isCurrent = level.name === division
                           const isPast = level.max === Infinity ? points.total_points >= level.min : points.total_points >= level.max
@@ -327,7 +325,7 @@ export function PointsScreen() {
                         })}
                       </div>
                     )}
-                  </div>
+                  </>
                 )
               })}
             </TabContent>
