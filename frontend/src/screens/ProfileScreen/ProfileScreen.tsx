@@ -100,7 +100,7 @@ export function ProfileScreen() {
             📍 {profileData.city}{profileData.state && `, ${profileData.state}`}{profileData.country && `, ${profileData.country}`}
           </div>
         )}
-        <EditProfileButton onClick={() => navigate('/edit-profile')}>
+        <EditProfileButton onClick={() => navigate('/app/edit-profile')}>
           Editar Perfil
         </EditProfileButton>
       </Card>
