@@ -134,8 +134,7 @@ export function PointsScreen() {
   const renderEcoPoints = () => (
     <>
       <Header>
-        <Title>🌿 Eco Points</Title>
-        <Subtitle>Tu impacto en la comunidad</Subtitle>
+        <Title>🍃 Eco Points</Title>
       </Header>
 
       <PointsCard>
@@ -301,7 +300,7 @@ export function PointsScreen() {
   return (
     <Container ref={containerRef}>
       {/* Indicador de sección con estilo Tab */}
-      <TabContainer style={{ position: 'fixed', top: '70px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: '90%' }}>
+      <TabContainer style={{ position: 'fixed', top: '56px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: '90%', padding: '6px', borderRadius: '20px' }}>
         {sectionTitles.map((title, idx) => (
           <Tab
             key={idx}
@@ -310,6 +309,7 @@ export function PointsScreen() {
               setActiveSection(idx)
               containerRef.current?.scrollTo({ top: idx * window.innerHeight, behavior: 'smooth' })
             }}
+            style={{ padding: '8px 4px', fontSize: '12px' }}
           >
             {title}
           </Tab>
