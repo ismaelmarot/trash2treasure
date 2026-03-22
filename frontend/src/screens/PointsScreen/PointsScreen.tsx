@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
@@ -72,15 +72,15 @@ export function PointsScreen() {
   const [activeSummaryTab, setActiveSummaryTab] = useState('categories')
   const [expandedLevels, setExpandedLevels] = useState<string[]>(['bajo'])
 
-  const openAchievementModal = (achievement: any) => {
+  const openAchievementModal = useCallback((achievement: any) => {
     setSelectedAchievement(achievement)
     setIsModalOpen(true)
-  }
+  }, [])
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false)
     setSelectedAchievement(null)
-  }
+  }, [])
 
   const fetchData = useCallback(async () => {
     if (!token) return
@@ -117,6 +117,29 @@ export function PointsScreen() {
   if (!pointsData || !pointsData.points) return <Loading>Error al cargar datos</Loading>
 
   const { points, division, ecoScore } = pointsData
+
+  const sortedCategories = useMemo(() => {
+    const cats = points.category_points || {}
+    return Object.entries(cats)
+      .sort(([,a], [,b]) => Number(b) - Number(a))
+      .slice(0, 5)
+  }, [points.category_points])
+
+  const sortedFamilies = useMemo(() => {
+    const families = points.family_reports || {}
+    return Object.entries(families)
+      .sort(([,a], [,b]) => Number(b) - Number(a))
+  }, [points.family_reports])
+
+  const maxCategoryPoints = useMemo(() => {
+    const vals = Object.values(points.category_points || {}).map(Number)
+    return Math.max(...vals, 1)
+  }, [points.category_points])
+
+  const maxFamilyCount = useMemo(() => {
+    const vals = Object.values(points.family_reports || {}).map(Number)
+    return Math.max(...vals, 1)
+  }, [points.family_reports])
 
   return (
     <Container>
@@ -176,9 +199,8 @@ export function PointsScreen() {
 
           {activeSummaryTab === 'categories' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
-              {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => {
-                const maxPts = Math.max(...Object.values(points.category_points || {}).map((v: any) => Number(v)), 1)
-                const percentage = (Number(pts) / maxPts) * 100
+              {sortedCategories.map(([cat, pts]) => {
+                const percentage = (Number(pts) / maxCategoryPoints) * 100
                 const catData = CATEGORIES.find(c => c.id === cat)
                 const catIcon = catData?.icon || '📦'
                 const catColor = cat === 'electronics' ? '#3498db' : cat === 'organic' ? '#27ae60' : cat === 'construction' ? '#e67e22' : '#9b59b6'
@@ -202,9 +224,8 @@ export function PointsScreen() {
 
           {activeSummaryTab === 'families' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
-              {Object.entries(points.family_reports || {}).map(([family, count]) => {
-                const maxCount = Math.max(...Object.values(points.family_reports || {}).map((v: any) => Number(v)), 1)
-                const percentage = (Number(count) / maxCount) * 100
+              {sortedFamilies.map(([family, count]) => {
+                const percentage = (Number(count) / maxFamilyCount) * 100
                 const familyIcon = family === 'eco' ? '🍃' : family === 'tech' ? '⚡' : family === 'heavy' ? '🧱' : family === 'packaging' ? '📦' : family === 'reuse' ? '👕' : '✨'
                 const familyColor = family === 'eco' ? '#27ae60' : family === 'tech' ? '#3498db' : family === 'heavy' ? '#e67e22' : family === 'packaging' ? '#9b59b6' : family === 'reuse' ? '#e91e63' : '#9e9e9e'
                 return (
