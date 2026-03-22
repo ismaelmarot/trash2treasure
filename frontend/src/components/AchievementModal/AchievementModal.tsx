@@ -1,3 +1,4 @@
+import { StarRating } from '@/components/StarRating'
 import {
   CloseButton,
   Description,
@@ -20,11 +21,17 @@ interface AchievementModalProps {
     points: number
     unlocked: boolean
     unlocked_at?: string
+    stars?: number
+    filled?: number
+    trophies?: number
+    type?: string
   } | null
 }
 
 export function AchievementModal({ isOpen, onClose, achievement }: AchievementModalProps) {
   if (!isOpen || !achievement) return null
+
+  const isChallenge = achievement.type === 'challenge'
 
   return (
     <Overlay onClick={onClose}>
@@ -33,15 +40,38 @@ export function AchievementModal({ isOpen, onClose, achievement }: AchievementMo
         <Title $unlocked={achievement.unlocked}>{achievement.name}</Title>
         <Description>{achievement.description}</Description>
         
-        <PointsBadge $unlocked={achievement.unlocked}>
-          {achievement.unlocked ? `+${achievement.points} pts` : `${achievement.points} pts`}
-        </PointsBadge>
-        
-        <StatusText $unlocked={achievement.unlocked}>
-          {achievement.unlocked 
-            ? `Desbloqueado el ${new Date(achievement.unlocked_at!).toLocaleDateString('es-ES')}` 
-            : 'Aún no desbloqueado'}
-        </StatusText>
+        {isChallenge && achievement.stars ? (
+          <div style={{ margin: '16px 0' }}>
+            <StarRating 
+              total={achievement.stars} 
+              filled={achievement.filled || 0} 
+              maxStars={6}
+              size={24}
+            />
+            {achievement.trophies && achievement.trophies > 0 && (
+              <div style={{ 
+                marginTop: '12px', 
+                fontSize: '14px', 
+                color: '#34c759', 
+                fontWeight: '600' 
+              }}>
+                🏆 {achievement.trophies} {achievement.trophies === 1 ? 'copa' : 'copas'}
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <PointsBadge $unlocked={achievement.unlocked}>
+              {achievement.unlocked ? `+${achievement.points} pts` : `${achievement.points} pts`}
+            </PointsBadge>
+            
+            <StatusText $unlocked={achievement.unlocked}>
+              {achievement.unlocked 
+                ? `Desbloqueado el ${new Date(achievement.unlocked_at!).toLocaleDateString('es-ES')}` 
+                : 'Aún no desbloqueado'}
+            </StatusText>
+          </>
+        )}
         
         <CloseButton onClick={onClose}>Cerrar</CloseButton>
       </Modal>

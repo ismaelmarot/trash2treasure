@@ -83,6 +83,17 @@ const userPointsSchema = new mongoose.Schema({
   // División
   division: { type: String, default: 'Curioso Verde' },
   
+  // Progreso de desafíos
+  challenges: {
+    type: Map,
+    of: new mongoose.Schema({
+      completed: { type: Number, default: 0 },
+      trophies: { type: Number, default: 0 },
+      last_reset: { type: Date }
+    }, { _id: false }),
+    default: {}
+  },
+  
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });

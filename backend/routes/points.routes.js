@@ -88,48 +88,76 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       unlocked_at: achievements.find(a => a.achievement_id === ach.id)?.unlocked_at
     }));
 
-    // Verificar desafíos completados
+    // Verificar desafíos completados y calcular progreso
     const completedChallenges = [];
+    const challengeProgress = {};
     
-    // Desafíos diarios
-    if (userPoints.total_reports >= 3) completedChallenges.push('daily_report_3');
-    if (userPoints.total_reports >= 5) completedChallenges.push('daily_report_5');
-    if (userPoints.total_collected >= 3) completedChallenges.push('daily_collect_3');
-    if (userPoints.total_collected >= 5) completedChallenges.push('daily_collect_5');
-    const dailyFamilies = Object.values(userPoints.family_reports || {}).filter(v => v > 0).length;
-    if (dailyFamilies >= 2) completedChallenges.push('daily_families_2');
-    if (dailyFamilies >= 3) completedChallenges.push('daily_families_3');
-    if (userPoints.total_collected >= 3) completedChallenges.push('daily_speed');
+    // Configuración de desafíos con sus objetivos
+    const challengeConfig = {
+      // Diarios (7 estrellas)
+      daily_report_3: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_reports || 0, 3), target: 3 },
+      daily_report_5: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_reports || 0, 5), target: 5 },
+      daily_collect_3: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_collected || 0, 3), target: 3 },
+      daily_collect_5: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_collected || 0, 5), target: 5 },
+      daily_families_2: { type: 'daily', stars: 7, getValue: () => Math.min(Object.values(userPoints.family_reports || {}).filter(v => v > 0).length, 2), target: 2 },
+      daily_families_3: { type: 'daily', stars: 7, getValue: () => Math.min(Object.values(userPoints.family_reports || {}).filter(v => v > 0).length, 3), target: 3 },
+      daily_speed: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_collected || 0, 3), target: 3 },
+      
+      // Semanales (4 estrellas)
+      weekly_report_10: { type: 'weekly', stars: 4, getValue: () => Math.min(Math.floor((userPoints.weekly_reports || 0) / 2.5), 4), target: 10 },
+      weekly_collect_10: { type: 'weekly', stars: 4, getValue: () => Math.min(Math.floor((userPoints.weekly_collected || 0) / 2.5), 4), target: 10 },
+      weekly_categories_5: { type: 'weekly', stars: 4, getValue: () => Math.min(Object.keys(userPoints.category_reports || {}).length, 5), target: 5 },
+      weekly_families_4: { type: 'weekly', stars: 4, getValue: () => Math.min(Object.values(userPoints.family_reports || {}).filter(v => v > 0).length, 4), target: 4 },
+      weekly_streak: { type: 'weekly', stars: 4, getValue: () => Math.min(userPoints.current_streak || 0, 7), target: 7 },
+      
+      // Mensuales (12 estrellas - 2 filas de 6)
+      monthly_report_50: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 4.17), 12), target: 50 },
+      monthly_report_100: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 8.33), 12), target: 100 },
+      monthly_collect_50: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_collected || 0) / 4.17), 12), target: 50 },
+      monthly_collect_100: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_collected || 0) / 8.33), 12), target: 100 },
+      monthly_families_5: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 4.17), 12), target: 50 },
+      
+      // Anuales (10 estrellas - 2 filas de 5)
+      annual_eco_200: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor(((userPoints.family_reports && userPoints.family_reports.eco) || 0) / 20), 10), target: 200 },
+      annual_tech_100: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor(((userPoints.family_reports && userPoints.family_reports.tech) || 0) / 10), 10), target: 100 },
+      annual_heavy_80: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor(((userPoints.family_reports && userPoints.family_reports.heavy) || 0) / 8), 10), target: 80 },
+      annual_all_500: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 50), 10), target: 500 }
+    };
     
-    // Desafíos semanales
-    if (userPoints.weekly_points >= 10) completedChallenges.push('weekly_report_10');
-    if (userPoints.weekly_points >= 10) completedChallenges.push('weekly_collect_10');
-    const weeklyCategories = Object.keys(userPoints.category_reports || {}).length;
-    if (weeklyCategories >= 5) completedChallenges.push('weekly_categories_5');
-    if (dailyFamilies >= 4) completedChallenges.push('weekly_families_4');
-    if (userPoints.current_streak >= 7) completedChallenges.push('weekly_streak');
-    
-    // Desafíos mensuales
-    if (userPoints.total_reports >= 50) completedChallenges.push('monthly_report_50');
-    if (userPoints.total_reports >= 100) completedChallenges.push('monthly_report_100');
-    if (userPoints.total_collected >= 50) completedChallenges.push('monthly_collect_50');
-    if (userPoints.total_collected >= 100) completedChallenges.push('monthly_collect_100');
-    if (userPoints.total_reports >= 50 && dailyFamilies >= 4) completedChallenges.push('monthly_families_5');
-    
-    // Desafíos anuales
-    const ecoReports = (userPoints.family_reports && userPoints.family_reports.eco) || 0;
-    const techReports = (userPoints.family_reports && userPoints.family_reports.tech) || 0;
-    const heavyReports = (userPoints.family_reports && userPoints.family_reports.heavy) || 0;
-    if (ecoReports >= 200) completedChallenges.push('annual_eco_200');
-    if (techReports >= 100) completedChallenges.push('annual_tech_100');
-    if (heavyReports >= 80) completedChallenges.push('annual_heavy_80');
-    if (userPoints.total_reports >= 500 && dailyFamilies >= 6) completedChallenges.push('annual_all_500');
+    // Calcular progreso de cada desafío
+    for (const [challengeId, config] of Object.entries(challengeConfig)) {
+      const progress = config.getValue();
+      const challengeData = userPoints.challenges?.get(challengeId) || { completed: 0, trophies: 0 };
+      
+      // Si el progreso es igual al máximo de estrellas, marcar como completado
+      if (progress >= config.stars) {
+        completedChallenges.push(challengeId);
+        challengeData.completed = config.stars;
+        
+        // Incrementar copas si es la primera vez que se completa
+        if (challengeData.trophies === 0) {
+          challengeData.trophies = 1;
+        }
+      } else {
+        challengeData.completed = progress;
+      }
+      
+      challengeProgress[challengeId] = {
+        completed: challengeData.completed,
+        stars: config.stars,
+        trophies: challengeData.trophies,
+        type: config.type,
+        progress: progress,
+        target: config.target
+      };
+    }
     
     res.json({
       points: userPoints,
       division,
       achievements: allAchievements,
       completedChallenges,
+      challengeProgress,
       divisions: DIVISIONS
     });
   } catch (error) {
