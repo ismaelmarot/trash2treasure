@@ -197,8 +197,94 @@ export const CategorySection = styled.div`
 
 export const CategoryGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+`
+
+export const EcoScoreCard = styled.div<{ $bgColor: string }>`
+  background: ${props => props.$bgColor};
+  border-radius: 25px;
+  padding: 20px;
+  margin-bottom: 24px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+`
+
+export const EcoScoreHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+`
+
+export const EcoScoreGrade = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`
+
+export const EcoScoreLetter = styled.span`
+  font-size: 48px;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+`
+
+export const EcoScoreIcon = styled.span`
+  font-size: 32px;
+`
+
+export const EcoScoreTitle = styled.div`
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+`
+
+export const EcoScoreSubtitle = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+`
+
+export const EcoScoreTrend = styled.div<{ $trend: string }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: ${props => props.$trend === 'up' ? '#2ecc71' : props.$trend === 'down' ? '#e74c3c' : '#ccc'};
+`
+
+export const EcoScoreMessage = styled.div`
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 8px;
+`
+
+export const EcoScoreBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+`
+
+export const EcoScoreProgress = styled.div`
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 4px;
+  overflow: hidden;
+`
+
+export const EcoScoreProgressFill = styled.div<{ $width: number }>`
+  height: 100%;
+  width: ${props => props.$width}%;
+  background: white;
+  border-radius: 4px;
+  transition: width 0.3s;
+`
+
+export const EcoScorePercentile = styled.span`
+  font-size: 12px;
+  opacity: 0.8;
 `
 
 export const CategoryCard = styled.div`

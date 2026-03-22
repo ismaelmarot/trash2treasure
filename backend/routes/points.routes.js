@@ -86,6 +86,29 @@ const getOrCreateUserPoints = async (userId) => {
   if (userPoints.daily_family_reports === undefined) userPoints.daily_family_reports = {};
   if (userPoints.daily_category_reports === undefined) userPoints.daily_category_reports = {};
   
+  // Resetear contadores semanales si es nueva semana
+  const now = new Date();
+  const weekStart = getPeriodStart('weekly');
+  const lastWeekReset = userPoints.last_weekly_reset ? new Date(userPoints.last_weekly_reset) : null;
+  
+  if (!lastWeekReset || weekStart > lastWeekReset) {
+    userPoints.weekly_reports_prev = userPoints.weekly_reports || 0;
+    userPoints.weekly_collected_prev = userPoints.weekly_collected || 0;
+    userPoints.weekly_reports = 0;
+    userPoints.weekly_collected = 0;
+    userPoints.last_weekly_reset = weekStart;
+  }
+  
+  // Resetear contadores mensuales si es nuevo mes
+  const monthStart = getPeriodStart('monthly');
+  const lastMonthReset = userPoints.last_monthly_reset ? new Date(userPoints.last_monthly_reset) : null;
+  
+  if (!lastMonthReset || monthStart > lastMonthReset) {
+    userPoints.monthly_reports = 0;
+    userPoints.monthly_collected = 0;
+    userPoints.last_monthly_reset = monthStart;
+  }
+  
   return userPoints;
 };
 
@@ -248,6 +271,43 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       };
     }
     
+    // Calcular Eco Score semanal
+    const weeklyReports = userPoints.weekly_reports || 0;
+    const weeklyCollected = userPoints.weekly_collected || 0;
+    const weeklyScore = weeklyReports + (weeklyCollected * 2); // collected vale doble
+    
+    // Obtener ranking de usuarios para calcular percentil
+    const totalUsers = await UserPoints.countDocuments({ user_id: { $ne: null } });
+    const usersAbove = await UserPoints.countDocuments({ 
+      weekly_reports: { $gt: weeklyReports },
+      user_id: { $ne: null }
+    });
+    const usersSameLevel = await UserPoints.countDocuments({
+      weekly_reports: weeklyReports,
+      weekly_collected: { $gt: weeklyCollected },
+      user_id: { $ne: null }
+    });
+    const percentile = Math.round(((usersAbove + usersSameLevel / 2) / totalUsers) * 100);
+    
+    // Determinar grade basado en score
+    let grade, gradeColor;
+    if (weeklyScore >= 50) { grade = 'A+++'; gradeColor = '#27ae60'; }
+    else if (weeklyScore >= 40) { grade = 'A++'; gradeColor = '#2ecc71'; }
+    else if (weeklyScore >= 30) { grade = 'A+'; gradeColor = '#58d68d'; }
+    else if (weeklyScore >= 20) { grade = 'A'; gradeColor = '#82e0aa'; }
+    else if (weeklyScore >= 15) { grade = 'B'; gradeColor = '#f9e79f'; }
+    else if (weeklyScore >= 10) { grade = 'C'; gradeColor = '#f5b041'; }
+    else if (weeklyScore >= 5) { grade = 'D'; gradeColor = '#eb984e'; }
+    else if (weeklyScore >= 2) { grade = 'E'; gradeColor = '#e74c3c'; }
+    else if (weeklyScore >= 1) { grade = 'F'; gradeColor = '#c0392b'; }
+    else { grade = 'G'; gradeColor = '#922b21'; }
+    
+    // Comparar con semana anterior (usando monthly_reports como proxy si no hay weekly_prev)
+    const prevWeeklyScore = userPoints.weekly_reports_prev || 0;
+    const prevWeeklyCollected = userPoints.weekly_collected_prev || 0;
+    const prevScore = prevWeeklyScore + (prevWeeklyCollected * 2);
+    const scoreChange = weeklyScore - prevScore;
+    
     res.json({
       points: userPoints,
       division,
@@ -262,7 +322,16 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         target: c.target,
         reward: c.reward,
         max_stars: c.max_stars
-      }))
+      })),
+      ecoScore: {
+        grade,
+        gradeColor,
+        weeklyScore,
+        percentile,
+        scoreChange,
+        trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same',
+        message: `Top ${percentile}% de recicladores`
+      }
     });
   } catch (error) {
     console.error('Error in my-points:', error);

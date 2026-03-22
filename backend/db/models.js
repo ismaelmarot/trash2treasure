@@ -75,8 +75,12 @@ const userPointsSchema = new mongoose.Schema({
   daily_collected: { type: Number, default: 0 },
   weekly_reports: { type: Number, default: 0 },
   weekly_collected: { type: Number, default: 0 },
+  weekly_reports_prev: { type: Number, default: 0 },
+  weekly_collected_prev: { type: Number, default: 0 },
   monthly_reports: { type: Number, default: 0 },
   monthly_collected: { type: Number, default: 0 },
+  last_weekly_reset: { type: Date },
+  last_monthly_reset: { type: Date },
   
   // Familias y categorías temporales
   daily_family_reports: {

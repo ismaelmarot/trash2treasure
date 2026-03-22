@@ -18,6 +18,18 @@ import {
   BarValue,
   Container,
   DivisionBadge,
+  EcoScoreBar,
+  EcoScoreCard,
+  EcoScoreGrade,
+  EcoScoreHeader,
+  EcoScoreIcon,
+  EcoScorePercentile,
+  EcoScoreProgress,
+  EcoScoreProgressFill,
+  EcoScoreSubtitle,
+  EcoScoreTitle,
+  EcoScoreTrend,
+  EcoScoreLetter,
   Header,
   Loading,
   PointsCard,
@@ -111,7 +123,7 @@ export function PointsScreen() {
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division } = pointsData
+  const { points, division, ecoScore } = pointsData
 
   return (
     <Container>
@@ -148,6 +160,29 @@ export function PointsScreen() {
               </StatItem>
             </StatsRow>
           </PointsCard>
+
+          {ecoScore && (
+            <EcoScoreCard $bgColor={ecoScore.gradeColor}>
+              <EcoScoreHeader>
+                <EcoScoreGrade>
+                  <EcoScoreLetter>{ecoScore.grade}</EcoScoreLetter>
+                  <EcoScoreIcon>🌱</EcoScoreIcon>
+                </EcoScoreGrade>
+                <EcoScoreTrend $trend={ecoScore.trend}>
+                  {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
+                  {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
+                </EcoScoreTrend>
+              </EcoScoreHeader>
+              <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
+              <EcoScoreSubtitle>Estás en el {ecoScore.percentile}% de recicladores</EcoScoreSubtitle>
+              <EcoScoreBar>
+                <EcoScoreProgress>
+                  <EcoScoreProgressFill $width={100 - ecoScore.percentile} />
+                </EcoScoreProgress>
+                <EcoScorePercentile>Top {ecoScore.percentile}%</EcoScorePercentile>
+              </EcoScoreBar>
+            </EcoScoreCard>
+          )}
 
           <TabContainer>
             <Tab $active={activeSummaryTab === 'categories'} onClick={() => setActiveSummaryTab('categories')}>Categorías</Tab>
