@@ -168,7 +168,7 @@ export function PointsScreen() {
                 </EcoScoreTrend>
               </EcoScoreHeader>
               <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
-              <EcoScoreSubtitle>Arriba de {ecoScore.percentile}% de recicladores</EcoScoreSubtitle>
+              <EcoScoreSubtitle>{ecoScore.message}</EcoScoreSubtitle>
             </EcoScoreCard>
           )}
 

@@ -367,52 +367,52 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     if (weeklyScore >= 50) { 
       grade = 'A+++'; 
       gradeColor = '#27ae60';
-      gradeMessage = '¡Eres un maestro del reciclaje! 🏆';
+      gradeMessage = 'Maestro del reciclaje';
     }
     else if (weeklyScore >= 40) { 
       grade = 'A++'; 
       gradeColor = '#2ecc71';
-      gradeMessage = '¡Increíble! Estás en el top 5% 🌟';
+      gradeMessage = 'Reciclador experto';
     }
     else if (weeklyScore >= 30) { 
       grade = 'A+'; 
       gradeColor = '#58d68d';
-      gradeMessage = '¡Excelente trabajo! Estás en el top 10% ✨';
+      gradeMessage = 'Reciclador avanzado';
     }
     else if (weeklyScore >= 20) { 
       grade = 'A'; 
       gradeColor = '#82e0aa';
-      gradeMessage = '¡Muy bien! Sigue así 👍';
+      gradeMessage = 'Reciclador activo';
     }
     else if (weeklyScore >= 15) { 
       grade = 'B'; 
       gradeColor = '#f9e79f';
-      gradeMessage = 'Buen progreso, puedes mejorar 💪';
+      gradeMessage = 'Reciclador aprendiz';
     }
     else if (weeklyScore >= 10) { 
       grade = 'C'; 
       gradeColor = '#f5b041';
-      gradeMessage = 'Sigue reportando más objetos 🔄';
+      gradeMessage = 'Reciclador principiante';
     }
     else if (weeklyScore >= 5) { 
       grade = 'D'; 
       gradeColor = '#eb984e';
-      gradeMessage = 'Hay espacio para mejorar 📈';
+      gradeMessage = 'Empezando a reciclar';
     }
     else if (weeklyScore >= 2) { 
       grade = 'E'; 
       gradeColor = '#e74c3c';
-      gradeMessage = '¡Anímate a reportar más! 🚀';
+      gradeMessage = 'Novato verde';
     }
     else if (weeklyScore >= 1) { 
       grade = 'F'; 
       gradeColor = '#c0392b';
-      gradeMessage = '¡Cada reporte cuenta! 🌱';
+      gradeMessage = 'Primeros pasos';
     }
     else { 
       grade = 'G'; 
       gradeColor = '#922b21';
-      gradeMessage = '¡Comienza tu viaje eco! 🌿';
+      gradeMessage = 'Aun no empiezas';
     }
     
     // Comparar con semana anterior (usando monthly_reports como proxy si no hay weekly_prev)
