@@ -300,7 +300,7 @@ export function PointsScreen() {
   return (
     <Container ref={containerRef}>
       {/* Indicador de sección con estilo Tab */}
-      <TabContainer style={{ position: 'fixed', top: '56px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: '90%' }}>
+      <TabContainer style={{ position: 'fixed', top: '48px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: '90%' }}>
         {sectionTitles.map((title, idx) => (
           <Tab
             key={idx}
