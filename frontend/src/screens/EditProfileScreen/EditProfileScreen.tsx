@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_BASE_URL, COLORS } from '@/constants'
 import { useAuth } from '@/hooks'
+import { COUNTRIES, STATES } from '@/data/locationData'
 import {
   Avatar,
   AvatarImage,
@@ -22,6 +23,7 @@ import {
   InputGroup,
   Label,
   Loading,
+  Select,
   Subtitle,
   SubmitButton,
   SuccessMessage,
@@ -310,20 +312,32 @@ export function EditProfileScreen() {
 
           <InputGroup>
             <Label>País</Label>
-            <Input
+            <Select
               value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              placeholder="Ej: Argentina"
-            />
+              onChange={(e) => {
+                setCountry(e.target.value)
+                setState('')
+              }}
+            >
+              <option value="">Seleccionar país</option>
+              {COUNTRIES.map(c => (
+                <option key={c.code} value={c.name}>{c.name}</option>
+              ))}
+            </Select>
           </InputGroup>
 
           <InputGroup>
             <Label>Provincia / Estado</Label>
-            <Input
+            <Select
               value={state}
               onChange={(e) => setState(e.target.value)}
-              placeholder="Ej: Buenos Aires"
-            />
+              disabled={!country}
+            >
+              <option value="">{country ? 'Seleccionar provincia/estado' : 'Primero selecciona un país'}</option>
+              {country && STATES[COUNTRIES.find(c => c.name === country)?.code || '']?.map(s => (
+                <option key={s.code} value={s.name}>{s.name}</option>
+              ))}
+            </Select>
           </InputGroup>
 
           <InputGroup>

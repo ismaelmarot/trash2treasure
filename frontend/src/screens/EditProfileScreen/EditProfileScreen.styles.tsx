@@ -115,6 +115,33 @@ export const Input = styled.input`
     }
 `
 
+export const Select = styled.select`
+    padding: 14px 16px;
+    border-radius: 35px;
+    border: 1px solid ${COLORS.grey};
+    font-size: 16px;
+    background: #fbfbfd;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23666" d="M6 8L1 3h10z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    
+    &:focus {
+        border-color: ${COLORS.info};
+        outline: none;
+        box-shadow: 0 0 0 4px ${COLORS.shadow};
+    }
+    
+    &:disabled {
+        background-color: #f0f0f0;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+`
+
 export const ErrorMessage = styled.p`
     color: ${COLORS.danger};
     font-size: 14px;
