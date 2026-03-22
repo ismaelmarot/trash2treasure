@@ -19,7 +19,8 @@ export const BottomNavContainer = styled.nav`
 
 export const BottomNavItem = styled.button<{ $active: boolean }>`
   border: none;
-  background: none;
+  background: ${({ $active }) => ($active ? 'rgba(0, 113, 227, 0.1)' : 'none')};
+  border-radius: 34px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -28,10 +29,11 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
   gap: 4px;
   flex: 1;
   min-width: 0;
-  height: 100%;
+  height: auto;
+  padding: 8px 4px;
+  margin: 0 2px;
   color: ${({ $active }) => ($active ? '#0071e3' : '#8e8e93')};
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  padding: 4px 0;
 
   font-size: 11px;
   font-weight: ${({ $active }) => ($active ? '600' : '500')};
@@ -53,6 +55,7 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
   }
 
   &:hover {
+    background: rgba(0, 0, 0, 0.05);
     color: ${({ $active }) => ($active ? '#0071e3' : '#1d1d1f')};
     svg {
       transform: scale(1.1);
@@ -60,7 +63,7 @@ export const BottomNavItem = styled.button<{ $active: boolean }>`
   }
 
   &:active {
-    opacity: 0.7;
+    background: rgba(0, 113, 227, 0.15);
     svg {
       transform: scale(0.95);
     }
