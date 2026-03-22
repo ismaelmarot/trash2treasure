@@ -29,7 +29,6 @@ import {
   StatLabel,
   StatsRow,
   StatValue,
-  Subtitle,
   Tab,
   TabContainer,
   TabContent,
@@ -65,6 +64,7 @@ export function PointsScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('summary')
   const [activeChallengePeriod, setActiveChallengePeriod] = useState('daily')
+  const [activeSummaryTab, setActiveSummaryTab] = useState('categories')
 
   const openAchievementModal = (achievement: any) => {
     setSelectedAchievement(achievement)
@@ -148,54 +148,74 @@ export function PointsScreen() {
             </StatsRow>
           </PointsCard>
 
-          <Subtitle>Top Categorías</Subtitle>
-          <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
-            {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => {
-              const maxPts = Math.max(...Object.values(points.category_points || {}).map((v: any) => Number(v)), 1)
-              const percentage = (Number(pts) / maxPts) * 100
-              const catData = CATEGORIES.find(c => c.id === cat)
-              const catIcon = catData?.icon || '📦'
-              const catColor = cat === 'electronics' ? '#3498db' : cat === 'organic' ? '#27ae60' : cat === 'construction' ? '#e67e22' : '#9b59b6'
-              return (
-                <BarChartRow key={cat}>
-                  <BarHeader>
-                    <BarLabel>
-                      <span>{catIcon}</span>
-                      <span style={{ textTransform: 'capitalize' }}>{cat}</span>
-                    </BarLabel>
-                    <BarValue>{String(pts)} pts</BarValue>
-                  </BarHeader>
-                  <BarContainer>
-                    <BarFill $color={catColor} $width={percentage} />
-                  </BarContainer>
-                </BarChartRow>
-              )
-            })}
-          </TabContent>
-          
-          <Subtitle>Por Familia</Subtitle>
-          <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
-            {Object.entries(points.family_reports || {}).map(([family, count]) => {
-              const maxCount = Math.max(...Object.values(points.family_reports || {}).map((v: any) => Number(v)), 1)
-              const percentage = (Number(count) / maxCount) * 100
-              const familyIcon = family === 'eco' ? '🍃' : family === 'tech' ? '⚡' : family === 'heavy' ? '🧱' : family === 'packaging' ? '📦' : family === 'reuse' ? '👕' : '✨'
-              const familyColor = family === 'eco' ? '#27ae60' : family === 'tech' ? '#3498db' : family === 'heavy' ? '#e67e22' : family === 'packaging' ? '#9b59b6' : family === 'reuse' ? '#e91e63' : '#9e9e9e'
-              return (
-                <BarChartRow key={family}>
-                  <BarHeader>
-                    <BarLabel>
-                      <span>{familyIcon}</span>
-                      <span style={{ textTransform: 'capitalize' }}>{family}</span>
-                    </BarLabel>
-                    <BarValue>{String(count)} items</BarValue>
-                  </BarHeader>
-                  <BarContainer>
-                    <BarFill $color={familyColor} $width={percentage} />
-                  </BarContainer>
-                </BarChartRow>
-              )
-            })}
-          </TabContent>
+          <TabContainer>
+            <Tab $active={activeSummaryTab === 'categories'} onClick={() => setActiveSummaryTab('categories')}>Categorías</Tab>
+            <Tab $active={activeSummaryTab === 'families'} onClick={() => setActiveSummaryTab('families')}>Familia</Tab>
+            <Tab $active={activeSummaryTab === 'level'} onClick={() => setActiveSummaryTab('level')}>Nivel</Tab>
+          </TabContainer>
+
+          {activeSummaryTab === 'categories' && (
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+              {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => {
+                const maxPts = Math.max(...Object.values(points.category_points || {}).map((v: any) => Number(v)), 1)
+                const percentage = (Number(pts) / maxPts) * 100
+                const catData = CATEGORIES.find(c => c.id === cat)
+                const catIcon = catData?.icon || '📦'
+                const catColor = cat === 'electronics' ? '#3498db' : cat === 'organic' ? '#27ae60' : cat === 'construction' ? '#e67e22' : '#9b59b6'
+                return (
+                  <BarChartRow key={cat}>
+                    <BarHeader>
+                      <BarLabel>
+                        <span>{catIcon}</span>
+                        <span style={{ textTransform: 'capitalize' }}>{cat}</span>
+                      </BarLabel>
+                      <BarValue>{String(pts)} pts</BarValue>
+                    </BarHeader>
+                    <BarContainer>
+                      <BarFill $color={catColor} $width={percentage} />
+                    </BarContainer>
+                  </BarChartRow>
+                )
+              })}
+            </TabContent>
+          )}
+
+          {activeSummaryTab === 'families' && (
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+              {Object.entries(points.family_reports || {}).map(([family, count]) => {
+                const maxCount = Math.max(...Object.values(points.family_reports || {}).map((v: any) => Number(v)), 1)
+                const percentage = (Number(count) / maxCount) * 100
+                const familyIcon = family === 'eco' ? '🍃' : family === 'tech' ? '⚡' : family === 'heavy' ? '🧱' : family === 'packaging' ? '📦' : family === 'reuse' ? '👕' : '✨'
+                const familyColor = family === 'eco' ? '#27ae60' : family === 'tech' ? '#3498db' : family === 'heavy' ? '#e67e22' : family === 'packaging' ? '#9b59b6' : family === 'reuse' ? '#e91e63' : '#9e9e9e'
+                return (
+                  <BarChartRow key={family}>
+                    <BarHeader>
+                      <BarLabel>
+                        <span>{familyIcon}</span>
+                        <span style={{ textTransform: 'capitalize' }}>{family}</span>
+                      </BarLabel>
+                      <BarValue>{String(count)} items</BarValue>
+                    </BarHeader>
+                    <BarContainer>
+                      <BarFill $color={familyColor} $width={percentage} />
+                    </BarContainer>
+                  </BarChartRow>
+                )
+              })}
+            </TabContent>
+          )}
+
+          {activeSummaryTab === 'level' && (
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+              <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '12px', textAlign: 'center' }}>
+                <div style={{ fontSize: '48px', marginBottom: '8px' }}>🏆</div>
+                <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{division}</div>
+                <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
+                  {points.total_points} puntos totales
+                </div>
+              </div>
+            </TabContent>
+          )}
         </>
       )}
 
