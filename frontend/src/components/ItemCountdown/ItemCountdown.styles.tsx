@@ -2,12 +2,13 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants'
 
 export const Wrapper = styled.div<{ $align?: string; $direction?: string }>`
-    display: flex;
+    display: inline-flex;
     flex-direction: ${props => props.$direction || 'row'};
-    align-items: flex-start;
+    align-items: center;
     justify-content: ${props => props.$align || 'flex-start'};
-    border: 3px solid red;
-    background-color: ${COLORS.grey};
+    background: ${COLORS.grey};
+    border-radius: 35px;
+    padding: 6px 12px;
 `
 
 export const PostingLabel = styled.span`
@@ -21,19 +22,16 @@ export const Container = styled.div<{ $isUrgent: boolean }>`
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 2px 6px;
-    border-radius: 12px;
+    padding: 0;
     font-size: 12px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px ${COLORS.shadow};
-    color: ${props => props.$isUrgent ? COLORS.allWhite : COLORS.black};
-    background: ${props => props.$isUrgent ? COLORS.danger : COLORS.white};
+    color: ${props => props.$isUrgent ? COLORS.danger : COLORS.black};
+    background: transparent;
     
     ${props => props.$isUrgent && `
         animation: pulse 1.5s ease-in-out infinite;
-        box-shadow: 0 2px 12px rgba(255, 59, 48, 0.4);
     `}
     
     @keyframes pulse {
