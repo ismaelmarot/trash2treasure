@@ -54,7 +54,14 @@ router.get('/', async (req, res) => {
     }
 
     if (type === 'claimed') {
-      filter.claimed_by = { $exists: true };
+      // Items reclamados por el usuario + Items del usuario que fueron reclamados por otros
+      filter.$or = [
+        { claimed_by: req.user.id },
+        { user_id: req.user.id, claimed_by: { $exists: true, $ne: null } }
+      ];
+    } else if (type === 'mine') {
+      // Solo items reportados por el usuario
+      filter.user_id = req.user.id;
     }
 
     // Obtener items con datos del usuario y fotos
