@@ -578,15 +578,15 @@ export const TabContainer = styled.div`
 
 export const Tab = styled.button<{ $active: boolean }>`
   flex: 1;
-  padding: 10px;
-  border-radius: 25px;
+  padding: 8px 4px;
+  border-radius: 20px;
   border: none;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   background: ${props => props.$active ? 'white' : 'transparent'};
   color: ${props => props.$active ? COLORS.black : COLORS.primaryDark};
-  box-shadow: ${props => props.$active ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'};
+  box-shadow: ${props => props.$active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none'};
   transition: all 0.2s ease;
 `
 
