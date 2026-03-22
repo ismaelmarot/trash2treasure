@@ -10,6 +10,12 @@ import {
   AchievementsGrid,
   AchievementsSection,
   AvatarImage,
+  BarChartRow,
+  BarContainer,
+  BarFill,
+  BarHeader,
+  BarLabel,
+  BarValue,
   Container,
   DivisionBadge,
   Header,
@@ -141,17 +147,49 @@ export function PointsScreen() {
               </StatItem>
             </StatsRow>
           </PointsCard>
-          
+
           <Subtitle>Top Categorías</Subtitle>
           <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
-            <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '12px' }}>
-              {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => (
-                <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #e0e0e0' }}>
-                  <span style={{ textTransform: 'capitalize' }}>{cat}</span>
-                  <span style={{ fontWeight: 'bold' }}>{String(pts)} pts</span>
-                </div>
-              ))}
-            </div>
+            {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => {
+              const maxPts = Math.max(...Object.values(points.category_points || {}).map((v: any) => Number(v)), 1)
+              const percentage = (Number(pts) / maxPts) * 100
+              const catColor = cat === 'electronics' ? '#3498db' : cat === 'organic' ? '#27ae60' : cat === 'construction' ? '#e67e22' : '#9b59b6'
+              return (
+                <BarChartRow key={cat}>
+                  <BarHeader>
+                    <BarLabel>
+                      <span style={{ textTransform: 'capitalize' }}>{cat}</span>
+                    </BarLabel>
+                    <BarValue>{String(pts)} pts</BarValue>
+                  </BarHeader>
+                  <BarContainer>
+                    <BarFill $color={catColor} $width={percentage} />
+                  </BarContainer>
+                </BarChartRow>
+              )
+            })}
+          </TabContent>
+          
+          <Subtitle>Por Familia</Subtitle>
+          <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+            {Object.entries(points.family_reports || {}).map(([family, count]) => {
+              const maxCount = Math.max(...Object.values(points.family_reports || {}).map((v: any) => Number(v)), 1)
+              const percentage = (Number(count) / maxCount) * 100
+              const familyColor = family === 'eco' ? '#27ae60' : family === 'tech' ? '#3498db' : family === 'heavy' ? '#e67e22' : '#9b59b6'
+              return (
+                <BarChartRow key={family}>
+                  <BarHeader>
+                    <BarLabel>
+                      <span style={{ textTransform: 'capitalize' }}>{family}</span>
+                    </BarLabel>
+                    <BarValue>{String(count)} items</BarValue>
+                  </BarHeader>
+                  <BarContainer>
+                    <BarFill $color={familyColor} $width={percentage} />
+                  </BarContainer>
+                </BarChartRow>
+              )
+            })}
           </TabContent>
         </>
       )}
