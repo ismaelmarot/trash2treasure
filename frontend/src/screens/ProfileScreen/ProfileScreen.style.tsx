@@ -270,3 +270,44 @@ export const InfoDetail = styled.div`
     color: ${COLORS.greyDark};
     line-height: 1.4;
 `
+
+export const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+`
+
+export const ModalContent = styled.div`
+    background: ${COLORS.white};
+    padding: ${SPACING.lg};
+    border-radius: ${SPACING.lg};
+    max-width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    width: 100%;
+`
+
+export const ModalTitle = styled.h3`
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: ${SPACING.md};
+    text-align: center;
+`
+
+export const ModalClose = styled.button`
+    position: absolute;
+    top: ${SPACING.md};
+    right: ${SPACING.md};
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: ${COLORS.greyDark};
+`

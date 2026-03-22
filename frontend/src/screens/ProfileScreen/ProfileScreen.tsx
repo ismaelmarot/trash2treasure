@@ -27,11 +27,10 @@ import {
   StatValue,
   StatsRow,
   ExitText,
-  CollapsibleSection,
-  CollapsibleHeader,
-  CollapsibleTitle,
-  CollapsibleArrow,
-  CollapsibleContent,
+  ModalOverlay,
+  ModalContent,
+  ModalTitle,
+  ModalClose,
   InfoList,
   InfoItem,
   InfoIcon,
@@ -66,7 +65,7 @@ export function ProfileScreen() {
   const navigate = useNavigate()
   const [pointsData, setPointsData] = useState<any>(null)
   const [profileData, setProfileData] = useState<any>(null)
-  const [isInfoOpen, setIsInfoOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -149,35 +148,22 @@ export function ProfileScreen() {
         </StatsRow>
       </Section>
 
-      <CollapsibleSection>
-        <CollapsibleHeader onClick={() => setIsInfoOpen(!isInfoOpen)}>
-          <CollapsibleTitle>ℹ️ Cómo obtener puntos</CollapsibleTitle>
-          <CollapsibleArrow $isOpen={isInfoOpen}>▼</CollapsibleArrow>
-        </CollapsibleHeader>
-        <CollapsibleContent $isOpen={isInfoOpen}>
-          <InfoList>
-            {POINTS_INFO.map((info, index) => (
-              <InfoItem key={index}>
-                <InfoIcon>{info.icon}</InfoIcon>
-                <InfoContent>
-                  <InfoTitle>{info.title}</InfoTitle>
-                  <InfoDetail>{info.detail}</InfoDetail>
-                </InfoContent>
-              </InfoItem>
-            ))}
-          </InfoList>
-        </CollapsibleContent>
-      </CollapsibleSection>
-
       <Section>
-      <SectionTitle>Aplicación</SectionTitle>
+        <SectionTitle>Aplicación</SectionTitle>
+        <MenuItem onClick={() => setIsModalOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+          </MenuIconWrapper>
+          <MenuLabel>Cómo obtener puntos</MenuLabel>
+          <IconChevron />
+        </MenuItem>
         <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
             <IconCircle />
           </MenuIconWrapper>
           <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
-            <IconChevron />
-          </MenuItem>
+          <IconChevron />
+        </MenuItem>
       </Section>
 
       <Section>
@@ -189,6 +175,26 @@ export function ProfileScreen() {
           </MenuIconWrapper>
           </MenuItem>
       </Section>
+
+      {isModalOpen && (
+        <ModalOverlay onClick={() => setIsModalOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>ℹ️ Cómo obtener puntos</ModalTitle>
+            <InfoList>
+              {POINTS_INFO.map((info, index) => (
+                <InfoItem key={index}>
+                  <InfoIcon>{info.icon}</InfoIcon>
+                  <InfoContent>
+                    <InfoTitle>{info.title}</InfoTitle>
+                    <InfoDetail>{info.detail}</InfoDetail>
+                  </InfoContent>
+                </InfoItem>
+              ))}
+            </InfoList>
+            <ModalClose onClick={() => setIsModalOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
 
     </Container>
   )
