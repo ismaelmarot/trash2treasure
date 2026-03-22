@@ -241,7 +241,7 @@ export function ActivityScreen() {
       ) : (
         <Grid>
           {items.map(item => (
-            <ItemCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
+            <ItemCard key={item.id} onClick={() => navigate(`/app/item/${item.id}`)}>
               <ImageWrapper>
                 {item.main_image ? (
                   <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
@@ -276,7 +276,7 @@ export function ActivityScreen() {
                       <>
                         <EditButton onClick={(e) => {
                           e.stopPropagation()
-                          navigate(`/edit/${item.id}`)
+                          navigate(`/app/edit/${item.id}`)
                         }}>
                           Editar
                         </EditButton>

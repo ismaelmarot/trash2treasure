@@ -178,7 +178,7 @@ export function SearchScreen() {
       ) : (
         <ResultsGrid>
           {filteredItems.map(item => (
-            <ResultCard key={item.id} onClick={() => navigate(`/item/${item.id}`)}>
+            <ResultCard key={item.id} onClick={() => navigate(`/app/item/${item.id}`)}>
               <ImageWrapper>
                 {item.main_image ? (
                   <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />
@@ -211,7 +211,7 @@ export function SearchScreen() {
                   onClick={(e) => {
                     e.stopPropagation();
                     if (!item.claimed_by && item.user_id !== user?.id) {
-                      navigate(`/claimed/${item.id}`);
+                      navigate(`/app/claimed/${item.id}`);
                     }
                   }}
                 >

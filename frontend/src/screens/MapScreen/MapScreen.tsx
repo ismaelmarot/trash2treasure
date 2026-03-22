@@ -441,7 +441,7 @@ export function MapScreen() {
                     </CountdownWrapper>
                     <PopupTitle>{item.title}</PopupTitle>
                     <PopupDescription>{item.description || 'Sin descripción'}</PopupDescription>
-                    <ViewButton onClick={() => navigate(`/item/${item.id}`)}>
+                    <ViewButton onClick={() => navigate(`/app/item/${item.id}`)}>
                       Ver detalle
                     </ViewButton>
                   </PopupContent>
@@ -543,7 +543,7 @@ export function MapScreen() {
                 <ViewDetailButton 
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/item/${item.id}`);
+                    navigate(`/app/item/${item.id}`);
                   }}
                   title="Ver detalles"
                 >
