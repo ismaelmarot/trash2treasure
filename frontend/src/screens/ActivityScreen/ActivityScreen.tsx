@@ -254,11 +254,7 @@ export function ActivityScreen() {
                   <CategoryBadge>{item.category}</CategoryBadge>
                   {item.user_id === user?.id && <OwnerBadge>Mío</OwnerBadge>}
                   {item.claimed_by === user?.id && <ClaimedBadge>Reclamado por mí</ClaimedBadge>}
-                  {item.claimed_by && item.claimed_by !== user?.id && (
-                    <ClaimedBadge $others>
-                      Reclamado por {typeof item.claimed_by === 'object' && 'name' in item.claimed_by ? (item.claimed_by as any).name : 'Otro usuario'}
-                    </ClaimedBadge>
-                  )}
+                  {item.claimed_by && item.claimed_by !== user?.id && <ClaimedBadge $others>Ocupado</ClaimedBadge>}
                 </TagGroup>
               </ImageWrapper>
 
