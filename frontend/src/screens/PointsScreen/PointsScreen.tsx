@@ -174,10 +174,10 @@ export function PointsScreen() {
                 </EcoScoreTrend>
               </EcoScoreHeader>
               <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
-              <EcoScoreSubtitle>Estás en el {ecoScore.percentile}% de recicladores</EcoScoreSubtitle>
+              <EcoScoreSubtitle>{ecoScore.message}</EcoScoreSubtitle>
               <EcoScoreBar>
                 <EcoScoreProgress>
-                  <EcoScoreProgressFill $width={100 - ecoScore.percentile} />
+                  <EcoScoreProgressFill $width={ecoScore.percentile} />
                 </EcoScoreProgress>
                 <EcoScorePercentile>Top {ecoScore.percentile}%</EcoScorePercentile>
               </EcoScoreBar>

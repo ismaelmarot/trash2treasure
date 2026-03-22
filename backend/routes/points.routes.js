@@ -348,7 +348,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const weeklyCollected = userPoints.weekly_collected || 0;
     const weeklyScore = weeklyReports + (weeklyCollected * 2); // collected vale doble
     
-    // Obtener ranking de usuarios para calcular percentil
+    // Obtener ranking de usuarios para calcular percentil (top X%)
     const totalUsers = await UserPoints.countDocuments({ user_id: { $ne: null } });
     const usersAbove = await UserPoints.countDocuments({ 
       weekly_reports: { $gt: weeklyReports },
@@ -359,20 +359,61 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       weekly_collected: { $gt: weeklyCollected },
       user_id: { $ne: null }
     });
-    const percentile = totalUsers > 0 ? Math.round(((usersAbove + usersSameLevel / 2) / totalUsers) * 100) : 100;
+    const rank = usersAbove + Math.ceil(usersSameLevel / 2);
+    const percentile = totalUsers > 1 ? Math.max(1, Math.round((rank / totalUsers) * 100)) : 100;
     
     // Determinar grade basado en score
-    let grade, gradeColor;
-    if (weeklyScore >= 50) { grade = 'A+++'; gradeColor = '#27ae60'; }
-    else if (weeklyScore >= 40) { grade = 'A++'; gradeColor = '#2ecc71'; }
-    else if (weeklyScore >= 30) { grade = 'A+'; gradeColor = '#58d68d'; }
-    else if (weeklyScore >= 20) { grade = 'A'; gradeColor = '#82e0aa'; }
-    else if (weeklyScore >= 15) { grade = 'B'; gradeColor = '#f9e79f'; }
-    else if (weeklyScore >= 10) { grade = 'C'; gradeColor = '#f5b041'; }
-    else if (weeklyScore >= 5) { grade = 'D'; gradeColor = '#eb984e'; }
-    else if (weeklyScore >= 2) { grade = 'E'; gradeColor = '#e74c3c'; }
-    else if (weeklyScore >= 1) { grade = 'F'; gradeColor = '#c0392b'; }
-    else { grade = 'G'; gradeColor = '#922b21'; }
+    let grade, gradeColor, gradeMessage;
+    if (weeklyScore >= 50) { 
+      grade = 'A+++'; 
+      gradeColor = '#27ae60';
+      gradeMessage = '¡Eres un maestro del reciclaje! 🏆';
+    }
+    else if (weeklyScore >= 40) { 
+      grade = 'A++'; 
+      gradeColor = '#2ecc71';
+      gradeMessage = '¡Increíble! Estás en el top 5% 🌟';
+    }
+    else if (weeklyScore >= 30) { 
+      grade = 'A+'; 
+      gradeColor = '#58d68d';
+      gradeMessage = '¡Excelente trabajo! Estás en el top 10% ✨';
+    }
+    else if (weeklyScore >= 20) { 
+      grade = 'A'; 
+      gradeColor = '#82e0aa';
+      gradeMessage = '¡Muy bien! Sigue así 👍';
+    }
+    else if (weeklyScore >= 15) { 
+      grade = 'B'; 
+      gradeColor = '#f9e79f';
+      gradeMessage = 'Buen progreso, puedes mejorar 💪';
+    }
+    else if (weeklyScore >= 10) { 
+      grade = 'C'; 
+      gradeColor = '#f5b041';
+      gradeMessage = 'Sigue reportando más objetos 🔄';
+    }
+    else if (weeklyScore >= 5) { 
+      grade = 'D'; 
+      gradeColor = '#eb984e';
+      gradeMessage = 'Hay espacio para mejorar 📈';
+    }
+    else if (weeklyScore >= 2) { 
+      grade = 'E'; 
+      gradeColor = '#e74c3c';
+      gradeMessage = '¡Anímate a reportar más! 🚀';
+    }
+    else if (weeklyScore >= 1) { 
+      grade = 'F'; 
+      gradeColor = '#c0392b';
+      gradeMessage = '¡Cada reporte cuenta! 🌱';
+    }
+    else { 
+      grade = 'G'; 
+      gradeColor = '#922b21';
+      gradeMessage = '¡Comienza tu viaje eco! 🌿';
+    }
     
     // Comparar con semana anterior (usando monthly_reports como proxy si no hay weekly_prev)
     const prevWeeklyScore = userPoints.weekly_reports_prev || 0;
@@ -402,7 +443,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         percentile,
         scoreChange,
         trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same',
-        message: `Top ${percentile}% de recicladores`
+        message: gradeMessage
       }
     });
   } catch (error) {
