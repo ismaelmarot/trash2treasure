@@ -80,6 +80,11 @@ export function ClaimConfirmationScreen() {
           })
         })
         
+        // Refrescar datos de puntos en la pantalla de puntos
+        if (typeof window !== 'undefined' && (window as any).refreshPointsData) {
+          (window as any).refreshPointsData()
+        }
+        
         setLoading(false)
       } catch (err: any) {
         console.error('Error claiming item:', err)

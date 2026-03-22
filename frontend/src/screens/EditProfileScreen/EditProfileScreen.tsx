@@ -205,16 +205,25 @@ export function EditProfileScreen() {
         setProfileImage(imageData.profile_image)
         setNewImage(null)
         setNewImagePreview(null)
-      }
 
-      // Actualizar contexto de autenticación
-      const updatedUser = { 
-        id: user!.id, 
-        name: name.trim(), 
-        email: user!.email, 
-        profile_image: newImagePreview || profileImage 
+        // Actualizar contexto con la nueva imagen
+        const updatedUser = { 
+          id: user!.id, 
+          name: name.trim(), 
+          email: user!.email, 
+          profile_image: imageData.profile_image
+        }
+        login(token!, updatedUser)
+      } else {
+        // Sin imagen nueva, actualizar solo nombre
+        const updatedUser = { 
+          id: user!.id, 
+          name: name.trim(), 
+          email: user!.email, 
+          profile_image: profileImage 
+        }
+        login(token!, updatedUser)
       }
-      login(token!, updatedUser)
 
       setSuccess('Perfil actualizado correctamente')
       setTimeout(() => {

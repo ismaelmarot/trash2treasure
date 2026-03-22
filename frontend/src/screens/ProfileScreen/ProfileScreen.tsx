@@ -80,20 +80,21 @@ export function ProfileScreen() {
     );
   }
 
-  const avatarColor = getAvatarColor(user?.name || 'U')
+  const avatarColor = getAvatarColor(profileData?.name || user?.name || 'U')
+  const displayProfileImage = profileData?.profile_image || user?.profile_image
 
   return (
     <Container>
       <Card>
-        <Avatar $hasImage={!!user?.profile_image} $bgColor={avatarColor}>
-          {user?.profile_image ? (
-            <AvatarImage src={user.profile_image} alt="Profile" />
+        <Avatar $hasImage={!!displayProfileImage} $bgColor={avatarColor}>
+          {displayProfileImage ? (
+            <AvatarImage src={displayProfileImage} alt="Profile" />
           ) : (
             user?.name?.[0]?.toUpperCase() || 'U'
           )}
         </Avatar>
-        <Name>{user?.name}</Name>
-        <Email>{user?.email}</Email>
+        <Name>{profileData?.name || user?.name}</Name>
+        <Email>{profileData?.email || user?.email}</Email>
         {profileData?.city && (
           <div style={{ fontSize: '10px', color: '#666', margin: '.5rem 0 3rem 0' }}>
             📍 {profileData.city}{profileData.state && `, ${profileData.state}`}{profileData.country && `, ${profileData.country}`}

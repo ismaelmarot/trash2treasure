@@ -315,6 +315,11 @@ export function AddItemScreen() {
         body: JSON.stringify({ category, itemId })
       })
 
+      // Refrescar datos de puntos en la pantalla de puntos
+      if (typeof window !== 'undefined' && (window as any).refreshPointsData) {
+        (window as any).refreshPointsData()
+      }
+
       setSuccess(true)
       setTimeout(() => {
         navigate('/app/activity')

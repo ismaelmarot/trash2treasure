@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import { API_BASE_URL, COLORS } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
@@ -270,6 +271,7 @@ const POINTS_INFO = [
 
 export function PointsScreen() {
   const { token, user } = useAuth()
+  const location = useLocation()
   const [loading, setLoading] = useState(true)
   const [pointsData, setPointsData] = useState<any>(null)
   const [ranking, setRanking] = useState<any[]>([])
@@ -277,6 +279,7 @@ export function PointsScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('daily')
   const [activeStatsTab, setActiveStatsTab] = useState('ranking')
+  const [refreshKey, setRefreshKey] = useState(0)
   
   // Estados para secciones desplegables
   const [isInfoOpen, setIsInfoOpen] = useState(false)
@@ -291,33 +294,46 @@ export function PointsScreen() {
     setSelectedAchievement(null)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-        const pointsData = await pointsRes.json()
-        setPointsData(pointsData)
+  const refreshData = useCallback(async () => {
+    if (!token) return
+    setLoading(true)
+    try {
+      const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await pointsRes.json()
+      setPointsData(data)
 
-        const rankingRes = await fetch(`${API_BASE_URL}/points/ranking`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-        if (rankingRes.ok) {
-          const rankingData = await rankingRes.json()
-          setRanking(rankingData.ranking || [])
-        } else {
-          setRanking([])
-        }
-      } catch (err) {
-        console.error('Error fetching points data:', err)
-      } finally {
-        setLoading(false)
+      const rankingRes = await fetch(`${API_BASE_URL}/points/ranking`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (rankingRes.ok) {
+        const rankingData = await rankingRes.json()
+        setRanking(rankingData.ranking || [])
+      } else {
+        setRanking([])
       }
+    } catch (err) {
+      console.error('Error fetching points data:', err)
+    } finally {
+      setLoading(false)
     }
-
-    fetchData()
   }, [token])
+
+  // Refrescar cuando cambia de ruta (al volver a esta pantalla)
+  useEffect(() => {
+    refreshData()
+  }, [refreshKey, location.pathname])
+
+  // Exponer función de refresh globalmente para otras pantallas
+  useEffect(() => {
+    (window as any).refreshPointsData = () => {
+      setRefreshKey(k => k + 1)
+    }
+    return () => {
+      delete (window as any).refreshPointsData
+    }
+  }, [])
 
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
