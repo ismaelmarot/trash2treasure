@@ -175,7 +175,7 @@ export function PointsScreen() {
           </TabContainer>
 
           {activeSummaryTab === 'categories' && (
-            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
               {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => {
                 const maxPts = Math.max(...Object.values(points.category_points || {}).map((v: any) => Number(v)), 1)
                 const percentage = (Number(pts) / maxPts) * 100
@@ -201,7 +201,7 @@ export function PointsScreen() {
           )}
 
           {activeSummaryTab === 'families' && (
-            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
               {Object.entries(points.family_reports || {}).map(([family, count]) => {
                 const maxCount = Math.max(...Object.values(points.family_reports || {}).map((v: any) => Number(v)), 1)
                 const percentage = (Number(count) / maxCount) * 100
