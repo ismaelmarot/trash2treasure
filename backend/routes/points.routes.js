@@ -197,18 +197,123 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       unlocked_at: achievements.find(a => a.achievement_id === ach.id)?.unlocked_at
     }));
     
-    // Obtener progreso de desafíos para cada período
+    // Calcular y actualizar progreso de desafíos desde los items reales
+    const now = new Date();
+    const todayStart = getPeriodStart('daily');
+    const todayEnd = new Date(todayStart);
+    todayEnd.setDate(todayEnd.getDate() + 1);
+    
+    const weekStart = getPeriodStart('weekly');
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    
+    const monthStart = getPeriodStart('monthly');
+    const monthEnd = new Date(monthStart);
+    monthEnd.setMonth(monthEnd.getMonth() + 1);
+    
+    const yearStart = getPeriodStart('annual');
+    const yearEnd = new Date(yearStart);
+    yearEnd.setFullYear(yearEnd.getFullYear() + 1);
+    
+    // Calcular estadísticas de cada período
+    const dailyStats = await calculateUserStats(req.user.id, todayStart, todayEnd);
+    const weeklyStats = await calculateUserStats(req.user.id, weekStart, weekEnd);
+    const monthlyStats = await calculateUserStats(req.user.id, monthStart, monthEnd);
+    const yearStats = await calculateUserStats(req.user.id, yearStart, yearEnd);
+    
     const challengeProgress = {};
     
     for (const challenge of CHALLENGE_DEFINITIONS) {
-      const periodStart = getPeriodStart(challenge.type);
-      const progress = await getOrCreateChallengeProgress(req.user.id, challenge, periodStart);
+      let stats, progress = 0;
+      let periodStart;
+      
+      switch (challenge.type) {
+        case 'daily':
+          stats = dailyStats;
+          periodStart = todayStart;
+          break;
+        case 'weekly':
+          stats = weeklyStats;
+          periodStart = weekStart;
+          break;
+        case 'monthly':
+          stats = monthlyStats;
+          periodStart = monthStart;
+          break;
+        case 'annual':
+          stats = yearStats;
+          periodStart = yearStart;
+          break;
+        default:
+          stats = dailyStats;
+          periodStart = todayStart;
+      }
+      
+      // Calcular progreso según la categoría
+      switch (challenge.category) {
+        case 'reports':
+          progress = stats.reports;
+          break;
+        case 'collected':
+          // Para collected usamos los contadores de userPoints
+          if (challenge.type === 'daily') progress = userPoints.daily_collected || 0;
+          else if (challenge.type === 'weekly') progress = userPoints.weekly_collected || 0;
+          else if (challenge.type === 'monthly') progress = userPoints.monthly_collected || 0;
+          else progress = userPoints.total_collected || 0;
+          break;
+        case 'families':
+          progress = stats.families;
+          break;
+        case 'categories':
+          progress = stats.categories;
+          break;
+        case 'eco':
+          progress = stats.familiesCount['eco'] || 0;
+          break;
+        case 'tech':
+          progress = stats.familiesCount['tech'] || 0;
+          break;
+        case 'heavy':
+          progress = stats.familiesCount['heavy'] || 0;
+          break;
+        case 'packaging':
+          progress = stats.familiesCount['packaging'] || 0;
+          break;
+        case 'reuse':
+          progress = stats.familiesCount['reuse'] || 0;
+          break;
+        case 'streak':
+          if (challenge.type === 'monthly') progress = userPoints.max_streak || 0;
+          else progress = userPoints.current_streak || 0;
+          break;
+        default:
+          progress = stats.reports;
+      }
+      
+      // Actualizar progreso en la DB
+      const userProgress = await getOrCreateChallengeProgress(req.user.id, challenge, periodStart);
+      userProgress.current_progress = progress;
+      userProgress.last_updated = now;
+      
+      // Si cumple el objetivo y no estaba completado, sumar estrella
+      if (progress >= challenge.target && !userProgress.completed) {
+        userProgress.stars += 1;
+        
+        // Si llegó al máximo de estrellas, dar copa y resetear
+        if (userProgress.stars >= challenge.max_stars) {
+          userProgress.trophies += 1;
+          userProgress.stars = 0;
+          userProgress.completed = true;
+        }
+      }
+      
+      await userProgress.save();
       
       challengeProgress[challenge.id] = {
-        current_progress: progress.current_progress,
-        stars: progress.stars,
-        trophies: progress.trophies,
-        completed_this_period: progress.current_progress >= challenge.target,
+        current_progress: progress,
+        stars: userProgress.stars,
+        trophies: userProgress.trophies,
+        completed_this_period: progress >= challenge.target,
         max_stars: challenge.max_stars,
         target: challenge.target,
         type: challenge.type
@@ -286,15 +391,11 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     const { category, itemId } = req.body;
     const userPoints = await getOrCreateUserPoints(req.user.id);
     
-    // Puntos base
     let points = 1;
-    
-    // Bonus por categoría crítica
     if (CRITICAL_CATEGORIES.includes(category)) {
       points += 3;
     }
     
-    // Actualizar contadores
     userPoints.total_points += points;
     userPoints.report_points += points;
     userPoints.total_reports += 1;
@@ -302,11 +403,9 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     userPoints.weekly_reports += 1;
     userPoints.monthly_reports += 1;
     
-    // Actualizar por familia
     const family = CATEGORY_FAMILIES[category] || 'special';
     userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
     
-    // Actualizar streak
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const lastActivity = userPoints.last_activity_date ? new Date(userPoints.last_activity_date) : null;
@@ -331,7 +430,6 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     userPoints.last_activity_date = new Date();
     userPoints.updated_at = new Date();
     
-    // Actualizar división
     for (const div of DIVISIONS) {
       if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
         userPoints.division = div.name;
@@ -340,148 +438,7 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     }
     
     await userPoints.save();
-    
-    // Actualizar desafíos basados en los items reales
-    const now = new Date();
-    const todayStart = getPeriodStart('daily');
-    const todayEnd = new Date(todayStart);
-    todayEnd.setDate(todayEnd.getDate() + 1);
-    
-    const weekStart = getPeriodStart('weekly');
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 7);
-    
-    const monthStart = getPeriodStart('monthly');
-    const monthEnd = new Date(monthStart);
-    monthEnd.setMonth(monthEnd.getMonth() + 1);
-    
-    const yearStart = getPeriodStart('annual');
-    const yearEnd = new Date(yearStart);
-    yearEnd.setFullYear(yearEnd.getFullYear() + 1);
-    
-    // Calcular estadísticas diarias
-    const dailyStats = await calculateUserStats(req.user.id, todayStart, todayEnd);
-    
-    // Calcular estadísticas semanales
-    const weeklyStats = await calculateUserStats(req.user.id, weekStart, weekEnd);
-    
-    // Calcular estadísticas mensuales
-    const monthlyStats = await calculateUserStats(req.user.id, monthStart, monthEnd);
-    
-    // Calcular estadísticas anuales
-    const yearStats = await calculateUserStats(req.user.id, yearStart, yearEnd);
-    
-    // Actualizar desafíos diarios
-    for (const challenge of CHALLENGE_DEFINITIONS.filter(c => c.type === 'daily')) {
-      let progress = 0;
-      
-      switch (challenge.category) {
-        case 'reports':
-          progress = dailyStats.reports;
-          break;
-        case 'collected':
-          progress = userPoints.daily_collected || 0;
-          break;
-        case 'families':
-          progress = dailyStats.families;
-          break;
-        case 'eco':
-          progress = dailyStats.familiesCount['eco'] || 0;
-          break;
-        case 'tech':
-          progress = dailyStats.familiesCount['tech'] || 0;
-          break;
-        case 'heavy':
-          progress = dailyStats.familiesCount['heavy'] || 0;
-          break;
-        case 'packaging':
-          progress = dailyStats.familiesCount['packaging'] || 0;
-          break;
-        case 'reuse':
-          progress = dailyStats.familiesCount['reuse'] || 0;
-          break;
-        case 'streak':
-          progress = userPoints.current_streak || 0;
-          break;
-      }
-      
-      await updateChallengeProgress(req.user.id, challenge, todayStart, progress);
-    }
-    
-    // Actualizar desafíos semanales
-    for (const challenge of CHALLENGE_DEFINITIONS.filter(c => c.type === 'weekly')) {
-      let progress = 0;
-      
-      switch (challenge.category) {
-        case 'reports':
-          progress = weeklyStats.reports;
-          break;
-        case 'collected':
-          progress = userPoints.weekly_collected || 0;
-          break;
-        case 'families':
-          progress = weeklyStats.families;
-          break;
-        case 'eco':
-          progress = weeklyStats.familiesCount['eco'] || 0;
-          break;
-        case 'tech':
-          progress = weeklyStats.familiesCount['tech'] || 0;
-          break;
-        case 'heavy':
-          progress = weeklyStats.familiesCount['heavy'] || 0;
-          break;
-        case 'streak':
-          progress = userPoints.current_streak || 0;
-          break;
-      }
-      
-      await updateChallengeProgress(req.user.id, challenge, weekStart, progress);
-    }
-    
-    // Actualizar desafíos mensuales
-    for (const challenge of CHALLENGE_DEFINITIONS.filter(c => c.type === 'monthly')) {
-      let progress = 0;
-      
-      switch (challenge.category) {
-        case 'reports':
-          progress = monthlyStats.reports;
-          break;
-        case 'collected':
-          progress = userPoints.monthly_collected || 0;
-          break;
-        case 'families':
-          progress = monthlyStats.families;
-          break;
-        case 'streak':
-          progress = userPoints.max_streak || 0;
-          break;
-      }
-      
-      await updateChallengeProgress(req.user.id, challenge, monthStart, progress);
-    }
-    
-    // Actualizar desafíos anuales
-    for (const challenge of CHALLENGE_DEFINITIONS.filter(c => c.type === 'annual')) {
-      let progress = 0;
-      
-      switch (challenge.category) {
-        case 'eco':
-          progress = yearStats.familiesCount['eco'] || 0;
-          break;
-        case 'tech':
-          progress = yearStats.familiesCount['tech'] || 0;
-          break;
-        case 'heavy':
-          progress = yearStats.familiesCount['heavy'] || 0;
-          break;
-      }
-      
-      await updateChallengeProgress(req.user.id, challenge, yearStart, progress);
-    }
-    
-    // Verificar logros
-    await checkAchievements(req.user.id, userPoints);
+    checkAchievements(req.user.id, userPoints);
     
     res.json({ 
       message: 'Puntos agregados', 
@@ -489,7 +446,6 @@ router.post('/add-report', authenticateToken, async (req, res) => {
       total_points: userPoints.total_points 
     });
   } catch (error) {
-    console.error('Error in add-report:', error);
     res.status(500).json({ error: error.message });
   }
 });
