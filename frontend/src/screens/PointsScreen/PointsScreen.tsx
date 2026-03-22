@@ -302,6 +302,8 @@ export function PointsScreen() {
                               border: isCurrent ? '2px solid rgba(66, 165, 159, 1)' : '1px solid #e0e0e0',
                               opacity: isCurrent ? 1 : 0.5,
                               filter: isCurrent ? 'none' : 'grayscale(100%)',
+                              width: '100%',
+                              boxSizing: 'border-box',
                             }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                                 <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? 'rgba(66, 165, 159, 1)' : '#999' }}>
