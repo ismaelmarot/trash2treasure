@@ -263,7 +263,6 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     };
     
     const challengeProgress = {};
-    const bulkOps = [];
     
     for (const challenge of CHALLENGE_DEFINITIONS) {
       let progress = 0;
@@ -317,50 +316,34 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       
       // Actualizar progreso en la DB
       const userProgress = progressMap[challenge.id];
-      if (!userProgress) continue;
+      if (!userProgress) {
+        console.error('No progress found for challenge:', challenge.id);
+        continue;
+      }
+      userProgress.current_progress = progress;
+      userProgress.last_updated = now;
       
-      let stars = userProgress.stars;
-      let trophies = userProgress.trophies;
-      let completed = userProgress.completed;
-      
-      if (progress >= challenge.target && !completed) {
-        stars += 1;
-        if (stars >= challenge.max_stars) {
-          trophies += 1;
-          stars = 0;
-          completed = true;
+      if (progress >= challenge.target && !userProgress.completed) {
+        userProgress.stars += 1;
+        
+        if (userProgress.stars >= challenge.max_stars) {
+          userProgress.trophies += 1;
+          userProgress.stars = 0;
+          userProgress.completed = true;
         }
       }
       
-      bulkOps.push({
-        updateOne: {
-          filter: { _id: userProgress._id },
-          update: { 
-            $set: { 
-              current_progress: progress, 
-              last_updated: now,
-              stars,
-              trophies,
-              completed
-            }
-          }
-        }
-      });
+      await userProgress.save();
       
       challengeProgress[challenge.id] = {
         current_progress: progress,
-        stars,
-        trophies,
+        stars: userProgress.stars,
+        trophies: userProgress.trophies,
         completed_this_period: progress >= challenge.target,
         max_stars: challenge.max_stars,
         target: challenge.target,
         type: challenge.type
       };
-    }
-    
-    // Ejecutar todas las actualizaciones en una sola operación
-    if (bulkOps.length > 0) {
-      await UserChallengeProgress.bulkWrite(bulkOps);
     }
     
     console.log('Step 5 done. Calculating Eco Score...');
@@ -370,19 +353,17 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const weeklyCollected = userPoints.weekly_collected || 0;
     const weeklyScore = weeklyReports + (weeklyCollected * 2); // collected vale doble
     
-    // Obtener percentil con una sola query agregada
-    const aggResult = await UserPoints.aggregate([
-      { $match: { user_id: { $ne: null } } },
-      { $group: { 
-          _id: null, 
-          total: { $sum: 1 },
-          above: { $sum: { $cond: [{ $gt: ['$weekly_reports', weeklyReports] }, 1, 0] } },
-          same: { $sum: { $cond: [{ $and: [{ $eq: ['$weekly_reports', weeklyReports] }, { $gt: ['$weekly_collected', weeklyCollected] }] }, 1, 0] } }
-      }}
-    ]);
-    const totalUsers = aggResult[0]?.total || 1;
-    const usersAbove = aggResult[0]?.above || 0;
-    const usersSameLevel = aggResult[0]?.same || 0;
+    // Obtener ranking de usuarios para calcular percentil (top X%)
+    const totalUsers = await UserPoints.countDocuments({ user_id: { $ne: null } });
+    const usersAbove = await UserPoints.countDocuments({ 
+      weekly_reports: { $gt: weeklyReports },
+      user_id: { $ne: null }
+    });
+    const usersSameLevel = await UserPoints.countDocuments({
+      weekly_reports: weeklyReports,
+      weekly_collected: { $gt: weeklyCollected },
+      user_id: { $ne: null }
+    });
     const rank = usersAbove + Math.ceil(usersSameLevel / 2);
     const percentile = totalUsers > 1 ? Math.max(1, Math.round((rank / totalUsers) * 100)) : 100;
     
