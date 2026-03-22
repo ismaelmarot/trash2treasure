@@ -206,14 +206,60 @@ export function PointsScreen() {
           )}
 
           {activeSummaryTab === 'level' && (
-            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
-              <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '12px', textAlign: 'center' }}>
-                <div style={{ fontSize: '48px', marginBottom: '8px' }}>🏆</div>
-                <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{division}</div>
-                <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
-                  {points.total_points} puntos totales
-                </div>
-              </div>
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '12px' }}>
+              {[
+                { name: 'Curioso Verde', min: 0, max: 100 },
+                { name: 'Recolector Novato', min: 100, max: 200 },
+                { name: 'Semilla', min: 200, max: 400 },
+                { name: 'Eco Aprendiz', min: 400, max: 700 },
+                { name: 'Separador Serial', min: 700, max: 1000 },
+                { name: 'Guardián del Bosque', min: 1000, max: 1500 },
+                { name: 'Maestro del Reciclaje', min: 1500, max: 2000 },
+                { name: 'Defensor del Planeta', min: 2000, max: 2500 },
+                { name: 'Titán Verde', min: 2500, max: 3000 },
+                { name: 'Gaia Ascendido', min: 3000, max: Infinity },
+              ].map((level) => {
+                const isCurrent = level.name === division
+                const isPast = points.total_points >= level.max
+                const percentage = level.max === Infinity 
+                  ? 100 
+                  : Math.min((points.total_points - level.min) / (level.max - level.min) * 100, 100)
+                const pointsInLevel = isPast ? level.max - level.min : Math.max(0, points.total_points - level.min)
+                const pointsNeeded = isPast ? 0 : level.max - points.total_points
+                const levelColor = isCurrent ? '#42c5a5' : isPast ? '#34c759' : '#ccc'
+                
+                return (
+                  <div key={level.name} style={{ 
+                    padding: '12px', 
+                    background: isCurrent ? '#f0fff4' : '#f5f5f5', 
+                    borderRadius: '12px',
+                    border: isCurrent ? '2px solid #42c5a5' : 'none'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#42c5a5' : '#999' }}>
+                        {isPast ? '✓' : isCurrent ? '→' : '○'} {level.name}
+                      </span>
+                      <span style={{ fontSize: '12px', color: '#666' }}>
+                        {level.max === Infinity ? `${level.min}+` : `${level.min} - ${level.max}`}
+                      </span>
+                    </div>
+                    <div style={{ height: '8px', background: '#e0e0e0', borderRadius: '4px', overflow: 'hidden', marginBottom: '8px' }}>
+                      <div style={{ 
+                        height: '100%', 
+                        width: `${isPast ? 100 : percentage}%`, 
+                        background: levelColor, 
+                        borderRadius: '4px',
+                        transition: 'width 0.3s'
+                      }} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#666' }}>
+                      <span>{pointsInLevel} pts en nivel</span>
+                      {!isPast && <span style={{ color: '#42c5a5' }}>Faltan {pointsNeeded} pts</span>}
+                      {isPast && <span style={{ color: '#34c759' }}>Completado ✓</span>}
+                    </div>
+                  </div>
+                )
+              })}
             </TabContent>
           )}
         </>
