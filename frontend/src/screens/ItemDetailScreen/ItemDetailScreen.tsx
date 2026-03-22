@@ -190,7 +190,7 @@ export function ItemDetailScreen() {
           {distance && <DistanceBadge>📍 {distance}</DistanceBadge>}
           {item.user_id === user?.id && <OwnerBadge>Mi Reporte</OwnerBadge>}
           {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
-          {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
+          {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>RECLAMADO</ClaimStatusBadge>}
         </BadgeRow>
 
         <Header>
@@ -261,7 +261,7 @@ export function ItemDetailScreen() {
 
         {!item.claimed_by && item.user_id !== user?.id && !isWithinRange && distanceInMeters !== null && (
           <ProximityHint>
-            Debes estar a menos de 50m para reclamar este tesoro
+            Está a más de la distancia permitida ({Math.round(distanceInMeters)}m). Debes estar a menos de 50m.
           </ProximityHint>
         )}
       </ContentCard>
