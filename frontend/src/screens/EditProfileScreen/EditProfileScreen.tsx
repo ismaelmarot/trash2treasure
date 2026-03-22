@@ -218,7 +218,7 @@ export function EditProfileScreen() {
 
       setSuccess('Perfil actualizado correctamente')
       setTimeout(() => {
-        navigate('/profile')
+        navigate('/app/profile')
       }, 1500)
     } catch (err: any) {
       setError(err.message)
