@@ -245,7 +245,7 @@ export function ItemDetailScreen() {
 
         
         <ClaimButton 
-          disabled={!canClaim && !item.claimed_by && item.user_id !== user?.id}
+          disabled={item.user_id === user?.id || !!item.claimed_by || !canClaim}
           onClick={() => navigate(`/app/claimed/${item.id}`)}
         >
           {item.user_id === user?.id 
