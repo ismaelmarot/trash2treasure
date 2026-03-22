@@ -47,6 +47,57 @@ const DIVISIONS = [
   { name: 'Gaia Ascendido', minPoints: 3000, maxPoints: Infinity }
 ];
 
+// Verificar y resetear contadores temporales si es necesario
+const resetCountersIfNeeded = (userPoints) => {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  
+  // Reset diario
+  const lastDaily = userPoints.last_daily_reset ? new Date(userPoints.last_daily_reset) : null;
+  if (!lastDaily || lastDaily < now) {
+    userPoints.daily_reports = 0;
+    userPoints.daily_collected = 0;
+    userPoints.daily_family_reports = {};
+    userPoints.daily_category_reports = {};
+    userPoints.last_daily_reset = now;
+  }
+  
+  // Reset semanal (lunes)
+  const currentDay = now.getDay();
+  const mondayOffset = currentDay === 0 ? 6 : currentDay - 1;
+  const lastMonday = new Date(now);
+  lastMonday.setDate(now.getDate() - mondayOffset);
+  lastMonday.setHours(0, 0, 0, 0);
+  
+  const lastWeekly = userPoints.last_weekly_reset ? new Date(userPoints.last_weekly_reset) : null;
+  if (!lastWeekly || lastWeekly < lastMonday) {
+    userPoints.weekly_reports = 0;
+    userPoints.weekly_collected = 0;
+    userPoints.weekly_family_reports = {};
+    userPoints.weekly_category_reports = {};
+    userPoints.weekly_eco_reports = 0;
+    userPoints.weekly_tech_reports = 0;
+    userPoints.weekly_heavy_reports = 0;
+    userPoints.weekly_packaging_reports = 0;
+    userPoints.weekly_reuse_reports = 0;
+    userPoints.last_weekly_reset = lastMonday;
+  }
+  
+  // Reset mensual (día 1)
+  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastMonthly = userPoints.last_monthly_reset ? new Date(userPoints.last_monthly_reset) : null;
+  if (!lastMonthly || lastMonthly < firstOfMonth) {
+    userPoints.monthly_reports = 0;
+    userPoints.monthly_collected = 0;
+    userPoints.monthly_eco_reports = 0;
+    userPoints.monthly_tech_reports = 0;
+    userPoints.monthly_heavy_reports = 0;
+    userPoints.monthly_packaging_reports = 0;
+    userPoints.monthly_reuse_reports = 0;
+    userPoints.last_monthly_reset = firstOfMonth;
+  }
+};
+
 // Obtener o crear UserPoints
 const getOrCreateUserPoints = async (userId) => {
   let userPoints = await UserPoints.findOne({ user_id: userId });
@@ -54,6 +105,35 @@ const getOrCreateUserPoints = async (userId) => {
     userPoints = new UserPoints({ user_id: userId });
     await userPoints.save();
   }
+  
+  // Inicializar campos que no existen (compatibilidad con documentos antiguos)
+  if (userPoints.daily_reports === undefined) userPoints.daily_reports = 0;
+  if (userPoints.daily_collected === undefined) userPoints.daily_collected = 0;
+  if (userPoints.weekly_reports === undefined) userPoints.weekly_reports = 0;
+  if (userPoints.weekly_collected === undefined) userPoints.weekly_collected = 0;
+  if (userPoints.monthly_reports === undefined) userPoints.monthly_reports = 0;
+  if (userPoints.monthly_collected === undefined) userPoints.monthly_collected = 0;
+  if (!userPoints.daily_family_reports) userPoints.daily_family_reports = {};
+  if (!userPoints.daily_category_reports) userPoints.daily_category_reports = {};
+  if (!userPoints.weekly_family_reports) userPoints.weekly_family_reports = {};
+  if (!userPoints.weekly_category_reports) userPoints.weekly_category_reports = {};
+  if (userPoints.eco_reports === undefined) userPoints.eco_reports = 0;
+  if (userPoints.tech_reports === undefined) userPoints.tech_reports = 0;
+  if (userPoints.heavy_reports === undefined) userPoints.heavy_reports = 0;
+  if (userPoints.packaging_reports === undefined) userPoints.packaging_reports = 0;
+  if (userPoints.reuse_reports === undefined) userPoints.reuse_reports = 0;
+  if (userPoints.weekly_eco_reports === undefined) userPoints.weekly_eco_reports = 0;
+  if (userPoints.weekly_tech_reports === undefined) userPoints.weekly_tech_reports = 0;
+  if (userPoints.weekly_heavy_reports === undefined) userPoints.weekly_heavy_reports = 0;
+  if (userPoints.weekly_packaging_reports === undefined) userPoints.weekly_packaging_reports = 0;
+  if (userPoints.weekly_reuse_reports === undefined) userPoints.weekly_reuse_reports = 0;
+  if (userPoints.monthly_eco_reports === undefined) userPoints.monthly_eco_reports = 0;
+  if (userPoints.monthly_tech_reports === undefined) userPoints.monthly_tech_reports = 0;
+  if (userPoints.monthly_heavy_reports === undefined) userPoints.monthly_heavy_reports = 0;
+  if (userPoints.monthly_packaging_reports === undefined) userPoints.monthly_packaging_reports = 0;
+  if (userPoints.monthly_reuse_reports === undefined) userPoints.monthly_reuse_reports = 0;
+  if (!userPoints.challenge_last_reset) userPoints.challenge_last_reset = {};
+  
   return userPoints;
 };
 
@@ -61,6 +141,10 @@ const getOrCreateUserPoints = async (userId) => {
 router.get('/my-points', authenticateToken, async (req, res) => {
   try {
     const userPoints = await getOrCreateUserPoints(req.user.id);
+    
+    // Resetear contadores temporales si es necesario
+    resetCountersIfNeeded(userPoints);
+    await userPoints.save();
     
     // Calcular división actual
     let division = 'Curioso Verde';
@@ -91,55 +175,73 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     // Verificar desafíos completados y calcular progreso
     const completedChallenges = [];
     const challengeProgress = {};
+    let challengesChanged = false;
     
-    // Configuración de desafíos con sus objetivos
-    const challengeConfig = {
-      // Diarios (7 estrellas)
-      daily_report_3: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_reports || 0, 3), target: 3 },
-      daily_report_5: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_reports || 0, 5), target: 5 },
-      daily_collect_3: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_collected || 0, 3), target: 3 },
-      daily_collect_5: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_collected || 0, 5), target: 5 },
-      daily_families_2: { type: 'daily', stars: 7, getValue: () => Math.min(Object.values(userPoints.family_reports || {}).filter(v => v > 0).length, 2), target: 2 },
-      daily_families_3: { type: 'daily', stars: 7, getValue: () => Math.min(Object.values(userPoints.family_reports || {}).filter(v => v > 0).length, 3), target: 3 },
-      daily_speed: { type: 'daily', stars: 7, getValue: () => Math.min(userPoints.daily_collected || 0, 3), target: 3 },
-      
-      // Semanales (4 estrellas)
-      weekly_report_10: { type: 'weekly', stars: 4, getValue: () => Math.min(Math.floor((userPoints.weekly_reports || 0) / 2.5), 4), target: 10 },
-      weekly_collect_10: { type: 'weekly', stars: 4, getValue: () => Math.min(Math.floor((userPoints.weekly_collected || 0) / 2.5), 4), target: 10 },
-      weekly_categories_5: { type: 'weekly', stars: 4, getValue: () => Math.min(Object.keys(userPoints.category_reports || {}).length, 5), target: 5 },
-      weekly_families_4: { type: 'weekly', stars: 4, getValue: () => Math.min(Object.values(userPoints.family_reports || {}).filter(v => v > 0).length, 4), target: 4 },
-      weekly_streak: { type: 'weekly', stars: 4, getValue: () => Math.min(userPoints.current_streak || 0, 7), target: 7 },
-      
-      // Mensuales (12 estrellas - 2 filas de 6)
-      monthly_report_50: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 4.17), 12), target: 50 },
-      monthly_report_100: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 8.33), 12), target: 100 },
-      monthly_collect_50: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_collected || 0) / 4.17), 12), target: 50 },
-      monthly_collect_100: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_collected || 0) / 8.33), 12), target: 100 },
-      monthly_families_5: { type: 'monthly', stars: 12, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 4.17), 12), target: 50 },
-      
-      // Anuales (10 estrellas - 2 filas de 5)
-      annual_eco_200: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor(((userPoints.family_reports && userPoints.family_reports.eco) || 0) / 20), 10), target: 200 },
-      annual_tech_100: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor(((userPoints.family_reports && userPoints.family_reports.tech) || 0) / 10), 10), target: 100 },
-      annual_heavy_80: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor(((userPoints.family_reports && userPoints.family_reports.heavy) || 0) / 8), 10), target: 80 },
-      annual_all_500: { type: 'annual', stars: 10, getValue: () => Math.min(Math.floor((userPoints.total_reports || 0) / 50), 10), target: 500 }
+    // Configuración de desafíos: verificar si se completan en el período actual
+    const now = new Date();
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
+    
+    // Inicio de semana (lunes)
+    const currentDay = now.getDay();
+    const mondayOffset = currentDay === 0 ? 6 : currentDay - 1;
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - mondayOffset);
+    
+    // Inicio de mes
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    // Inicio de año
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    
+    // Función para obtener el inicio del período según el tipo
+    const getPeriodStart = (type) => {
+      switch (type) {
+        case 'daily': return today;
+        case 'weekly': return weekStart;
+        case 'monthly': return monthStart;
+        case 'annual': return yearStart;
+        default: return today;
+      }
     };
     
-    // Calcular progreso de cada desafío
-    for (const [challengeId, config] of Object.entries(challengeConfig)) {
-      const progress = config.getValue();
+    // Función para verificar si ya se contó en este período
+    const wasAlreadyCounted = (challengeId, periodStart) => {
+      const lastReset = userPoints.challenge_last_reset?.get(challengeId);
+      if (!lastReset) return false;
+      const lastResetDate = new Date(lastReset);
+      lastResetDate.setHours(0, 0, 0, 0);
+      return lastResetDate.getTime() >= periodStart.getTime();
+    };
+    
+    // Función para verificar desafío y actualizar progreso
+    const checkChallenge = (challengeId, config, isComplete) => {
       const challengeData = userPoints.challenges?.get(challengeId) || { completed: 0, trophies: 0 };
+      const periodStart = getPeriodStart(config.type);
+      const alreadyCounted = wasAlreadyCounted(challengeId, periodStart);
       
-      // Si el progreso es igual al máximo de estrellas, marcar como completado
-      if (progress >= config.stars) {
-        completedChallenges.push(challengeId);
-        challengeData.completed = config.stars;
+      // Verificar si se completó en el período actual
+      const completedThisPeriod = isComplete;
+      
+      if (isComplete && !alreadyCounted) {
+        // Primera vez que se completa en este período
+        challengeData.completed += 1;
+        userPoints.challenge_last_reset.set(challengeId, now);
+        challengesChanged = true;
         
-        // Incrementar copas si es la primera vez que se completa
-        if (challengeData.trophies === 0) {
-          challengeData.trophies = 1;
+        // Si llegó al máximo de estrellas, incrementar copa y resetear estrellas
+        if (challengeData.completed >= config.stars) {
+          challengeData.trophies += 1;
+          challengeData.completed = 0;
         }
-      } else {
-        challengeData.completed = progress;
+      }
+      
+      // Guardar cambios en el mapa
+      userPoints.challenges.set(challengeId, { completed: challengeData.completed, trophies: challengeData.trophies });
+      
+      // Marcar como completado este período para la card verde
+      if (completedThisPeriod) {
+        completedChallenges.push(challengeId);
       }
       
       challengeProgress[challengeId] = {
@@ -147,16 +249,98 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         stars: config.stars,
         trophies: challengeData.trophies,
         type: config.type,
-        progress: progress,
-        target: config.target
+        completed_this_period: completedThisPeriod
       };
+    };
+    
+    // === DESAFÍOS DIARIOS ===
+    const dailyReports = userPoints.daily_reports || 0;
+    const dailyCollected = userPoints.daily_collected || 0;
+    const dailyFamilies = Object.values(userPoints.daily_family_reports || {}).filter(v => v > 0).length;
+    const dailyCategories = Object.keys(userPoints.daily_category_reports || {}).length;
+    const dailyBoth = Math.min(dailyReports, dailyCollected);
+    const dailyEco = userPoints.daily_family_reports?.eco || 0;
+    const dailyTech = userPoints.daily_family_reports?.tech || 0;
+    const dailyHeavy = userPoints.daily_family_reports?.heavy || 0;
+    
+    checkChallenge('daily_report_3', { type: 'daily', stars: 7 }, dailyReports >= 3);
+    checkChallenge('daily_report_5', { type: 'daily', stars: 7 }, dailyReports >= 5);
+    checkChallenge('daily_collect_3', { type: 'daily', stars: 7 }, dailyCollected >= 3);
+    checkChallenge('daily_collect_5', { type: 'daily', stars: 7 }, dailyCollected >= 5);
+    checkChallenge('daily_families_2', { type: 'daily', stars: 7 }, dailyFamilies >= 2);
+    checkChallenge('daily_families_3', { type: 'daily', stars: 7 }, dailyFamilies >= 3);
+    checkChallenge('daily_speed', { type: 'daily', stars: 7 }, dailyCollected >= 3);
+    checkChallenge('daily_variety', { type: 'daily', stars: 7 }, dailyCategories >= 2);
+    checkChallenge('daily_both', { type: 'daily', stars: 7 }, dailyBoth >= 1);
+    checkChallenge('daily_eco', { type: 'daily', stars: 7 }, dailyEco >= 2);
+    checkChallenge('daily_tech', { type: 'daily', stars: 7 }, dailyTech >= 1);
+    checkChallenge('daily_heavy', { type: 'daily', stars: 7 }, dailyHeavy >= 1);
+    
+    // === DESAFÍOS SEMANALES ===
+    const weeklyReports = userPoints.weekly_reports || 0;
+    const weeklyCollected = userPoints.weekly_collected || 0;
+    const weeklyCategories = Object.keys(userPoints.weekly_category_reports || {}).length;
+    const weeklyFamilies = Object.values(userPoints.weekly_family_reports || {}).filter(v => v > 0).length;
+    const streak = userPoints.current_streak || 0;
+    
+    checkChallenge('weekly_report_10', { type: 'weekly', stars: 4 }, weeklyReports >= 10);
+    checkChallenge('weekly_collect_10', { type: 'weekly', stars: 4 }, weeklyCollected >= 10);
+    checkChallenge('weekly_categories_5', { type: 'weekly', stars: 4 }, weeklyCategories >= 5);
+    checkChallenge('weekly_families_4', { type: 'weekly', stars: 4 }, weeklyFamilies >= 4);
+    checkChallenge('weekly_streak', { type: 'weekly', stars: 4 }, streak >= 7);
+    checkChallenge('weekly_eco_5', { type: 'weekly', stars: 4 }, (userPoints.weekly_eco_reports || 0) >= 5);
+    checkChallenge('weekly_tech_3', { type: 'weekly', stars: 4 }, (userPoints.weekly_tech_reports || 0) >= 3);
+    checkChallenge('weekly_heavy_2', { type: 'weekly', stars: 4 }, (userPoints.weekly_heavy_reports || 0) >= 2);
+    checkChallenge('weekly_packaging_5', { type: 'weekly', stars: 4 }, (userPoints.weekly_packaging_reports || 0) >= 5);
+    checkChallenge('weekly_reuse_3', { type: 'weekly', stars: 4 }, (userPoints.weekly_reuse_reports || 0) >= 3);
+    checkChallenge('weekly_variety', { type: 'weekly', stars: 4 }, weeklyFamilies >= 3);
+    checkChallenge('weekly_streak_5', { type: 'weekly', stars: 4 }, streak >= 5);
+    checkChallenge('weekly_collect_5', { type: 'weekly', stars: 4 }, weeklyCollected >= 5);
+    checkChallenge('weekly_speed', { type: 'weekly', stars: 4 }, weeklyCollected >= 3);
+    
+    // === DESAFÍOS MENSUALES ===
+    const totalReports = userPoints.total_reports || 0;
+    const totalCollected = userPoints.total_collected || 0;
+    const familiesUsed = Object.values(userPoints.family_reports || {}).filter(v => v > 0).length;
+    const maxStreak = userPoints.max_streak || 0;
+    
+    checkChallenge('monthly_report_50', { type: 'monthly', stars: 12 }, totalReports >= 50);
+    checkChallenge('monthly_report_100', { type: 'monthly', stars: 12 }, totalReports >= 100);
+    checkChallenge('monthly_collect_50', { type: 'monthly', stars: 12 }, totalCollected >= 50);
+    checkChallenge('monthly_collect_100', { type: 'monthly', stars: 12 }, totalCollected >= 100);
+    checkChallenge('monthly_families_5', { type: 'monthly', stars: 12 }, familiesUsed >= 5);
+    checkChallenge('monthly_eco_15', { type: 'monthly', stars: 12 }, (userPoints.monthly_eco_reports || 0) >= 15);
+    checkChallenge('monthly_tech_10', { type: 'monthly', stars: 12 }, (userPoints.monthly_tech_reports || 0) >= 10);
+    checkChallenge('monthly_heavy_5', { type: 'monthly', stars: 12 }, (userPoints.monthly_heavy_reports || 0) >= 5);
+    checkChallenge('monthly_packaging_15', { type: 'monthly', stars: 12 }, (userPoints.monthly_packaging_reports || 0) >= 15);
+    checkChallenge('monthly_reuse_10', { type: 'monthly', stars: 12 }, (userPoints.monthly_reuse_reports || 0) >= 10);
+    checkChallenge('monthly_variety', { type: 'monthly', stars: 12 }, familiesUsed >= 4);
+    checkChallenge('monthly_streak_15', { type: 'monthly', stars: 12 }, maxStreak >= 15);
+    checkChallenge('monthly_collect_15', { type: 'monthly', stars: 12 }, totalCollected >= 15);
+    checkChallenge('monthly_speed', { type: 'monthly', stars: 12 }, totalCollected >= 10);
+    checkChallenge('monthly_all_families', { type: 'monthly', stars: 12 }, familiesUsed >= 6);
+    
+    // === DESAFÍOS ANUALES ===
+    const ecoReports = (userPoints.family_reports && userPoints.family_reports.eco) || 0;
+    const techReports = (userPoints.family_reports && userPoints.family_reports.tech) || 0;
+    const heavyReports = (userPoints.family_reports && userPoints.family_reports.heavy) || 0;
+    
+    checkChallenge('annual_eco_200', { type: 'annual', stars: 10 }, ecoReports >= 200);
+    checkChallenge('annual_tech_100', { type: 'annual', stars: 10 }, techReports >= 100);
+    checkChallenge('annual_heavy_80', { type: 'annual', stars: 10 }, heavyReports >= 80);
+    checkChallenge('annual_all_500', { type: 'annual', stars: 10 }, totalReports >= 500);
+    
+    // Guardar si hubo cambios en desafíos
+    if (challengesChanged) {
+      userPoints.markModified('challenges');
+      userPoints.markModified('challenge_last_reset');
+      await userPoints.save();
     }
     
     res.json({
       points: userPoints,
       division,
       achievements: allAchievements,
-      completedChallenges,
       challengeProgress,
       divisions: DIVISIONS
     });
@@ -168,19 +352,21 @@ router.get('/my-points', authenticateToken, async (req, res) => {
 // Obtener ranking de usuarios (top 15)
 router.get('/ranking', authenticateToken, async (req, res) => {
   try {
-    const topUsers = await UserPoints.find()
+    const topUsers = await UserPoints.find({ user_id: { $ne: null } })
       .sort({ total_points: -1 })
       .limit(15)
       .populate('user_id', 'name profile_image');
     
-    const ranking = topUsers.map((up, index) => ({
-      position: index + 1,
-      user_id: up.user_id._id,
-      name: up.user_id.name,
-      profile_image: up.user_id.profile_image,
-      total_points: up.total_points,
-      division: up.division
-    }));
+    const ranking = topUsers
+      .filter(up => up.user_id)
+      .map((up, index) => ({
+        position: index + 1,
+        user_id: up.user_id._id,
+        name: up.user_id.name,
+        profile_image: up.user_id.profile_image,
+        total_points: up.total_points,
+        division: up.division
+      }));
     
     // Verificar si el usuario actual está en el ranking
     const userInRanking = ranking.find(r => r.user_id.toString() === req.user.id);
@@ -214,6 +400,9 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     const { category, itemId } = req.body;
     const userPoints = await getOrCreateUserPoints(req.user.id);
     
+    // Resetear contadores si es necesario
+    resetCountersIfNeeded(userPoints);
+    
     // Puntos base
     let points = 1;
     
@@ -227,6 +416,11 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     userPoints.report_points += points;
     userPoints.total_reports += 1;
     
+    // Contadores temporales
+    userPoints.daily_reports += 1;
+    userPoints.weekly_reports += 1;
+    userPoints.monthly_reports += 1;
+    
     // Actualizar por categoría
     const currentCatPoints = userPoints.category_points.get(category) || 0;
     userPoints.category_points.set(category, currentCatPoints + points);
@@ -237,6 +431,39 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     // Actualizar por familia
     const family = CATEGORY_FAMILIES[category] || 'special';
     userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
+    
+    // Actualizar contadores por familia
+    if (family === 'eco') userPoints.eco_reports += 1;
+    if (family === 'tech') userPoints.tech_reports += 1;
+    if (family === 'heavy') userPoints.heavy_reports += 1;
+    if (family === 'packaging') userPoints.packaging_reports += 1;
+    if (family === 'reuse') userPoints.reuse_reports += 1;
+    
+    // Actualizar contadores temporales de familia
+    const currentDailyFamily = userPoints.daily_family_reports.get(family) || 0;
+    userPoints.daily_family_reports.set(family, currentDailyFamily + 1);
+    const currentWeeklyFamily = userPoints.weekly_family_reports.get(family) || 0;
+    userPoints.weekly_family_reports.set(family, currentWeeklyFamily + 1);
+    
+    // Actualizar contadores semanales por familia
+    if (family === 'eco') userPoints.weekly_eco_reports += 1;
+    if (family === 'tech') userPoints.weekly_tech_reports += 1;
+    if (family === 'heavy') userPoints.weekly_heavy_reports += 1;
+    if (family === 'packaging') userPoints.weekly_packaging_reports += 1;
+    if (family === 'reuse') userPoints.weekly_reuse_reports += 1;
+    
+    // Actualizar contadores mensuales por familia
+    if (family === 'eco') userPoints.monthly_eco_reports += 1;
+    if (family === 'tech') userPoints.monthly_tech_reports += 1;
+    if (family === 'heavy') userPoints.monthly_heavy_reports += 1;
+    if (family === 'packaging') userPoints.monthly_packaging_reports += 1;
+    if (family === 'reuse') userPoints.monthly_reuse_reports += 1;
+    
+    // Actualizar contadores temporales de categoría
+    const currentDailyCat = userPoints.daily_category_reports.get(category) || 0;
+    userPoints.daily_category_reports.set(category, currentDailyCat + 1);
+    const currentWeeklyCat = userPoints.weekly_category_reports.get(category) || 0;
+    userPoints.weekly_category_reports.set(category, currentWeeklyCat + 1);
     
     // Actualizar streak
     const today = new Date();
@@ -292,6 +519,9 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
     const { category, itemId, createdAt } = req.body;
     const userPoints = await getOrCreateUserPoints(req.user.id);
     
+    // Resetear contadores si es necesario
+    resetCountersIfNeeded(userPoints);
+    
     // Puntos base
     let points = 3;
     
@@ -320,6 +550,11 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
     userPoints.collect_points += points;
     userPoints.total_collected += 1;
     
+    // Contadores temporales
+    userPoints.daily_collected += 1;
+    userPoints.weekly_collected += 1;
+    userPoints.monthly_collected += 1;
+    
     // Actualizar por categoría
     const currentCatPoints = userPoints.category_points.get(category) || 0;
     userPoints.category_points.set(category, currentCatPoints + points);
@@ -330,6 +565,39 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
     // Actualizar por familia
     const family = CATEGORY_FAMILIES[category] || 'special';
     userPoints.family_collected[family] = (userPoints.family_collected[family] || 0) + 1;
+    
+    // Actualizar contadores por familia
+    if (family === 'eco') userPoints.eco_reports += 1;
+    if (family === 'tech') userPoints.tech_reports += 1;
+    if (family === 'heavy') userPoints.heavy_reports += 1;
+    if (family === 'packaging') userPoints.packaging_reports += 1;
+    if (family === 'reuse') userPoints.reuse_reports += 1;
+    
+    // Actualizar contadores temporales de familia
+    const currentDailyFamily = userPoints.daily_family_reports.get(family) || 0;
+    userPoints.daily_family_reports.set(family, currentDailyFamily + 1);
+    const currentWeeklyFamily = userPoints.weekly_family_reports.get(family) || 0;
+    userPoints.weekly_family_reports.set(family, currentWeeklyFamily + 1);
+    
+    // Actualizar contadores semanales por familia
+    if (family === 'eco') userPoints.weekly_eco_reports += 1;
+    if (family === 'tech') userPoints.weekly_tech_reports += 1;
+    if (family === 'heavy') userPoints.weekly_heavy_reports += 1;
+    if (family === 'packaging') userPoints.weekly_packaging_reports += 1;
+    if (family === 'reuse') userPoints.weekly_reuse_reports += 1;
+    
+    // Actualizar contadores mensuales por familia
+    if (family === 'eco') userPoints.monthly_eco_reports += 1;
+    if (family === 'tech') userPoints.monthly_tech_reports += 1;
+    if (family === 'heavy') userPoints.monthly_heavy_reports += 1;
+    if (family === 'packaging') userPoints.monthly_packaging_reports += 1;
+    if (family === 'reuse') userPoints.monthly_reuse_reports += 1;
+    
+    // Actualizar contadores temporales de categoría
+    const currentDailyCat = userPoints.daily_category_reports.get(category) || 0;
+    userPoints.daily_category_reports.set(category, currentDailyCat + 1);
+    const currentWeeklyCat = userPoints.weekly_category_reports.get(category) || 0;
+    userPoints.weekly_category_reports.set(category, currentWeeklyCat + 1);
     
     // Actualizar streak
     const today = new Date();
@@ -431,6 +699,15 @@ async function checkAchievements(userId, userPoints) {
   const familiesUsed = Object.values(userPoints.family_reports).filter(v => v > 0).length;
   if (familiesUsed >= 4 && !unlockedIds.includes('family_diverse')) {
     await unlockAchievement(userId, 'family_diverse');
+  }
+  
+  // Primero del día
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const lastDailyReset = userPoints.last_daily_reset ? new Date(userPoints.last_daily_reset) : null;
+  const isFirstOfDay = !lastDailyReset || lastDailyReset < today;
+  if (isFirstOfDay && userPoints.daily_reports >= 1 && !unlockedIds.includes('first_of_day')) {
+    await unlockAchievement(userId, 'first_of_day');
   }
 }
 

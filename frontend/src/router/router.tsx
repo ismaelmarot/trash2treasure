@@ -7,6 +7,7 @@ import {
   EditProfileScreen,
   ItemDetailScreen,
   MapScreen,
+  NotFoundScreen,
   PointsScreen,
   ProfileScreen,
   SearchScreen,
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <SplashScreen />,
+    errorElement: <NotFoundScreen />,
   },
   {
     path: '/welcome',
@@ -46,10 +48,12 @@ export const router = createBrowserRouter([
 
   {
     element: <ProtectedRoute />,
+    errorElement: <NotFoundScreen />,
     children: [
       {
         path: '/app',
         element: <Layout />,
+        errorElement: <NotFoundScreen />,
         children: [
           {
             index: true,
@@ -103,8 +107,16 @@ export const router = createBrowserRouter([
             path: 'claimed/:id',
             element: <ClaimConfirmationScreen />,
           },
+          {
+            path: '*',
+            element: <NotFoundScreen />,
+          },
         ],
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFoundScreen />,
   },
 ])

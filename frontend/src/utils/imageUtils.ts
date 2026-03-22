@@ -52,5 +52,6 @@ export const normalizeItem = (item: any): any => {
 
 // Helper para normalizar array de items
 export const normalizeItems = (items: any[]): any[] => {
+  if (!items || !Array.isArray(items)) return [];
   return items.map(normalizeItem);
 };

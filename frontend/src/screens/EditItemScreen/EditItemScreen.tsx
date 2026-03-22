@@ -82,7 +82,7 @@ export function EditItemScreen() {
 
       setSuccess(true)
       setTimeout(() => {
-        navigate('/activity')
+        navigate('/app/activity')
       }, 2000)
     } catch (err: any) {
       setError(err.message)

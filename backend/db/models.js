@@ -70,6 +70,61 @@ const userPointsSchema = new mongoose.Schema({
   max_streak: { type: Number, default: 0 },
   last_activity_date: { type: Date },
   
+  // Contadores temporales (desafíos)
+  daily_reports: { type: Number, default: 0 },
+  daily_collected: { type: Number, default: 0 },
+  weekly_reports: { type: Number, default: 0 },
+  weekly_collected: { type: Number, default: 0 },
+  monthly_reports: { type: Number, default: 0 },
+  monthly_collected: { type: Number, default: 0 },
+  
+  // Familias y categorías temporales
+  daily_family_reports: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  daily_category_reports: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  weekly_family_reports: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  weekly_category_reports: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  
+  // Contadores por familia (acumulados)
+  eco_reports: { type: Number, default: 0 },
+  tech_reports: { type: Number, default: 0 },
+  heavy_reports: { type: Number, default: 0 },
+  packaging_reports: { type: Number, default: 0 },
+  reuse_reports: { type: Number, default: 0 },
+  special_reports: { type: Number, default: 0 },
+  
+  weekly_eco_reports: { type: Number, default: 0 },
+  weekly_tech_reports: { type: Number, default: 0 },
+  weekly_heavy_reports: { type: Number, default: 0 },
+  weekly_packaging_reports: { type: Number, default: 0 },
+  weekly_reuse_reports: { type: Number, default: 0 },
+  
+  monthly_eco_reports: { type: Number, default: 0 },
+  monthly_tech_reports: { type: Number, default: 0 },
+  monthly_heavy_reports: { type: Number, default: 0 },
+  monthly_packaging_reports: { type: Number, default: 0 },
+  monthly_reuse_reports: { type: Number, default: 0 },
+  
+  // Fechas de último reseteo
+  last_daily_reset: { type: Date },
+  last_weekly_reset: { type: Date },
+  last_monthly_reset: { type: Date },
+  
   // Combo tracking
   last_category: { type: String },
   combo_same_category: { type: Number, default: 0 },
@@ -88,9 +143,15 @@ const userPointsSchema = new mongoose.Schema({
     type: Map,
     of: new mongoose.Schema({
       completed: { type: Number, default: 0 },
-      trophies: { type: Number, default: 0 },
-      last_reset: { type: Date }
+      trophies: { type: Number, default: 0 }
     }, { _id: false }),
+    default: {}
+  },
+  
+  // Fechas de último reseteo de desafíos (separado para mejor control)
+  challenge_last_reset: {
+    type: Map,
+    of: Date,
     default: {}
   },
   

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Form, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -256,7 +256,7 @@ export function AddItemScreen() {
 
       setSuccess(true)
       setTimeout(() => {
-        navigate('/activity')
+        navigate('/app/activity')
       }, 2500)
     } catch (err: any) {
       setError('Error al guardar offline: ' + err.message)
@@ -317,7 +317,7 @@ export function AddItemScreen() {
 
       setSuccess(true)
       setTimeout(() => {
-        navigate('/activity')
+        navigate('/app/activity')
       }, 2500)
     } catch (err: any) {
       setError(err.message)
@@ -371,7 +371,7 @@ export function AddItemScreen() {
             <Title>Publicar Tesoro</Title>
             <Subtitle>Dale una segunda vida a lo que ya no usas</Subtitle>
 
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
 
           <InputGroup>
             <Label required>Título</Label>
@@ -476,7 +476,7 @@ export function AddItemScreen() {
               {loading ? 'Publicando...' : 'Publicar Tesoro'}
             </SubmitButton>
           </ContainerSubmitButton>
-        </Form>
+            </form>
           </>
         )}
       </Card>

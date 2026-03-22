@@ -113,7 +113,7 @@ export function ClaimConfirmationScreen() {
           <Title>¡Ops! Algo salió mal</Title>
           <Subtitle>{error}</Subtitle>
           <ButtonGroup>
-            <PrimaryButton onClick={() => navigate('/search')}>
+            <PrimaryButton onClick={() => navigate('/app/search')}>
               Volver a Explorar
             </PrimaryButton>
           </ButtonGroup>

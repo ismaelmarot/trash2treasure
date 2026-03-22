@@ -214,9 +214,7 @@ const CHALLENGES = {
     { id: 'daily_both', name: 'Doble Misión', description: 'Reporta 1 y recolecta 1 item', icon: '🎯', target: 1, reward: 6, type: 'both' },
     { id: 'daily_eco', name: 'Eco Diario', description: 'Reporta 2 items ECO', icon: '🌱', target: 2, reward: 4, type: 'eco' },
     { id: 'daily_tech', name: 'Tech Diario', description: 'Reporta 1 item TECH', icon: '⚡', target: 1, reward: 4, type: 'tech' },
-    { id: 'daily_heavy', name: 'Heavy Diario', description: 'Reporta 1 item HEAVY', icon: '🏗️', target: 1, reward: 5, type: 'heavy' },
-    { id: 'daily_distance', name: 'Explorador', description: 'Reporta un item a más de 500m', icon: '🗺️', target: 1, reward: 5, type: 'distance' },
-    { id: 'daily_close', name: 'Vecino', description: 'Recolecta un item a menos de 100m', icon: '📍', target: 1, reward: 5, type: 'close' }
+    { id: 'daily_heavy', name: 'Heavy Diario', description: 'Reporta 1 item HEAVY', icon: '🏗️', target: 1, reward: 5, type: 'heavy' }
   ],
   weekly: [
     { id: 'weekly_report_10', name: 'Reportero Semanal', description: '10 items esta semana', icon: '📸', target: 10, reward: 30, type: 'reports' },
@@ -232,8 +230,7 @@ const CHALLENGES = {
     { id: 'weekly_variety', name: 'Semana Diversa', description: 'Usa 3 familias diferentes', icon: '🌈', target: 3, reward: 20, type: 'variety' },
     { id: 'weekly_streak_5', name: 'Racha de 5', description: '5 días activo en la semana', icon: '🔥', target: 5, reward: 10, type: 'streak' },
     { id: 'weekly_collect_5', name: 'Recolector Semanal', description: 'Recolecta 5 items', icon: '♻️', target: 5, reward: 15, type: 'collected' },
-    { id: 'weekly_speed', name: 'Velocista Semanal', description: 'Recolecta 3 items en menos de 6 horas', icon: '⚡', target: 3, reward: 15, type: 'speed' },
-    { id: 'weekly_night', name: 'Nocturno', description: 'Reporta 3 items después de las 22:00', icon: '🌙', target: 3, reward: 10, type: 'night' }
+    { id: 'weekly_speed', name: 'Velocista Semanal', description: 'Recolecta 3 items en menos de 6 horas', icon: '⚡', target: 3, reward: 15, type: 'speed' }
   ],
   monthly: [
     { id: 'monthly_report_50', name: 'Reportero Mensual', description: '50 items este mes', icon: '📸', target: 50, reward: 50, type: 'reports' },
@@ -306,8 +303,12 @@ export function PointsScreen() {
         const rankingRes = await fetch(`${API_BASE_URL}/points/ranking`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
-        const rankingData = await rankingRes.json()
-        setRanking(rankingData.ranking)
+        if (rankingRes.ok) {
+          const rankingData = await rankingRes.json()
+          setRanking(rankingData.ranking || [])
+        } else {
+          setRanking([])
+        }
       } catch (err) {
         console.error('Error fetching points data:', err)
       } finally {
@@ -321,11 +322,10 @@ export function PointsScreen() {
   if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
-  const { points, division, achievements: achievementsFromBackend, completedChallenges: completedFromBackend, challengeProgress: progressFromBackend } = pointsData
+  const { points, division, achievements: achievementsFromBackend, challengeProgress: progressFromBackend } = pointsData
 
   // Usar los logros del backend (que ya tienen unlocked calculado)
   const achievements = achievementsFromBackend || ACHIEVEMENTS.map(a => ({ ...a, unlocked: false }))
-  const completedChallenges = completedFromBackend || []
   const challengeProgress = progressFromBackend || {}
 
   // Calcular totales
@@ -537,29 +537,29 @@ export function PointsScreen() {
       </TabContainer>
       <TabContent>
         {CHALLENGES[activeTab as keyof typeof CHALLENGES].map((challenge) => {
-          const isUnlocked = completedChallenges.includes(challenge.id)
-          const progress = challengeProgress[challenge.id] || { completed: 0, stars: 7, trophies: 0 }
+          const progress = challengeProgress[challenge.id] || { completed: 0, stars: 7, trophies: 0, completed_this_period: false }
+          const isActive = progress.completed_this_period
           return (
             <AchievementCard 
               key={challenge.id} 
-              $unlocked={isUnlocked}
+              $unlocked={isActive}
               onClick={() => openAchievementModal({
                 id: challenge.id,
                 name: challenge.name,
                 description: challenge.description,
                 icon: challenge.icon,
                 points: challenge.reward,
-                unlocked: isUnlocked,
+                unlocked: isActive,
                 stars: progress.stars,
                 filled: progress.completed,
                 trophies: progress.trophies,
                 type: 'challenge'
               })}
             >
-              <AchievementIcon $unlocked={isUnlocked}>{challenge.icon}</AchievementIcon>
-              <AchievementName $unlocked={isUnlocked}>{challenge.name}</AchievementName>
-              <AchievementDesc $unlocked={isUnlocked}>{challenge.description}</AchievementDesc>
-              <div style={{ fontSize: '12px', color: isUnlocked ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
+              <AchievementIcon $unlocked={isActive}>{challenge.icon}</AchievementIcon>
+              <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
+              <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
+              <div style={{ fontSize: '12px', color: isActive ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
                 +{challenge.reward} pts
               </div>
             </AchievementCard>

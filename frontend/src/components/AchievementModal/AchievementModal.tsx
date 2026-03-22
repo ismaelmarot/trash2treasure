@@ -48,16 +48,14 @@ export function AchievementModal({ isOpen, onClose, achievement }: AchievementMo
               maxStars={6}
               size={24}
             />
-            {achievement.trophies && achievement.trophies > 0 && (
-              <div style={{ 
-                marginTop: '12px', 
-                fontSize: '14px', 
-                color: '#34c759', 
-                fontWeight: '600' 
-              }}>
-                🏆 {achievement.trophies} {achievement.trophies === 1 ? 'copa' : 'copas'}
-              </div>
-            )}
+            <div style={{ 
+              marginTop: '12px', 
+              fontSize: '14px', 
+              color: (achievement.trophies || 0) > 0 ? '#34c759' : '#999', 
+              fontWeight: '600' 
+            }}>
+              🏆 {achievement.trophies || 0} {(achievement.trophies || 0) === 1 ? 'copa' : 'copas'}
+            </div>
           </div>
         ) : (
           <>

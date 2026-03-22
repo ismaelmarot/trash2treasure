@@ -106,7 +106,7 @@ export function ProfileScreen() {
 
       <Section>
         <SectionTitle>🌿 Eco Points</SectionTitle>
-        <PointsCard onClick={() => navigate('/points')}>
+        <PointsCard onClick={() => navigate('/app/points')}>
           <PointsLabel>Total Eco Points</PointsLabel>
           <PointsValue>{pointsData?.points?.total_points || 0}</PointsValue>
           <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
