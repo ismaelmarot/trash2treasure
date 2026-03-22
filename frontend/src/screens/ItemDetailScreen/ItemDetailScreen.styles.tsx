@@ -3,7 +3,7 @@ import { flex, size } from '@/mixins'
 import { COLORS } from '@/constants'
 
 export const Container = styled.div`
-    background: ${COLORS.white};
+    background: #ffffff;
     min-height: 100vh;
     padding-bottom: 40px;
 `
@@ -232,7 +232,7 @@ export const ClaimButton = styled.button`
 
 export const ProximityHint = styled.p`
     font-size: 13px;
-    color: ${COLORS.greyDark};
+    color: #666666;
     text-align: center;
     margin-top: 12px;
     margin-bottom: 0;

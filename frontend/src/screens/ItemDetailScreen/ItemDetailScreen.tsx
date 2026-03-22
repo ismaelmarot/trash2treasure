@@ -199,6 +199,14 @@ export function ItemDetailScreen() {
 
         <MetaRow>
           <ItemCountdown createdAt={item.created_at} align="flex-start" />
+          <span style={{ fontSize: '13px', color: '#888', marginLeft: '12px' }}>
+            Publicado: {new Date(item.created_at).toLocaleDateString('es-ES', { 
+              day: 'numeric', 
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </span>
         </MetaRow>
 
         <Description>{item.description || 'Sin descripción adicional.'}</Description>
