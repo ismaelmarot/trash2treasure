@@ -267,8 +267,8 @@ export function PointsScreen() {
                         justifyContent: 'space-between', 
                         alignItems: 'center',
                         cursor: 'pointer',
-                        background: '#2eb890',
-                        color: 'white'
+                        background: 'rgba(66, 165, 159, 1)',
+                        color: 'rgba(26, 26, 26, 1)'
                       }}
                     >
                       <span style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -296,10 +296,10 @@ export function PointsScreen() {
                               background: 'white',
                               borderRadius: '35px',
                               marginBottom: '8px',
-                              border: isCurrent ? '2px solid #2eb890' : '1px solid #e0e0e0'
+                              border: isCurrent ? '2px solid rgba(114, 224, 172, 1)' : '1px solid #e0e0e0'
                             }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? '#2eb890' : '#666' }}>
+                                <span style={{ fontWeight: isCurrent ? 'bold' : 'normal', color: isPast ? '#34c759' : isCurrent ? 'rgba(66, 165, 159, 1)' : '#666' }}>
                                   {isPast ? '✓ ' : isCurrent ? '→ ' : ''}{level.name}
                                 </span>
                                 <span style={{ fontSize: '12px', color: '#666' }}>
@@ -307,11 +307,11 @@ export function PointsScreen() {
                                 </span>
                               </div>
                               <div style={{ height: '8px', background: 'white', borderRadius: '35px', overflow: 'hidden', border: '1px solid #e0e0e0', marginBottom: '6px' }}>
-                                <div style={{ height: '100%', width: `${percentage}%`, background: '#2eb890', borderRadius: '35px', transition: 'width 0.3s' }} />
+                                <div style={{ height: '100%', width: `${percentage}%`, background: 'rgba(66, 165, 159, 1)', borderRadius: '35px', transition: 'width 0.3s' }} />
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#666' }}>
                                 <span>{pointsInLevel} pts</span>
-                                <span style={{ color: isPast ? '#34c759' : '#2eb890' }}>
+                                <span style={{ color: isPast ? '#34c759' : 'rgba(66, 165, 159, 1)' }}>
                                   {isPast ? 'Completado ✓' : `Faltan ${pointsRemaining} pts`}
                                 </span>
                               </div>
