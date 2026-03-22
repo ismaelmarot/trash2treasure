@@ -45,7 +45,6 @@ export const Name = styled.h2`
 `
 
 export const Email = styled.p`
-    margin-bottom: ${SPACING.md};
     color: ${COLORS.primaryDark};
 `
 

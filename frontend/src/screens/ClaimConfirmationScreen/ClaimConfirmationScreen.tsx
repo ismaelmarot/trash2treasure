@@ -35,12 +35,30 @@ export function ClaimConfirmationScreen() {
         })
         const item = await itemResponse.json()
 
+        // Obtener ubicación del usuario
+        let userLat = null;
+        let userLng = null;
+        
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: true,
+              timeout: 10000
+            });
+          });
+          userLat = position.coords.latitude;
+          userLng = position.coords.longitude;
+        } catch (geoError) {
+          console.error('Error getting location:', geoError);
+        }
+
         const response = await fetch(`${API_BASE_URL}/items/${id}/claim`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({ userLat, userLng })
         })
         
         if (!response.ok) {

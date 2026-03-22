@@ -192,6 +192,27 @@ router.post('/:id/claim', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Cannot claim your own item' });
     }
 
+    // Verificar distancia (50 metros)
+    const { userLat, userLng } = req.body;
+    if (userLat && userLng && item.latitude && item.longitude) {
+      const R = 6371000; // Radio de la Tierra en metros
+      const deg2rad = (deg) => deg * (Math.PI / 180);
+      const dLat = deg2rad(item.latitude - userLat);
+      const dLon = deg2rad(item.longitude - userLng);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(userLat)) * Math.cos(deg2rad(item.latitude)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c;
+
+      if (distance > 50) {
+        return res.status(400).json({ 
+          error: `Debes estar a menos de 50m para reclamar este tesoro. Estás a ${Math.round(distance)}m.` 
+        });
+      }
+    }
+
     item.claimed_by = req.user.id;
     await item.save();
 

@@ -96,7 +96,7 @@ export function ProfileScreen() {
         <Name>{user?.name}</Name>
         <Email>{user?.email}</Email>
         {profileData?.city && (
-          <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
+          <div style={{ fontSize: '10px', color: '#666', margin: '.5rem 0 3rem 0' }}>
             📍 {profileData.city}{profileData.state && `, ${profileData.state}`}{profileData.country && `, ${profileData.country}`}
           </div>
         )}
