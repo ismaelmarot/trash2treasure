@@ -499,11 +499,6 @@ export function PointsScreen() {
         {(challenges || []).filter((c: any) => c.type === activeTab).map((challenge: any) => {
           const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
           const isActive = progress.completed_this_period
-          // Progress capped at target
-          const displayProgress = Math.min(progress.current_progress, challenge.target)
-          // Estrellas: mostrar solo las ganadas en color
-          const earnedStars = progress.stars
-          const totalSlots = challenge.max_stars
           
           return (
             <AchievementCard 
@@ -517,7 +512,7 @@ export function PointsScreen() {
                 points: challenge.reward,
                 unlocked: isActive,
                 stars: progress.stars,
-                filled: displayProgress,
+                filled: Math.min(progress.current_progress, challenge.target),
                 trophies: progress.trophies,
                 max_stars: challenge.max_stars,
                 type: 'challenge'
@@ -526,22 +521,8 @@ export function PointsScreen() {
               <AchievementIcon $unlocked={isActive}>{challenge.icon}</AchievementIcon>
               <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
               <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
-              
-              {/* Progreso texto */}
-              <div style={{ fontSize: '10px', color: isActive ? '#34c759' : '#999', marginTop: '2px', textAlign: 'center' }}>
-                {displayProgress}/{challenge.target}
-              </div>
-              
-              {/* Estrellas */}
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '2px', marginTop: '4px' }}>
-                {Array.from({ length: totalSlots }, (_, i) => (
-                  <span key={i} style={{ fontSize: '14px', color: i < earnedStars ? '#FFD700' : '#ddd' }}>
-                    ★
-                  </span>
-                ))}
-                {progress.trophies > 0 && (
-                  <span style={{ fontSize: '12px', marginLeft: '4px' }}>🏆×{progress.trophies}</span>
-                )}
+              <div style={{ fontSize: '12px', color: isActive ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
+                +{challenge.reward} pts
               </div>
             </AchievementCard>
           )
