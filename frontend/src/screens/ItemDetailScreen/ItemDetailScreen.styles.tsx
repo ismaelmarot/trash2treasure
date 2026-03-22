@@ -72,14 +72,14 @@ export const CategoryBadge = styled.span`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 14px;
+    padding: 2px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: ${COLORS.black};
-    background: ${COLORS.white};
+    background: ${COLORS.grey};
 `
 
 export const TagGroup = styled.div`
@@ -122,7 +122,7 @@ export const ContentCard = styled.div`
     position: relative;
     border-radius: 24px 24px 0 0;
     padding: 32px 24px;
-    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 30px rgba(194, 86, 86, 0.08);
 `
 
 export const MetaRow = styled.div`
@@ -133,24 +133,23 @@ export const MetaRow = styled.div`
 export const DistanceBadge = styled.span`
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border-radius: 12px;
+    padding: 2px 12px;
+    border-radius: 35px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${COLORS.black};
-    background: ${COLORS.white};
+    background: ${COLORS.grey};
 `
 
 export const Header = styled.div`
     ${flex('row', 'center', 'flex-start')}
-    margin-bottom: 1.5rem;
+    margin: 1rem 0 .5rem;
+    border-top: 2px solid ${COLORS.grey};
 `
 
 export const Title = styled.h1`
     font-size: 28px;
     font-weight: 700;
-    margin: 0;
     color: ${COLORS.black};
     line-height: 1.2;
     letter-spacing: -0.5px;
@@ -159,8 +158,9 @@ export const Title = styled.h1`
 export const Description = styled.p`
     font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 28px;
+    margin-bottom: 1rem;
     color: ${COLORS.greyDark};
+    border-bottom: 2px solid ${COLORS.grey};
 `
 
 export const SectionTitle = styled.h2`
