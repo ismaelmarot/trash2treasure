@@ -1,6 +1,6 @@
 # TRASH2TREASURE
 
-![App Icon](/public/icons/app-icon.png)
+<img src="/frontend/public/icon-192.png" alt="Icon Cap" width="150">
 
 **Trash2Treasure es una aplicación móvil de reciclaje comunitario donde los usuarios reportan objetos abandonados y otros usuarios pueden recolectarlos.**
 
@@ -461,7 +461,7 @@ flowchart TD
 
 ## 🌍 LIVE DEMO
 
-- **Frontend**: https://trash2treasure.vercel.app
+- **Frontend**: https://trash2treasure-app.vercel.app
 - **Backend**: https://trash2treasure-api.onrender.com
 
 ---
