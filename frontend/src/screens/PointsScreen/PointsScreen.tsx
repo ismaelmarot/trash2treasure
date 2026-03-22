@@ -527,11 +527,6 @@ export function PointsScreen() {
               <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
               <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
               
-              {/* Barra de progreso */}
-              <div style={{ marginTop: '6px', height: '6px', background: '#eee', borderRadius: '3px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${(displayProgress / challenge.target) * 100}%`, background: isActive ? '#34c759' : '#ccc', borderRadius: '3px', transition: 'width 0.3s' }} />
-              </div>
-              
               {/* Progreso texto */}
               <div style={{ fontSize: '10px', color: isActive ? '#34c759' : '#999', marginTop: '2px', textAlign: 'center' }}>
                 {displayProgress}/{challenge.target}
@@ -540,7 +535,7 @@ export function PointsScreen() {
               {/* Estrellas */}
               <div style={{ display: 'flex', justifyContent: 'center', gap: '2px', marginTop: '4px' }}>
                 {Array.from({ length: totalSlots }, (_, i) => (
-                  <span key={i} style={{ fontSize: '12px', color: i < earnedStars ? '#FFD700' : '#ddd' }}>
+                  <span key={i} style={{ fontSize: '14px', color: i < earnedStars ? '#FFD700' : '#ddd' }}>
                     ★
                   </span>
                 ))}

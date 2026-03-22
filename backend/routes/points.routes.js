@@ -123,14 +123,35 @@ const getOrCreateChallengeProgress = async (userId, challenge, periodStart) => {
   });
   
   if (!progress) {
+    // Buscar progreso del período anterior para heredar estrellas
+    let previousProgress = null;
+    let previousPeriod = new Date(periodStart);
+    
+    // Ir hacia atrás para encontrar el último período con progreso
+    for (let i = 0; i < 30; i++) {
+      previousPeriod = new Date(previousPeriod);
+      if (challenge.type === 'daily') previousPeriod.setDate(previousPeriod.getDate() - 1);
+      else if (challenge.type === 'weekly') previousPeriod.setDate(previousPeriod.getDate() - 7);
+      else if (challenge.type === 'monthly') previousPeriod.setMonth(previousPeriod.getMonth() - 1);
+      else previousPeriod.setFullYear(previousPeriod.getFullYear() - 1);
+      
+      previousProgress = await UserChallengeProgress.findOne({
+        user_id: userId,
+        challenge_id: challenge.id,
+        period_start: previousPeriod
+      });
+      
+      if (previousProgress) break;
+    }
+    
     progress = new UserChallengeProgress({
       user_id: userId,
       challenge_id: challenge.id,
       period_start: periodStart,
       period_type: challenge.type,
       current_progress: 0,
-      stars: 0,
-      trophies: 0,
+      stars: previousProgress ? previousProgress.stars : 0,
+      trophies: previousProgress ? previousProgress.trophies : 0,
       completed: false
     });
     await progress.save();
