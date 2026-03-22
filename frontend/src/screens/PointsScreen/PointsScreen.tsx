@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
@@ -48,9 +48,7 @@ function getAvatarColor(name: string): string {
 
 export function PointsScreen() {
   const { token, user } = useAuth()
-  const containerRef = useRef<HTMLDivElement>(null)
   
-  const [activeSection, setActiveSection] = useState(0)
   const [loading, setLoading] = useState(true)
   const [pointsData, setPointsData] = useState<any>(null)
   const [ranking, setRanking] = useState<any[]>([])
@@ -59,10 +57,7 @@ export function PointsScreen() {
   const [challengeProgress, setChallengeProgress] = useState<any>({})
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeStatsTab, setActiveStatsTab] = useState('ranking')
-  const [activeChallengeTab, setActiveChallengeTab] = useState('daily')
-  const [refreshKey, setRefreshKey] = useState(0)
-  const [sectionLoaded, setSectionLoaded] = useState<{[key: number]: boolean}>({ 0: false, 1: false, 2: false })
+  const [activeTab, setActiveTab] = useState('summary')
 
   const openAchievementModal = (achievement: any) => {
     setSelectedAchievement(achievement)
@@ -74,8 +69,9 @@ export function PointsScreen() {
     setSelectedAchievement(null)
   }
 
-  const fetchBasicData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     if (!token) return
+    setLoading(true)
     try {
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -85,14 +81,7 @@ export function PointsScreen() {
       setAchievements(data.achievements || [])
       setChallenges(data.challenges || [])
       setChallengeProgress(data.challengeProgress || {})
-    } catch (err) {
-      console.error('Error fetching points data:', err)
-    }
-  }, [token])
-
-  const fetchRanking = useCallback(async () => {
-    if (!token) return
-    try {
+      
       const rankingRes = await fetch(`${API_BASE_URL}/points/ranking`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -101,68 +90,73 @@ export function PointsScreen() {
         setRanking(rankingData.ranking || [])
       }
     } catch (err) {
-      console.error('Error fetching ranking:', err)
+      console.error('Error fetching points data:', err)
+    } finally {
+      setLoading(false)
     }
   }, [token])
 
   useEffect(() => {
-    const loadSection = async () => {
-      setLoading(true)
-      await fetchBasicData()
-      if (activeSection === 0) {
-        await fetchRanking()
-      }
-      setLoading(false)
-      setSectionLoaded(prev => ({ ...prev, [activeSection]: true }))
-    }
-    loadSection()
-  }, [refreshKey, activeSection, fetchBasicData, fetchRanking])
+    fetchData()
+  }, [fetchData])
 
-  useEffect(() => {
-    if (!sectionLoaded[activeSection]) {
-      setRefreshKey(k => k + 1)
-    }
-  }, [activeSection])
-
-  if (loading && !sectionLoaded[activeSection]) return <Loading>Cargando...</Loading>
+  if (loading) return <Loading>Cargando...</Loading>
   if (!pointsData) return <Loading>Error al cargar datos</Loading>
 
   const { points, division } = pointsData
 
-  const sectionTitles = ['Eco Points', 'Logros', 'Desafíos']
-
-  const renderEcoPoints = () => (
-    <>
+  return (
+    <Container>
       <Header>
         <Title>🍃 Tu impacto en la comunidad</Title>
       </Header>
 
-      <PointsCard>
-        <PointsHeader>
-          <div>
-            <PointsLabel>Total Eco Points</PointsLabel>
-            <PointsValue>{points.total_points}</PointsValue>
-          </div>
-          <DivisionBadge>{division}</DivisionBadge>
-        </PointsHeader>
-        <StatsRow>
-          <StatItem>
-            <StatValue>{points.total_reports}</StatValue>
-            <StatLabel>Reportes</StatLabel>
-          </StatItem>
-          <StatItem>
-            <StatValue>{points.total_collected}</StatValue>
-            <StatLabel>Recolectados</StatLabel>
-          </StatItem>
-        </StatsRow>
-      </PointsCard>
-
       <TabContainer>
-        <Tab $active={activeStatsTab === 'ranking'} onClick={() => setActiveStatsTab('ranking')}>Ranking</Tab>
-        <Tab $active={activeStatsTab === 'stats'} onClick={() => setActiveStatsTab('stats')}>Stats</Tab>
+        <Tab $active={activeTab === 'summary'} onClick={() => setActiveTab('summary')}>Resumen</Tab>
+        <Tab $active={activeTab === 'ranking'} onClick={() => setActiveTab('ranking')}>Ranking</Tab>
+        <Tab $active={activeTab === 'achievements'} onClick={() => setActiveTab('achievements')}>Logros</Tab>
+        <Tab $active={activeTab === 'challenges'} onClick={() => setActiveTab('challenges')}>Desafíos</Tab>
       </TabContainer>
 
-      {activeStatsTab === 'ranking' && (
+      {/* Resumen */}
+      {activeTab === 'summary' && (
+        <>
+          <PointsCard>
+            <PointsHeader>
+              <div>
+                <PointsLabel>Total Eco Points</PointsLabel>
+                <PointsValue>{points.total_points}</PointsValue>
+              </div>
+              <DivisionBadge>{division}</DivisionBadge>
+            </PointsHeader>
+            <StatsRow>
+              <StatItem>
+                <StatValue>{points.total_reports}</StatValue>
+                <StatLabel>Reportes</StatLabel>
+              </StatItem>
+              <StatItem>
+                <StatValue>{points.total_collected}</StatValue>
+                <StatLabel>Recolectados</StatLabel>
+              </StatItem>
+            </StatsRow>
+          </PointsCard>
+          
+          <Subtitle>Top Categorías</Subtitle>
+          <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
+            <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '12px' }}>
+              {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => (
+                <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #e0e0e0' }}>
+                  <span style={{ textTransform: 'capitalize' }}>{cat}</span>
+                  <span style={{ fontWeight: 'bold' }}>{String(pts)} pts</span>
+                </div>
+              ))}
+            </div>
+          </TabContent>
+        </>
+      )}
+
+      {/* Ranking */}
+      {activeTab === 'ranking' && (
         <TabContent style={{ gridTemplateColumns: '1fr' }}>
           {ranking.map((item, index) => (
             <RankingItem 
@@ -192,155 +186,69 @@ export function PointsScreen() {
         </TabContent>
       )}
 
-      {activeStatsTab === 'stats' && (
-        <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px' }}>
-          <div style={{ textAlign: 'center', padding: '16px', background: '#f5f5f5', borderRadius: '12px' }}>
-            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Top Categorías</div>
-            {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 3).map(([cat, pts]) => (
-              <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
-                <span style={{ textTransform: 'capitalize' }}>{cat}</span>
-                <span style={{ fontWeight: 'bold' }}>{String(pts)} pts</span>
-              </div>
+      {/* Logros */}
+      {activeTab === 'achievements' && (
+        <AchievementsSection>
+          <AchievementsGrid>
+            {achievements.map((achievement) => (
+              <AchievementCard 
+                key={achievement.id} 
+                $unlocked={achievement.unlocked}
+                onClick={() => openAchievementModal(achievement)}
+              >
+                <AchievementIcon $unlocked={achievement.unlocked}>{achievement.icon}</AchievementIcon>
+                <AchievementName $unlocked={achievement.unlocked}>{achievement.name}</AchievementName>
+                <AchievementDesc $unlocked={achievement.unlocked}>{achievement.description}</AchievementDesc>
+                <div style={{ fontSize: '12px', color: achievement.unlocked ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
+                  +{achievement.points} pts
+                </div>
+              </AchievementCard>
             ))}
-          </div>
-          <div style={{ textAlign: 'center', padding: '16px', background: '#f5f5f5', borderRadius: '12px' }}>
-            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Por Familia</div>
-            {Object.entries(points.family_reports || {}).map(([family, count]) => (
-              <div key={family} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
-                <span style={{ textTransform: 'capitalize' }}>{family}</span>
-                <span style={{ fontWeight: 'bold' }}>{String(count)} items</span>
-              </div>
-            ))}
-          </div>
-        </TabContent>
+          </AchievementsGrid>
+        </AchievementsSection>
       )}
-    </>
-  )
 
-  const renderLogros = () => (
-    <>
-      <Header>
-        <Title>🏆 Logros</Title>
-        <Subtitle>Tu historial de reconocimientos</Subtitle>
-      </Header>
-
-      <AchievementsSection>
-        <AchievementsGrid>
-          {achievements.map((achievement) => (
-            <AchievementCard 
-              key={achievement.id} 
-              $unlocked={achievement.unlocked}
-              onClick={() => openAchievementModal(achievement)}
-            >
-              <AchievementIcon $unlocked={achievement.unlocked}>{achievement.icon}</AchievementIcon>
-              <AchievementName $unlocked={achievement.unlocked}>{achievement.name}</AchievementName>
-              <AchievementDesc $unlocked={achievement.unlocked}>{achievement.description}</AchievementDesc>
-              <div style={{ fontSize: '12px', color: achievement.unlocked ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
-                +{achievement.points} pts
-              </div>
-            </AchievementCard>
-          ))}
-        </AchievementsGrid>
-      </AchievementsSection>
-    </>
-  )
-
-  const renderDesafios = () => (
-    <>
-      <Header>
-        <Title>🎯 Desafíos</Title>
-        <Subtitle>Completa para ganar estrellas y copas</Subtitle>
-      </Header>
-
-      <TabContainer>
-        <Tab $active={activeChallengeTab === 'daily'} onClick={() => setActiveChallengeTab('daily')}>Diario</Tab>
-        <Tab $active={activeChallengeTab === 'weekly'} onClick={() => setActiveChallengeTab('weekly')}>Semanal</Tab>
-        <Tab $active={activeChallengeTab === 'monthly'} onClick={() => setActiveChallengeTab('monthly')}>Mensual</Tab>
-        <Tab $active={activeChallengeTab === 'annual'} onClick={() => setActiveChallengeTab('annual')}>Anual</Tab>
-      </TabContainer>
-
-      <TabContent>
-        {(challenges || []).filter((c: any) => c.type === activeChallengeTab).map((challenge: any) => {
-          const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
-          const isActive = progress.completed_this_period
-          
-          return (
-            <AchievementCard 
-              key={challenge.id} 
-              $unlocked={isActive}
-              onClick={() => openAchievementModal({
-                id: challenge.id,
-                name: challenge.name,
-                description: challenge.description,
-                icon: challenge.icon,
-                points: challenge.reward,
-                unlocked: isActive,
-                stars: progress.stars,
-                filled: Math.min(progress.current_progress, challenge.target),
-                trophies: progress.trophies,
-                max_stars: challenge.max_stars,
-                type: 'challenge'
-              })}
-            >
-              <AchievementIcon $unlocked={isActive}>{challenge.icon}</AchievementIcon>
-              <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
-              <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
-              <div style={{ fontSize: '12px', color: isActive ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
-                +{challenge.reward} pts
-              </div>
-            </AchievementCard>
-          )
-        })}
-      </TabContent>
-    </>
-  )
-
-  const sections = [renderEcoPoints(), renderLogros(), renderDesafios()]
-
-  return (
-    <Container ref={containerRef}>
-      {/* Indicador de sección con estilo Tab */}
-      <TabContainer style={{ position: 'fixed', top: '48px', left: '50%', transform: 'translateX(-50%)', zIndex: 100, width: '90%' }}>
-        {sectionTitles.map((title, idx) => (
-          <Tab
-            key={idx}
-            $active={idx === activeSection}
-            onClick={() => {
-              setActiveSection(idx)
-              containerRef.current?.scrollTo({ top: idx * window.innerHeight, behavior: 'smooth' })
-            }}
-          >
-            {title}
-          </Tab>
-        ))}
-      </TabContainer>
-
-      <div 
-        ref={containerRef as any}
-        onScroll={(e: any) => {
-          const scrollTop = e.target.scrollTop
-          const sectionHeight = window.innerHeight
-          const newSection = Math.round(scrollTop / sectionHeight)
-          if (newSection !== activeSection && newSection >= 0 && newSection <= 2) {
-            setActiveSection(newSection)
-          }
-        }}
-        style={{ 
-          overflowY: 'auto', 
-          height: 'calc(100vh - 60px)',
-          scrollSnapType: 'y mandatory'
-        }}
-      >
-        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '70px' }}>
-          {sections[0]}
-        </div>
-        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '70px' }}>
-          {sections[1]}
-        </div>
-        <div style={{ minHeight: '100vh', scrollSnapAlign: 'start', paddingTop: '70px' }}>
-          {sections[2]}
-        </div>
-      </div>
+      {/* Desafíos */}
+      {activeTab === 'challenges' && (
+        <>
+          <TabContainer>
+            <Tab $active={true} onClick={() => {}}>Diario</Tab>
+          </TabContainer>
+          <TabContent>
+            {challenges.filter((c: any) => c.type === 'daily').map((challenge: any) => {
+              const progress = challengeProgress[challenge.id] || { current_progress: 0, stars: 0, trophies: 0, completed_this_period: false }
+              const isActive = progress.completed_this_period
+              
+              return (
+                <AchievementCard 
+                  key={challenge.id} 
+                  $unlocked={isActive}
+                  onClick={() => openAchievementModal({
+                    id: challenge.id,
+                    name: challenge.name,
+                    description: challenge.description,
+                    icon: challenge.icon,
+                    points: challenge.reward,
+                    unlocked: isActive,
+                    stars: progress.stars,
+                    filled: Math.min(progress.current_progress, challenge.target),
+                    trophies: progress.trophies,
+                    max_stars: challenge.max_stars,
+                    type: 'challenge'
+                  })}
+                >
+                  <AchievementIcon $unlocked={isActive}>{challenge.icon}</AchievementIcon>
+                  <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
+                  <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
+                  <div style={{ fontSize: '12px', color: isActive ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
+                    +{challenge.reward} pts
+                  </div>
+                </AchievementCard>
+              )
+            })}
+          </TabContent>
+        </>
+      )}
 
       <AchievementModal 
         isOpen={isModalOpen}
