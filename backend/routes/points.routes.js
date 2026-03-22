@@ -422,7 +422,11 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const scoreChange = weeklyScore - prevScore;
     
     res.json({
-      points: userPoints.toObject ? userPoints.toObject() : userPoints,
+      points: {
+        ...userPoints.toObject(),
+        category_points: userPoints.category_points ? Object.fromEntries(userPoints.category_points) : {},
+        family_reports: userPoints.family_reports ? Object.fromEntries(userPoints.family_reports) : {},
+      },
       division,
       achievements: allAchievements,
       challengeProgress,
