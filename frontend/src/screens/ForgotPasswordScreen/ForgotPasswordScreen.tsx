@@ -17,7 +17,6 @@ import {
   Subtitle,
   Title,
   Span,
-  SuccessMessage,
 } from './ForgotPasswordScreen.styles'
 
 export function ForgotPasswordScreen() {
