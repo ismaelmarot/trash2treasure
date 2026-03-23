@@ -191,6 +191,30 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
+// Resetear contraseña con token
+router.post('/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) return res.status(400).json({ error: 'Token y contraseña son requeridos' });
+
+  try {
+    // Verificar el token JWT
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const hash = await bcrypt.hash(password, 10);
+    user.password_hash = hash;
+    await user.save();
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+      return res.status(400).json({ error: 'El enlace ha expirado o es inválido' });
+    }
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Verificar código
 router.post('/verify', async (req, res) => {
   const { email, code } = req.body;

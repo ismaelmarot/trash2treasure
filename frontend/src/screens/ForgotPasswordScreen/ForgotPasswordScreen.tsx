@@ -18,7 +18,7 @@ import {
   Title,
   Span,
   SuccessMessage,
-} from './LoginScreen.styles'
+} from './ForgotPasswordScreen.styles'
 
 export function ForgotPasswordScreen() {
   const [email, setEmail] = useState('')
