@@ -74,7 +74,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 ------------------------------------------------------------------------------------
 
-## 📑 TABLE OF CONTENT
+## 📑 [TABLE OF CONTENT](#-table-of-content)
 
 1. [Highlights](#highlights)
 2. [Core Features](#core-features)
