@@ -2,9 +2,14 @@
 
 <img src="/frontend/public/icon-192.png" alt="Icon Cap" width="150">
 
-**Trash2Treasure es una aplicación móvil de reciclaje comunitario donde los usuarios reportan objetos abandonados y otros usuarios pueden recolectarlos.**
+_**Trash2Treasure es una aplicación móvil de reciclaje comunitario donde los usuarios reportan objetos abandonados y otros usuarios pueden recolectarlos.**_
 
 La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios ganar puntos, completar desafíos y desbloquear logros mientras contribuyen a un entorno más limpio.
+
+![Version](https://img.shields.io/badge/version-1.0.2-orange?style=for-the-badge)
+&nbsp;&nbsp;&nbsp;&nbsp;
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure/blob/HEAD/LICENSE)
+&nbsp;&nbsp;&nbsp;&nbsp;
 
 ---
 
