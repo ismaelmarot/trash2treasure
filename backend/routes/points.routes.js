@@ -485,53 +485,54 @@ router.get('/my-points', authenticateToken, async (req, res) => {
 // Obtener ranking de usuarios
 router.get('/ranking', authenticateToken, async (req, res) => {
   try {
-    // Asegurar que el usuario actual tenga UserPoints
-    await getOrCreateUserPoints(req.user.id);
-
-    // Crear UserPoints para usuarios que no tengan (fix retroactivo)
-    const usersWithoutPoints = await User.find({}).select('_id');
-    const existingPoints = await UserPoints.find({}).select('user_id');
-    const existingUserIds = new Set(existingPoints.map(p => p.user_id.toString()));
-    const missingUsers = usersWithoutPoints.filter(u => !existingUserIds.has(u._id.toString()));
-    if (missingUsers.length > 0) {
-      await UserPoints.insertMany(missingUsers.map(u => ({ user_id: u._id })));
-    }
-
-    const topUsers = await UserPoints.find({ user_id: { $ne: null } })
-      .sort({ total_points: -1 })
-      .limit(15)
-      .populate('user_id', 'name profile_image');
+    // Obtener todos los usuarios verificados
+    const allUsers = await User.find({ is_verified: true }, 'name profile_image');
     
-    const ranking = topUsers
-      .filter(up => up.user_id)
-      .map((up, index) => ({
-        position: index + 1,
-        user_id: up.user_id._id,
-        name: up.user_id.name,
-        profile_image: up.user_id.profile_image,
-        total_points: up.total_points,
-        division: up.division
-      }));
+    // Obtener sus UserPoints
+    const allPoints = await UserPoints.find({ 
+      user_id: { $in: allUsers.map(u => u._id) } 
+    });
     
-    const userInRanking = ranking.find(r => r.user_id.toString() === req.user.id);
+    // Mapear puntos por user_id
+    const pointsMap = {};
+    allPoints.forEach(p => {
+      pointsMap[p.user_id.toString()] = p;
+    });
+
+    // Combinar usuarios con sus puntos (0 si no tienen)
+    const rankingData = allUsers.map(u => {
+      const p = pointsMap[u._id.toString()];
+      return {
+        user_id: u._id,
+        name: u.name,
+        profile_image: u.profile_image,
+        total_points: p ? p.total_points : 0,
+        division: p ? p.division : 'Curioso Verde'
+      };
+    });
+
+    // Ordenar por puntos descendente y limitar a 15
+    rankingData.sort((a, b) => b.total_points - a.total_points);
+    const top15 = rankingData.slice(0, 15).map((item, index) => ({
+      ...item,
+      position: index + 1
+    }));
+
+    // Si el usuario actual no está en el top 15, agregarlo al final
+    const userInRanking = top15.find(r => r.user_id.toString() === req.user.id);
     
     if (!userInRanking) {
-      const userPoints = await UserPoints.findOne({ user_id: req.user.id });
-      const position = await UserPoints.countDocuments({ total_points: { $gt: userPoints.total_points } }) + 1;
-      const user = await User.findById(req.user.id, 'name profile_image');
-      
-      ranking.push({
-        position,
-        user_id: req.user.id,
-        name: user.name,
-        profile_image: user.profile_image,
-        total_points: userPoints.total_points,
-        division: userPoints.division,
-        isCurrentUser: true
-      });
+      const userIndex = rankingData.findIndex(r => r.user_id.toString() === req.user.id);
+      if (userIndex !== -1) {
+        top15.push({
+          ...rankingData[userIndex],
+          position: userIndex + 1,
+          isCurrentUser: true
+        });
+      }
     }
     
-    res.json({ ranking });
+    res.json({ ranking: top15 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
