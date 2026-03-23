@@ -485,6 +485,18 @@ router.get('/my-points', authenticateToken, async (req, res) => {
 // Obtener ranking de usuarios
 router.get('/ranking', authenticateToken, async (req, res) => {
   try {
+    // Asegurar que el usuario actual tenga UserPoints
+    await getOrCreateUserPoints(req.user.id);
+
+    // Crear UserPoints para usuarios que no tengan (fix retroactivo)
+    const usersWithoutPoints = await User.find({}).select('_id');
+    const existingPoints = await UserPoints.find({}).select('user_id');
+    const existingUserIds = new Set(existingPoints.map(p => p.user_id.toString()));
+    const missingUsers = usersWithoutPoints.filter(u => !existingUserIds.has(u._id.toString()));
+    if (missingUsers.length > 0) {
+      await UserPoints.insertMany(missingUsers.map(u => ({ user_id: u._id })));
+    }
+
     const topUsers = await UserPoints.find({ user_id: { $ne: null } })
       .sort({ total_points: -1 })
       .limit(15)

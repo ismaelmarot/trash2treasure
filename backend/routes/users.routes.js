@@ -5,7 +5,7 @@ const sgMail = require('@sendgrid/mail');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
-const { User } = require('../db/models');
+const { User, UserPoints } = require('../db/models');
 
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
@@ -71,6 +71,9 @@ router.post('/register', async (req, res) => {
     });
 
     await newUser.save();
+
+    // Crear registro de puntos para el nuevo usuario
+    await new UserPoints({ user_id: newUser._id }).save();
 
     // Enviar email con SendGrid
     const msg = {
