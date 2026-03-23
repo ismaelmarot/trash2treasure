@@ -2,25 +2,60 @@
 
 <img src="/frontend/public/icon-192.png" alt="Icon Cap" width="150">
 
-_**Trash2Treasure es una aplicación móvil de reciclaje comunitario donde los usuarios reportan objetos abandonados y otros usuarios pueden recolectarlos.**_
+_**Trash2Treasure is a community recycling mobile app where users report abandoned items and others can collect them.**_
 
-La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios ganar puntos, completar desafíos y desbloquear logros mientras contribuyen a un entorno más limpio.
+The app promotes recycling and reuse, allowing users to earn points, complete challenges, and unlock achievements while contributing to a cleaner environment.
+
+&nbsp;&nbsp;&nbsp;&nbsp;
 
 ![Version](https://img.shields.io/badge/version-1.0.2-orange?style=for-the-badge)
 &nbsp;&nbsp;&nbsp;&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure/blob/HEAD/LICENSE)
 &nbsp;&nbsp;&nbsp;&nbsp;
+![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/trash2treasure?style=for-the-badge)
+&nbsp;&nbsp;&nbsp;&nbsp;
 
----
+### Frontend Stack
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Styled Components](https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
 
-## 🔗 LIVE DEMO
+### Backend Stack
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-| Service | URL | Status |
-|---------|-----|--------|
-| 🌐 **Frontend (Vercel)** | [https://trash2treasure-app.vercel.app](https://trash2treasure-app.vercel.app) | ![Vercel](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
-| ⚙️ **Backend (Render)** | [https://trash2treasure.onrender.com](https://trash2treasure.onrender.com) | ![Render](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
+&nbsp;&nbsp;&nbsp;&nbsp;
 
----
+
+<br>
+
+<p  align="center">
+  <a href="https://ismaelmarot.github.io/Trash2Treasure/" target="_blank">
+    <img src="https://img.shields.io/badge/Go-Live Demo-blue?style=for-the-badge" alt="Demo Trash2Treasure" />
+  </a>
+</p>
+
+<br>
+
+------------------------------------------------------------------------------------
+
+## What It Does?
+
+- **Report abandoned items**: Users take photos and report items they find on the street
+- **Collect items**: Other users can mark items as "collected" to encourage recycling
+- **Eco Points system**: Earn points by reporting and collecting items
+- **Daily, weekly, monthly, and yearly challenges**: Complete missions to earn stars and trophies
+- **Unlockable achievements**: Unlock achievements by reaching specific milestones
+- **Community ranking: Compete with other users on the recycler leaderboard
+- **Weekly Eco Score**: Rating from A+++ to G based on your weekly activity
+- **Level system**: Progress from "Green Curious" to "Ascended Gaia"
+- **Categories and families**: Classify items by type (electronics, organic, construction, etc.)
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
 
 ## 🛠️ INFRASTRUCTURE & SERVICES
 
@@ -34,44 +69,10 @@ La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios gana
 | **Analytics** | ![Vercel Analytics](https://img.shields.io/badge/Vercel_Analytics-000000?style=for-the-badge&logo=vercel&logoColor=white) | Analíticas de visitantes y rendimiento |
 | **UX/UI Design** | ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white) | Diseño de interfaces y prototipado |
 
-### Design Tools
-![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 📋 BADGES
-
-### Project Info
-![Version](https://img.shields.io/badge/version-1.0.0-orange?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
-![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/trash2treasure?style=for-the-badge)
-
-### Frontend Stack
-![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Styled Components](https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
-
-### Backend Stack
-![Node.js](https://img.shields.io/badge/Node.js-22-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-4-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-
----
-
-## What It Does?
-
-- **Reportar objetos abandonados**: Usuarios fotografían y reportan objetos que encuentran en la calle
-- **Recolectar objetos**: Otros usuarios pueden marcar objetos como "recolectados" para incentivar el reciclaje
-- **Sistema de puntos Eco Points**: Gana puntos por reportar y recolectar objetos
-- **Desafíos diarios, semanales, mensuales y anuales**: Completa misiones para ganar estrellas y trofeos
-- **Logros desbloqueables**: Desbloquea logros por alcanzar metas específicas
-- **Ranking comunitario**: Compite con otros usuarios en el ranking de recicladores
-- **Eco Score semanal**: Calificación de A+++ a G basada en tu actividad semanal
-- **Sistema de niveles**: Progresa desde "Curioso Verde" hasta "Gaia Ascendido"
-- **Categorías y familias**: Clasificación de objetos por tipo (electrónicos, orgánicos, construcción, etc.)
-
----
+------------------------------------------------------------------------------------
 
 ## 📑 TABLE OF CONTENT
 
@@ -88,9 +89,11 @@ La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios gana
 11. [Live Demo](#live-demo)
 12. [Versions](#versions)
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 🌟 HIGHLIGHTS
+------------------------------------------------------------------------------------
+
+## 🌟 [HIGHLIGHTS](#-table-of-content)
 
 - Full-stack application with React frontend and Express backend
 - MongoDB database with Mongoose ODM
@@ -102,46 +105,53 @@ La app fomenta el reciclaje y la reutilización, permitiendo a los usuarios gana
 - Styled-components for CSS-in-JS
 - CI/CD deployment with Vercel (frontend) and Render (backend)
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## ✨ CORE FEATURES
+------------------------------------------------------------------------------------
 
-| Feature | Description |
-|---------|-------------|
-| User authentication | Registro, login y gestión de perfil con JWT |
-| Report items | Fotografiar y reportar objetos abandonados con ubicación |
-| Collect items | Marcar objetos como recolectados para ganar puntos extra |
-| Eco Points | Sistema de puntos por acciones de reporte y recolección |
-| Challenges | Desafíos con recompensas de estrellas y trofeos |
-| Achievements | Logros desbloqueables por métricas específicas |
-| Eco Score | Calificación semanal de A+++ a G según actividad |
-| Division levels | Sistema de niveles progresivos de reciclaje |
-| Community ranking | Ranking de usuarios por puntos totales |
-| Categories | Clasificación por tipo: electrónicos, orgánicos, construcción, etc. |
-| Families | Agrupación: ECO, TECH, HEAVY, PACKAGING, REUSE |
+## ✨ [CORE FEATURES](#-table-of-content)
 
----
+| Feature             | Description                                                      |
+| ------------------- | ---------------------------------------------------------------- |
+| User authentication | Registration, login, and profile management with JWT             |
+| Report items        | Take photos and report abandoned items with location             |
+| Collect items       | Mark items as collected to earn extra points                     |
+| Eco Points          | Points system for reporting and collecting actions               |
+| Challenges          | Challenges with star and trophy rewards                          |
+| Achievements        | Unlockable achievements based on specific metrics                |
+| Eco Score           | Weekly rating from A+++ to G based on activity                   |
+| Division levels     | Progressive recycling level system                               |
+| Community ranking   | User ranking based on total points                               |
+| Categories          | Classification by type: electronics, organic, construction, etc. |
+| Families            | Grouping: ECO, TECH, HEAVY, PACKAGING, REUSE                     |
 
-## 🛠️ TECHNOLOGIES STACK
 
-| Category | Library / Tool | Version |
-|----------|---------------|---------|
-| Frontend UI | React | ^18.2.0 |
-| Frontend Language | TypeScript | ~5.3.0 |
-| Frontend Build | Vite | ^5.0.0 |
-| Frontend Styling | styled-components | ^6.0.0 |
-| Frontend Icons | react-icons | ^5.0.0 |
-| Backend Framework | Express | ^4.18.0 |
-| Backend Language | Node.js | ^22.0.0 |
-| Database | MongoDB + Mongoose | Latest |
-| Authentication | JWT | ^9.0.0 |
-| Image Upload | Cloudinary | Latest |
-| Deployment Frontend | Vercel | - |
-| Deployment Backend | Render | - |
+&nbsp;&nbsp;&nbsp;&nbsp;
 
----
+------------------------------------------------------------------------------------
 
-## 🔄 CODEBASE LAYER MAP
+## 🛠️ [TECHNOLOGIES STACK](#-table-of-content)
+
+| Category            | Library / Tool     | Version |
+|---------------------|--------------------|---------|
+| Frontend UI         | React              | ^18.2.0 |
+| Frontend Language   | TypeScript         | ~5.3.0  |
+| Frontend Build      | Vite               | ^5.0.0  |
+| Frontend Styling    | styled-components  | ^6.0.0  |
+| Frontend Icons      | react-icons        | ^5.0.0  |
+| Backend Framework   | Express            | ^4.18.0 |
+| Backend Language    | Node.js            | ^22.0.0 |
+| Database            | MongoDB + Mongoose | Latest  |
+| Authentication      | JWT                | ^9.0.0  |
+| Image Upload        | Cloudinary         | Latest  |
+| Deployment Frontend | Vercel             |    -    |
+| Deployment Backend  | Render             |    -    |
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
+
+## 🔄 [CODEBASE LAYER MAP](#-table-of-content)
 
 ```mermaid
 flowchart TD
@@ -164,9 +174,11 @@ flowchart TD
     end
 ```
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 🚀 INSTALLATION
+------------------------------------------------------------------------------------
+
+## 🚀 [INSTALLATION](#-table-of-content)
 
 ### Prerequisites
 
@@ -210,18 +222,18 @@ cp frontend/.env.example frontend/.env
 **Then edit each `.env` file with your own values:**
 
 **Backend (/backend/.env)**
-| Variable | Description |
-|----------|-------------|
-| `PORT` | Server port (default: 3000) |
-| `MONGODB_URI` | MongoDB connection string (local or Atlas) |
-| `JWT_SECRET` | Secret key for JWT tokens (generate a strong random string) |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
+| Variable                  | Description                                                 |
+|---------------------------|-------------------------------------------------------------|
+| `PORT`                    | Server port (default: 3000)                                 |
+| `MONGODB_URI`             | MongoDB connection string (local or Atlas)                  |
+| `JWT_SECRET`              | Secret key for JWT tokens (generate a strong random string) |
+| `CLOUDINARY_CLOUD_NAME`   | Cloudinary cloud name                                       |
+| `CLOUDINARY_API_KEY`      | Cloudinary API key                                          |
+| `CLOUDINARY_API_SECRET`   | Cloudinary API secret                                       |
 
 **Frontend (/frontend/.env)**
-| Variable | Description |
-|----------|-------------|
+| Variable       | Description     |
+|----------------|-----------------|
 | `VITE_API_URL` | Backend API URL |
 
 > ⚠️ **Important:** Never commit your `.env` files to version control. They are already in `.gitignore`.
@@ -245,26 +257,30 @@ npm run dev
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## ⚙️ USAGE
+------------------------------------------------------------------------------------
+
+## ⚙️ [USAGE](#-table-of-content)
 
 ### User Flow
 
-| Step | Description |
-|------|-------------|
-| 1 | Regístrate o inicia sesión |
-| 2 | Explora el mapa de objetos reportados |
-| 3 | Reporta un objeto abandonado con foto y ubicación |
-| 4 | Recolecta objetos de otros usuarios para ganar puntos extra |
-| 5 | Consulta tu puntuación en la pantalla de Puntos |
-| 6 | Completa desafíos diarios, semanales, mensuales y anuales |
-| 7 | Desbloquea logros alcanzables |
-| 8 | Sube de nivel y mejora tu Eco Score |
+| Step | Description                                            |
+| ---- | ------------------------------------------------------ |
+| 1    | Register or log in                                     |
+| 2    | Explore the map of reported items                      |
+| 3    | Report an abandoned item with photo and location       |
+| 4    | Collect items from other users to earn extra points    |
+| 5    | Check your score on the Points screen                  |
+| 6    | Complete daily, weekly, monthly, and yearly challenges |
+| 7    | Unlock achievable achievements                         |
+| 8    | Level up and improve your Eco Score                    |
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 📂 PROJECT STRUCTURE
+------------------------------------------------------------------------------------
+
+## 📂 [PROJECT STRUCTURE](#-table-of-content)
 
 ```
 TRASH2TREASURE
@@ -305,9 +321,11 @@ TRASH2TREASURE
 └── package.json
 ```
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 📂 KEY MODULE RELATIONSHIPS
+------------------------------------------------------------------------------------
+
+## 📂 [KEY MODULE RELATIONSHIPS](#-table-of-content)
 
 ```mermaid
 flowchart TD
@@ -334,46 +352,44 @@ flowchart TD
     L --> M["MongoDB Atlas"]
 ```
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 🔌 API ENDPOINTS
+------------------------------------------------------------------------------------
+
+## 🔌 [API ENDPOINTS](#-table-of-content)
 
 ### Authentication
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/auth/register | Registro de usuario |
-| POST | /api/auth/login | Inicio de sesión |
-| GET | /api/auth/me | Usuario actual |
+| Method | Endpoint           | Description       |
+| ------ | ------------------ | ----------------- |
+| POST   | /api/auth/register | User registration |
+| POST   | /api/auth/login    | User login        |
+| GET    | /api/auth/me       | Current user      |
 
-### Items
+| Method | Endpoint               | Description              |
+| ------ | ---------------------- | ------------------------ |
+| GET    | /api/items             | List all items           |
+| POST   | /api/items             | Create new item (report) |
+| GET    | /api/items/:id         | Get item by ID           |
+| PUT    | /api/items/:id/collect | Mark item as collected   |
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/items | Listar todos los items |
-| POST | /api/items | Crear nuevo item (reportar) |
-| GET | /api/items/:id | Obtener item por ID |
-| PUT | /api/items/:id/collect | Marcar item como recolectado |
+| Method | Endpoint                | Description                  |
+| ------ | ----------------------- | ---------------------------- |
+| GET    | /api/points/my-points   | Get user points and progress |
+| GET    | /api/points/ranking     | Get user ranking             |
+| POST   | /api/points/add-report  | Add points for reporting     |
+| POST   | /api/points/add-collect | Add points for collecting    |
 
-### Points
+| Method | Endpoint          | Description    |
+| ------ | ----------------- | -------------- |
+| GET    | /api/user/profile | User profile   |
+| PUT    | /api/user/profile | Update profile |
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/points/my-points | Obtener puntos y progreso del usuario |
-| GET | /api/points/ranking | Obtener ranking de usuarios |
-| POST | /api/points/add-report | Agregar puntos por reporte |
-| POST | /api/points/add-collect | Agregar puntos por recolección |
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-### User
+------------------------------------------------------------------------------------
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | /api/user/profile | Perfil del usuario |
-| PUT | /api/user/profile | Actualizar perfil |
-
----
-
-## 💾 DATABASE MODELS
+## 💾 [DATABASE MODELS](#-table-of-content)
 
 ### User
 
@@ -454,32 +470,65 @@ flowchart TD
 }
 ```
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 📸 SCREENS
+------------------------------------------------------------------------------------
 
-### Mobile Screenshots
+<a id="screenshots"></a>
+## 📸 [Screenshots](#-table-of-content)
 
-*(Coming soon)*
+>### 📱 Mobile
 
----
+<p align="center">
+  <img src="/docs/screenshots/screenshot-01.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-02.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-03.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-04.png" width="230"/>
+</p>
 
-## 🌍 LIVE DEMO
+<details>
+<summary><strong>See more...</strong></summary>
+<br>
+<p align="center">
+  <img src="/docs/screenshots/screenshot-05.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-06.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-07.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-08.png" width="230"/>
+</p>
+<p align="center">
+  <img src="/docs/screenshots/screenshot-09.png" width="230"/>
+  <img src="/docs/screenshots/screenshot-10.png" width="230"/>
+</p>
+</details>
 
-- **Frontend**: https://trash2treasure-app.vercel.app
-- **Backend**: https://trash2treasure-api.onrender.com
+<br>
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 📌 VERSIONS
+------------------------------------------------------------------------------------
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 22/03/2026 | Initial release - Core app with reporting, collecting, points, challenges, achievements, ranking, and Eco Score |
+## 🌍 [LIVE DEMO](#-table-of-content)
 
----
+| Service | URL | Status |
+|---------|-----|--------|
+| 🌐 **Frontend (Vercel)** | [https://trash2treasure-app.vercel.app](https://trash2treasure-app.vercel.app) | ![Vercel](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
+| ⚙️ **Backend (Render)** | [https://trash2treasure.onrender.com](https://trash2treasure.onrender.com) | ![Render](https://img.shields.io/badge/Deployed-Yes-brightgreen?style=flat-square) |
 
-## 🔒 SECURITY
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
+
+## 📌 [VERSIONS](#-table-of-content)
+
+| Version | Date       | Changes                                                                                                         |
+|---------|------------|-----------------------------------------------------------------------------------------------------------------|
+| 1.0.0   | 22/03/2026 | Initial release - Core app with reporting, collecting, points, challenges, achievements, ranking, and Eco Score |
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
+
+## 🔒 [SECURITY](#-table-of-content)
 
 This project is designed to be safe for public deployment:
 
@@ -497,15 +546,19 @@ This project is designed to be safe for public deployment:
 4. Set up proper CORS configuration
 5. Use HTTPS for all communications
 
----
+&nbsp;&nbsp;&nbsp;&nbsp;
 
-## 📄 LICENSE
+------------------------------------------------------------------------------------
 
-This project is licensed under the MIT License - see the [LICENSE](/trash2treasure/blob/main/LICENSE) file for details.
+## 📄 [LICENSE](#-table-of-content)
 
----
+This project is licensed under the MIT License - see the [LICENSE](/trash2treasure/blob/HEAD/LICENSE) file for details.
 
-## 📬 CONTACT
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
+
+## 📬 [CONTACT](#-table-of-content)
 
 Open to collaboration, feedback, and new opportunities.
 
