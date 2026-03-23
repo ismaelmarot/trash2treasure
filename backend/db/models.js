@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   password_hash: { type: String, required: true },
   is_verified: { type: Boolean, default: false },
   verification_code: { type: String },
+  reset_token: { type: String },
+  reset_token_expiry: { type: Date },
   profile_image: { type: String }, // URL de la foto de perfil (Cloudinary)
   cloudinary_public_id: { type: String }, // Para poder borrar de Cloudinary
   country: { type: String },

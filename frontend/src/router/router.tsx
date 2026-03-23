@@ -13,6 +13,7 @@ import {
   SearchScreen,
   LoginScreen,
   RegisterScreen,
+  ForgotPasswordScreen,
   SplashScreen,
   WelcomeScreen,
   VerificationScreen,
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
   {
     path: '/register',
     element: <RegisterScreen />,
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPasswordScreen />,
   },
   {
     path: '/verify',

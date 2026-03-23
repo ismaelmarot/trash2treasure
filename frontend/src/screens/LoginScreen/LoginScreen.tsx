@@ -101,6 +101,13 @@ export function LoginScreen() {
             </PasswordWrapper>
           </InputGroup>
 
+          <StyledLink 
+            to="/forgot-password" 
+            style={{ fontSize: '12px', color: '#666', textAlign: 'right', display: 'block', marginTop: '-8px', marginBottom: '16px' }}
+          >
+            ¿Olvidaste tu contraseña?
+          </StyledLink>
+
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 

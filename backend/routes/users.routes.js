@@ -145,6 +145,52 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Olvidé mi contraseña
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email requerido' });
+
+  try {
+    const user = await User.findOne({ email });
+    
+    // Por seguridad, siempre responder OK aunque el usuario no exista
+    // así no revelan si el email existe o no en el sistema
+    if (!user) {
+      return res.json({ message: 'Si el email existe, recibirás un enlace de recuperación' });
+    }
+
+    // Generar token de recuperación (válido por 1 hora)
+    const resetToken = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1h' });
+    
+    // Enviar email con SendGrid
+    const msg = {
+      to: user.email,
+      from: 'noreply@trash2treasure.app',
+      subject: 'Recupera tu contraseña - Trash2Treasure',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #42a59f;">Recupera tu contraseña</h2>
+          <p>Hola ${user.name},</p>
+          <p> Recibimos una solicitud para restablecer tu contraseña. Haz click en el siguiente botón:</p>
+          <a href="https://trash2treasure.vercel.app/reset-password?token=${resetToken}" 
+             style="display: inline-block; background: #42a59f; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 20px 0;">
+            Restablecer contraseña
+          </a>
+          <p style="color: #666; font-size: 12px;">
+            Este enlace expire en 1 hora. Si no solicitaste este cambio, puedes ignorar este email.
+          </p>
+        </div>
+      `,
+    };
+
+    await sgMail.send(msg);
+    res.json({ message: 'Si el email existe, recibirás un enlace de recuperación' });
+  } catch (error) {
+    console.error('Error en forgot-password:', error);
+    res.status(500).json({ error: 'Error al procesar la solicitud' });
+  }
+});
+
 // Verificar código
 router.post('/verify', async (req, res) => {
   const { email, code } = req.body;
