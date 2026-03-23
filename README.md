@@ -93,6 +93,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 ------------------------------------------------------------------------------------
 
+<a id="highlights"></a>
 ## 🌟 [HIGHLIGHTS](#-table-of-content)
 
 - Full-stack application with React frontend and Express backend
@@ -109,6 +110,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 ------------------------------------------------------------------------------------
 
+<a id="core-feature"></a>
 ## ✨ [CORE FEATURES](#-table-of-content)
 
 | Feature             | Description                                                      |
@@ -130,6 +132,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 ------------------------------------------------------------------------------------
 
+<a id="technologies-stack"></a>
 ## 🛠️ [TECHNOLOGIES STACK](#-table-of-content)
 
 | Category            | Library / Tool     | Version |
@@ -151,6 +154,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 ------------------------------------------------------------------------------------
 
+<a id="corebase-layer-map"></a>
 ## 🔄 [CODEBASE LAYER MAP](#-table-of-content)
 
 ```mermaid
@@ -178,6 +182,7 @@ flowchart TD
 
 ------------------------------------------------------------------------------------
 
+<a id="installation"></a>
 ## 🚀 [INSTALLATION](#-table-of-content)
 
 ### Prerequisites
@@ -261,6 +266,7 @@ npm run dev
 
 ------------------------------------------------------------------------------------
 
+<a id="usage"></a>
 ## ⚙️ [USAGE](#-table-of-content)
 
 ### User Flow
@@ -280,6 +286,7 @@ npm run dev
 
 ------------------------------------------------------------------------------------
 
+<a id="project-structure"></a>
 ## 📂 [PROJECT STRUCTURE](#-table-of-content)
 
 ```
@@ -325,6 +332,7 @@ TRASH2TREASURE
 
 ------------------------------------------------------------------------------------
 
+<a id="key-module-relationships"></a>
 ## 📂 [KEY MODULE RELATIONSHIPS](#-table-of-content)
 
 ```mermaid
@@ -356,6 +364,7 @@ flowchart TD
 
 ------------------------------------------------------------------------------------
 
+<a id="api-endpoints"></a>
 ## 🔌 [API ENDPOINTS](#-table-of-content)
 
 ### Authentication
@@ -389,6 +398,7 @@ flowchart TD
 
 ------------------------------------------------------------------------------------
 
+<a id="database-models"></a>
 ## 💾 [DATABASE MODELS](#-table-of-content)
 
 ### User
@@ -507,6 +517,7 @@ flowchart TD
 
 ------------------------------------------------------------------------------------
 
+<a id="live-demo"></a>
 ## 🌍 [LIVE DEMO](#-table-of-content)
 
 | Service | URL | Status |
@@ -518,6 +529,7 @@ flowchart TD
 
 ------------------------------------------------------------------------------------
 
+<a id="versions"></a>
 ## 📌 [VERSIONS](#-table-of-content)
 
 | Version | Date       | Changes                                                                                                         |
