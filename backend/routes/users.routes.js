@@ -154,37 +154,49 @@ router.post('/forgot-password', async (req, res) => {
     const user = await User.findOne({ email });
     
     // Por seguridad, siempre responder OK aunque el usuario no exista
-    // así no revelan si el email existe o no en el sistema
     if (!user) {
-      return res.json({ message: 'Si el email existe, recibirás un enlace de recuperación' });
+      return res.json({ message: 'Si el email existe, recibirás un email con tus datos' });
     }
 
-    // Generar token de recuperación (válido por 1 hora)
-    const resetToken = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1h' });
-    
-    // Enviar email con SendGrid
+    // Generar contraseña aleatoria de 8 caracteres
+    const crypto = require('crypto');
+    const newPassword = crypto.randomBytes(4).toString('hex'); // 8 caracteres hex
+    const hash = await bcrypt.hash(newPassword, 10);
+    user.password_hash = hash;
+    await user.save();
+
+    // Enviar email con credenciales
     const msg = {
       to: user.email,
-      from: 'noreply@trash2treasure.app',
-      subject: 'Recupera tu contraseña - Trash2Treasure',
+      from: {
+        email: 'trash2tresure.app@gmail.com',
+        name: 'Trash2Treasure'
+      },
+      subject: 'Recuperación de cuenta - Trash2Treasure',
+      text: `Hola ${user.name},\n\nAquí están tus datos de acceso:\n\nUsuario: ${user.email}\nContraseña temporal: ${newPassword}\n\nTe recomendamos cambiar tu contraseña una vez que ingreses.\n\nSaludos,\nEquipo Trash2Treasure`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #42a59f;">Recupera tu contraseña</h2>
+          <h2 style="color: #1d1d1f;">Recuperación de cuenta</h2>
           <p>Hola ${user.name},</p>
-          <p> Recibimos una solicitud para restablecer tu contraseña. Haz click en el siguiente botón:</p>
-          <a href="https://trash2treasure.vercel.app/reset-password?token=${resetToken}" 
-             style="display: inline-block; background: #42a59f; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 20px 0;">
-            Restablecer contraseña
-          </a>
-          <p style="color: #666; font-size: 12px;">
-            Este enlace expire en 1 hora. Si no solicitaste este cambio, puedes ignorar este email.
-          </p>
+          <p>Tus datos de acceso son:</p>
+          <div style="background-color: #f5f5f7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0;"><strong>Usuario:</strong> ${user.email}</p>
+            <p style="margin: 0;"><strong>Contraseña temporal:</strong> <span style="font-family: monospace; font-size: 18px; letter-spacing: 2px; color: #1d1d1f;">${newPassword}</span></p>
+          </div>
+          <p style="color: #666; font-size: 13px;">Te recomendamos cambiar tu contraseña una vez que ingreses.</p>
+          <p>Saludos,<br>Equipo Trash2Treasure</p>
         </div>
-      `,
+      `
     };
 
-    await sgMail.send(msg);
-    res.json({ message: 'Si el email existe, recibirás un enlace de recuperación' });
+    try {
+      await sgMail.send(msg);
+      console.log(`✅ Email de recuperación enviado a ${user.email}`);
+    } catch (emailError) {
+      console.error('Error enviando email de recuperación:', emailError);
+    }
+
+    res.json({ message: 'Si el email existe, recibirás un email con tus datos' });
   } catch (error) {
     console.error('Error en forgot-password:', error);
     res.status(500).json({ error: 'Error al procesar la solicitud' });
