@@ -15,6 +15,7 @@ import {
   RegisterScreen,
   ForgotPasswordScreen,
   ResetPasswordScreen,
+  ChangePasswordScreen,
   SplashScreen,
   WelcomeScreen,
   VerificationScreen,
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     errorElement: <NotFoundScreen />,
     children: [
+      {
+        path: '/change-password',
+        element: <ChangePasswordScreen />,
+      },
       {
         path: '/app',
         element: <Layout />,

@@ -5,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   profile_image?: string | null;
+  must_change_password?: boolean;
 }
 
 interface AuthContextType {

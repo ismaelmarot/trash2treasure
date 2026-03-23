@@ -48,7 +48,11 @@ export function LoginScreen() {
 
       if (response.ok) {
         login(data.token, data.user)
-        navigate('/app');
+        if (data.user.must_change_password) {
+          navigate('/change-password');
+        } else {
+          navigate('/app');
+        }
       } else {
         setError(data.error || 'Login failed')
       }

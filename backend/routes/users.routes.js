@@ -137,7 +137,8 @@ router.post('/login', async (req, res) => {
       user: { 
         id: user._id, 
         name: user.name, 
-        email: user.email 
+        email: user.email,
+        must_change_password: user.must_change_password || false
       } 
     });
   } catch (error) {
@@ -163,6 +164,7 @@ router.post('/forgot-password', async (req, res) => {
     const newPassword = crypto.randomBytes(4).toString('hex'); // 8 caracteres hex
     const hash = await bcrypt.hash(newPassword, 10);
     user.password_hash = hash;
+    user.must_change_password = true;
     await user.save();
 
     // Enviar email con credenciales
@@ -251,6 +253,29 @@ router.post('/verify', async (req, res) => {
 
 // Rutas de autenticación social (si las usas)
 const passport = require('../config/passport.config');
+
+// Cambiar contraseña (autenticado)
+router.put('/change-password', authenticateToken, async (req, res) => {
+  const { current_password, new_password } = req.body;
+  if (!current_password || !new_password) return res.status(400).json({ error: 'Contraseña actual y nueva son requeridas' });
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const match = await bcrypt.compare(current_password, user.password_hash);
+    if (!match) return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+
+    const hash = await bcrypt.hash(new_password, 10);
+    user.password_hash = hash;
+    user.must_change_password = false;
+    await user.save();
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 
