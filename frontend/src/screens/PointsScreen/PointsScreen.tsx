@@ -176,20 +176,20 @@ export function PointsScreen() {
 
           {activeSummaryTab === 'categories' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
-              {Object.entries(points.category_points || {}).sort(([,a]: [string, any], [,b]: [string, any]) => Number(b) - Number(a)).slice(0, 5).map(([cat, pts]) => {
-                const maxPts = Math.max(...Object.values(points.category_points || {}).map((v: any) => Number(v)), 1)
-                const percentage = (Number(pts) / maxPts) * 100
-                const catData = CATEGORIES.find(c => c.id === cat)
-                const catIcon = catData?.icon || '📦'
-                const catColor = cat === 'electronics' ? '#3498db' : cat === 'organic' ? '#27ae60' : cat === 'construction' ? '#e67e22' : '#9b59b6'
+              {CATEGORIES.filter(c => c.id !== 'todos').map((cat) => {
+                const pts = (points.category_points || {})[cat.id] || 0
+                const allPts = CATEGORIES.filter(c => c.id !== 'todos').map(c => (points.category_points || {})[c.id] || 0)
+                const maxPts = Math.max(...allPts, 1)
+                const percentage = (pts / maxPts) * 100
+                const catColor = cat.id === 'electronics' ? '#3498db' : cat.id === 'organic' ? '#27ae60' : cat.id === 'construction' ? '#e67e22' : cat.id === 'plastic' ? '#9b59b6' : cat.id === 'paper' ? '#e67e22' : cat.id === 'glass' ? '#00bcd4' : cat.id === 'metal' ? '#607d8b' : cat.id === 'clothes' ? '#e91e63' : cat.id === 'batteries' ? '#f44336' : cat.id === 'furniture' ? '#795548' : cat.id === 'wood' ? '#8d6e63' : cat.id === 'garden' ? '#4caf50' : cat.id === 'carton' ? '#ff9800' : cat.id === 'botellas' ? '#0097a7' : cat.id === 'books' ? '#3f51b5' : cat.id === 'mixto' ? '#9e9e9e' : '#999'
                 return (
-                  <BarChartRow key={cat}>
+                  <BarChartRow key={cat.id}>
                     <BarHeader>
                       <BarLabel>
-                        <span>{catIcon}</span>
-                        <span style={{ textTransform: 'capitalize' }}>{cat}</span>
+                        <span>{cat.icon}</span>
+                        <span>{cat.label}</span>
                       </BarLabel>
-                      <BarValue>{String(pts)} pts</BarValue>
+                      <BarValue>{pts} pts</BarValue>
                     </BarHeader>
                     <BarContainer>
                       <BarFill $color={catColor} $width={percentage} />
