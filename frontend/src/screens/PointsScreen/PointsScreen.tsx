@@ -192,10 +192,11 @@ export function PointsScreen() {
           )}
 
           {/* Gráficas de historial */}
-          <TabContainer>
-            <Tab $active={activeChartTab === 'daily'} onClick={() => setActiveChartTab('daily')}>Últimos 7 días</Tab>
-            <Tab $active={activeChartTab === 'weekly'} onClick={() => setActiveChartTab('weekly')}>Semanas</Tab>
-            <Tab $active={activeChartTab === 'monthly'} onClick={() => setActiveChartTab('monthly')}>Meses</Tab>
+          <div style={{ background: '#42a59f', borderRadius: '34px', padding: '16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '16px' }}>
+          <TabContainer style={{ color: '#fff' }}>
+            <Tab $active={activeChartTab === 'daily'} onClick={() => setActiveChartTab('daily')} style={{ color: activeChartTab === 'daily' ? '#fff' : 'rgba(255,255,255,0.6)' }}>Últimos 7 días</Tab>
+            <Tab $active={activeChartTab === 'weekly'} onClick={() => setActiveChartTab('weekly')} style={{ color: activeChartTab === 'weekly' ? '#fff' : 'rgba(255,255,255,0.6)' }}>Semanas</Tab>
+            <Tab $active={activeChartTab === 'monthly'} onClick={() => setActiveChartTab('monthly')} style={{ color: activeChartTab === 'monthly' ? '#fff' : 'rgba(255,255,255,0.6)' }}>Meses</Tab>
           </TabContainer>
 
           {activeChartTab === 'daily' && (() => {
@@ -312,8 +313,9 @@ export function PointsScreen() {
                   </div>
                 )
               })()}
+          </div>
 
-          <TabContainer style={{ marginTop: '16px' }}>
+          <TabContainer>
             <Tab $active={activeSummaryTab === 'categories'} onClick={() => setActiveSummaryTab('categories')}>Categorías</Tab>
             <Tab $active={activeSummaryTab === 'families'} onClick={() => setActiveSummaryTab('families')}>Familias</Tab>
             <Tab $active={activeSummaryTab === 'level'} onClick={() => setActiveSummaryTab('level')}>Nivel</Tab>
