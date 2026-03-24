@@ -180,3 +180,18 @@ export const Loading = styled.div`
     color: ${COLORS.greyDark};
     font-size: 15px;
 `
+
+export const MapWrapper = styled.div`
+    width: 100%;
+    height: 200px;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 1px solid ${COLORS.grey};
+`
+
+export const CoordsText = styled.div`
+    font-size: 12px;
+    color: ${COLORS.greyDark};
+    text-align: center;
+    margin-top: 8px;
+`

@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+function MapClickHandler({ setLocation }: { setLocation: (loc: { lat: number; lng: number }) => void }) {
+  useMapEvents({
+    click(e: any) {
+      setLocation({ lat: e.latlng.lat, lng: e.latlng.lng })
+    }
+  })
+  return null
+}
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { useAuth } from '@/hooks'
 import { normalizeItem } from '@/utils/imageUtils'
@@ -7,11 +19,13 @@ import {
   BackButton,
   Card,
   Container,
+  CoordsText,
   ErrorMessage,
   Input,
   InputGroup,
   Label,
   Loading,
+  MapWrapper,
   Select,
   Subtitle,
   SubmitButton,
@@ -30,6 +44,7 @@ export function EditItemScreen() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
+  const [location, setLocation] = useState({ lat: -34.6037, lng: -58.3816 })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -45,6 +60,9 @@ export function EditItemScreen() {
         setTitle(item.title || '')
         setDescription(item.description || '')
         setCategory(item.category || '')
+        if (item.latitude && item.longitude) {
+          setLocation({ lat: item.latitude, lng: item.longitude })
+        }
       } catch (err) {
         console.error('Error fetching item:', err)
         setError('Error al cargar el tesoro')
@@ -74,7 +92,7 @@ export function EditItemScreen() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ title, description, category })
+        body: JSON.stringify({ title, description, category, latitude: location.lat, longitude: location.lng })
       })
 
       const data = await response.json()
@@ -142,6 +160,34 @@ export function EditItemScreen() {
                     </option>
                   ))}
                 </Select>
+              </InputGroup>
+
+              <InputGroup>
+                <Label>Ubicación (Toca el mapa para mover el pin)</Label>
+                <MapWrapper>
+                  <MapContainer 
+                    center={[location.lat, location.lng]} 
+                    zoom={15} 
+                    style={{ height: '100%', width: '100%' }}
+                    scrollWheelZoom={false}
+                  >
+                    <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+                    <Marker
+                      position={[location.lat, location.lng]}
+                      icon={L.icon({
+                        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41]
+                      })}
+                    />
+                    <MapClickHandler setLocation={setLocation} />
+                  </MapContainer>
+                </MapWrapper>
+                <CoordsText>
+                  Lat: {location.lat.toFixed(5)} | Lng: {location.lng.toFixed(5)}
+                </CoordsText>
               </InputGroup>
 
               {error && <ErrorMessage>{error}</ErrorMessage>}
