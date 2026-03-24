@@ -170,7 +170,8 @@ export function ItemDetailScreen() {
     : null
 
   const isWithinRange = distanceInMeters !== null && distanceInMeters <= 50
-  const canClaim = !item.claimed_by && item.user_id !== user?.id && isWithinRange
+  const canClaim = !item.claimed_by && item.user_id !== user?.id && isWithinRange && !item.is_expired
+  const isExpired = item.is_expired
 
   return (
     <Container>
@@ -189,6 +190,19 @@ export function ItemDetailScreen() {
       <ContentCard>
         <BadgeRow>
           <CategoryBadge>{getCategoryIcon(item.category)} {item.category}</CategoryBadge>
+          {isExpired && (
+            <span style={{ 
+              background: '#8e8e93', 
+              color: 'white', 
+              padding: '4px 12px', 
+              borderRadius: '12px', 
+              fontSize: '12px',
+              fontWeight: 600,
+              marginLeft: '8px'
+            }}>
+              EXPIRADO
+            </span>
+          )}
           <div style={{ marginLeft: 'auto' }}>
             {distance && <DistanceBadge>📍 {distance}</DistanceBadge>}
           </div>
@@ -278,19 +292,27 @@ export function ItemDetailScreen() {
 
         
         <ClaimButton 
-          disabled={item.user_id === user?.id || !!item.claimed_by || !canClaim}
+          disabled={item.user_id === user?.id || !!item.claimed_by || !canClaim || isExpired}
           onClick={() => navigate(`/app/claimed/${item.id}`)}
         >
           {item.user_id === user?.id 
             ? 'Tu reporte' 
-            : item.claimed_by === user?.id 
-              ? 'Ya lo reclamaste' 
-              : item.claimed_by 
-                ? 'Ya reclamado' 
-                : !isWithinRange && distanceInMeters !== null
-                  ? `Acércate (${Math.round(distanceInMeters)}m)`
-                  : '¡Lo quiero!'}
+            : isExpired
+              ? 'Expirado'
+              : item.claimed_by === user?.id 
+                ? 'Ya lo reclamaste' 
+                : item.claimed_by 
+                  ? 'Ya reclaman' 
+                  : !isWithinRange && distanceInMeters !== null
+                    ? `Acércate (${Math.round(distanceInMeters)}m)`
+                    : '¡Lo quiero!'}
         </ClaimButton>
+
+        {isExpired && (
+          <ProximityHint>
+            Este reporte ya expiró. Los puntos ya fueron acreditados.
+          </ProximityHint>
+        )}
 
         {!item.claimed_by && item.user_id !== user?.id && !isWithinRange && distanceInMeters !== null && (
           <ProximityHint>
