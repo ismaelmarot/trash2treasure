@@ -313,14 +313,14 @@ export function ProfileScreen() {
             <div style={{ 
               display: 'flex',
               flexDirection: 'column',
-              gap: '16px',
+              gap: '12px',
               padding: '8px 0'
             }}>
-              <img src={achievement01} alt="Achievement 1" style={{ width: '100%', borderRadius: '16px' }} />
-              <img src={achievement02} alt="Achievement 2" style={{ width: '100%', borderRadius: '16px' }} />
-              <img src={achievement03} alt="Achievement 3" style={{ width: '100%', borderRadius: '16px' }} />
-              <img src={achievement04} alt="Achievement 4" style={{ width: '100%', borderRadius: '16px' }} />
-              <img src={achievement05} alt="Achievement 5" style={{ width: '100%', borderRadius: '16px' }} />
+              <img src={achievement01} alt="Achievement 1" style={{ width: '60%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement02} alt="Achievement 2" style={{ width: '60%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement03} alt="Achievement 3" style={{ width: '60%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement04} alt="Achievement 4" style={{ width: '60%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement05} alt="Achievement 5" style={{ width: '60%', margin: '0 auto', borderRadius: '16px' }} />
             </div>
             <ModalClose onClick={() => setIsComingSoonOpen(false)}>×</ModalClose>
           </ModalContent>
