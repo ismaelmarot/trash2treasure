@@ -217,7 +217,7 @@ export function PointsScreen() {
                 }
                 const maxVal = Math.max(...days.map(d => Math.max(d.reports, d.collected)), 1)
                 return (
-                  <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
+                  <div style={{ background: '#fff', borderRadius: '34px', padding: '20px 16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '160px', padding: '10px 0' }}>
                       {days.map((d, i) => {
                         const reportH = (d.reports / maxVal) * 100
@@ -225,8 +225,8 @@ export function PointsScreen() {
                         return (
                           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
-                              <div style={{ width: '14px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '4px 4px 0 0' }} title={`Reportes: ${d.reports}`} />
-                              <div style={{ width: '14px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '4px 4px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                              <div style={{ width: '14px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '8px 8px 0 0' }} title={`Reportes: ${d.reports}`} />
+                              <div style={{ width: '14px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '8px 8px 0 0' }} title={`Reclamos: ${d.collected}`} />
                             </div>
                             <div style={{ fontSize: '11px', color: '#666' }}>{d.label}</div>
                             <div style={{ fontSize: '10px', color: '#999' }}>{d.points} pts</div>
@@ -234,7 +234,7 @@ export function PointsScreen() {
                         )
                       })}
                     </div>
-                  </TabContent>
+                  </div>
                 )
               })()}
 
@@ -256,7 +256,7 @@ export function PointsScreen() {
                 }
                 const maxVal = Math.max(...weeks.map(d => Math.max(d.reports, d.collected)), 1)
                 return (
-                  <TabContent style={{ gridTemplateColumns: '1fr', gap: '4px', padding: '0 8px', overflowX: 'auto' }}>
+                  <div style={{ background: '#fff', borderRadius: '34px', padding: '20px 16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', overflowX: 'auto' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', height: '160px', padding: '10px 0', minWidth: '600px' }}>
                       {weeks.map((d, i) => {
                         const reportH = (d.reports / maxVal) * 100
@@ -264,15 +264,15 @@ export function PointsScreen() {
                         return (
                           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1px', height: '120px' }}>
-                              <div style={{ width: '4px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '2px 2px 0 0' }} />
-                              <div style={{ width: '4px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '2px 2px 0 0' }} />
+                              <div style={{ width: '4px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '4px 4px 0 0' }} />
+                              <div style={{ width: '4px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '4px 4px 0 0' }} />
                             </div>
                             {i % 4 === 0 && <div style={{ fontSize: '8px', color: '#999' }}>{d.label}</div>}
                           </div>
                         )
                       })}
                     </div>
-                  </TabContent>
+                  </div>
                 )
               })()}
 
@@ -292,7 +292,7 @@ export function PointsScreen() {
                 })
                 const maxVal = Math.max(...months.map(d => Math.max(d.reports, d.collected)), 1)
                 return (
-                  <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
+                  <div style={{ background: '#fff', borderRadius: '34px', padding: '20px 16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '160px', padding: '10px 0' }}>
                       {months.map((d, i) => {
                         const reportH = (d.reports / maxVal) * 100
@@ -300,8 +300,8 @@ export function PointsScreen() {
                         return (
                           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
-                              <div style={{ width: '10px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '4px 4px 0 0' }} title={`Reportes: ${d.reports}`} />
-                              <div style={{ width: '10px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '4px 4px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                              <div style={{ width: '10px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '8px 8px 0 0' }} title={`Reportes: ${d.reports}`} />
+                              <div style={{ width: '10px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '8px 8px 0 0' }} title={`Reclamos: ${d.collected}`} />
                             </div>
                             <div style={{ fontSize: '10px', color: '#666' }}>{d.label}</div>
                             <div style={{ fontSize: '9px', color: '#999' }}>{d.points} pts</div>
@@ -309,11 +309,11 @@ export function PointsScreen() {
                         )
                       })}
                     </div>
-                  </TabContent>
+                  </div>
                 )
               })()}
 
-          <TabContainer>
+          <TabContainer style={{ marginTop: '16px' }}>
             <Tab $active={activeSummaryTab === 'categories'} onClick={() => setActiveSummaryTab('categories')}>Categorías</Tab>
             <Tab $active={activeSummaryTab === 'families'} onClick={() => setActiveSummaryTab('families')}>Familias</Tab>
             <Tab $active={activeSummaryTab === 'level'} onClick={() => setActiveSummaryTab('level')}>Nivel</Tab>
