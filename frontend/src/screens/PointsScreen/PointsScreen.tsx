@@ -86,6 +86,12 @@ export function PointsScreen() {
     if (!token) return
     setLoading(true)
     try {
+      // Sincronizar puntos de items existentes
+      await fetch(`${API_BASE_URL}/points/sync`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(() => {})
+
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })

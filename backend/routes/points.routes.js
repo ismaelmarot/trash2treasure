@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { User, UserPoints, Achievement, ChallengeDefinition, UserChallengeProgress, ACHIEVEMENTS, CHALLENGE_DEFINITIONS, initializeChallengeDefinitions } = require('../db/models');
+const { User, UserPoints, Item, Achievement, ChallengeDefinition, UserChallengeProgress, ACHIEVEMENTS, CHALLENGE_DEFINITIONS, initializeChallengeDefinitions } = require('../db/models');
 
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
@@ -598,6 +598,50 @@ router.post('/add-report', authenticateToken, async (req, res) => {
       message: 'Puntos agregados', 
       points_added: points, 
       total_points: userPoints.total_points 
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Sincronizar puntos de items existentes que no acreditaron puntos
+router.post('/sync', authenticateToken, async (req, res) => {
+  try {
+    const userItems = await Item.find({ user_id: req.user.id });
+    const userPoints = await getOrCreateUserPoints(req.user.id);
+
+    let totalAdded = 0;
+
+    for (const item of userItems) {
+      const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
+      const family = CATEGORY_FAMILIES[item.category] || 'special';
+
+      userPoints.total_points += points;
+      userPoints.report_points += points;
+      userPoints.total_reports += 1;
+      userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
+      userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
+      totalAdded += points;
+    }
+
+    if (totalAdded > 0) {
+      for (const div of DIVISIONS) {
+        if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
+          userPoints.division = div.name;
+          break;
+        }
+      }
+
+      userPoints.updated_at = new Date();
+      await userPoints.save();
+      checkAchievements(req.user.id, userPoints);
+    }
+
+    res.json({
+      message: 'Puntos sincronizados',
+      items_synced: userItems.length,
+      points_added: totalAdded,
+      total_points: userPoints.total_points
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
