@@ -193,11 +193,29 @@ export function PointsScreen() {
 
           {/* Gráficas de historial */}
           <div style={{ background: '#42a59f', borderRadius: '34px', padding: '16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '16px' }}>
-          <TabContainer style={{ color: '#fff' }}>
-            <Tab $active={activeChartTab === 'daily'} onClick={() => setActiveChartTab('daily')} style={{ color: activeChartTab === 'daily' ? '#fff' : 'rgba(255,255,255,0.6)' }}>Últimos 7 días</Tab>
-            <Tab $active={activeChartTab === 'weekly'} onClick={() => setActiveChartTab('weekly')} style={{ color: activeChartTab === 'weekly' ? '#fff' : 'rgba(255,255,255,0.6)' }}>Semanas</Tab>
-            <Tab $active={activeChartTab === 'monthly'} onClick={() => setActiveChartTab('monthly')} style={{ color: activeChartTab === 'monthly' ? '#fff' : 'rgba(255,255,255,0.6)' }}>Meses</Tab>
-          </TabContainer>
+          <div style={{ display: 'flex', gap: '4px', marginBottom: '16px', background: 'rgba(255,255,255,0.2)', borderRadius: '25px', padding: '4px' }}>
+            {['daily', 'weekly', 'monthly'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveChartTab(tab)}
+                style={{
+                  flex: 1,
+                  padding: '10px',
+                  borderRadius: '25px',
+                  border: 'none',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  background: activeChartTab === tab ? 'white' : 'transparent',
+                  color: activeChartTab === tab ? '#42a59f' : 'rgba(255,255,255,0.8)',
+                  boxShadow: activeChartTab === tab ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {tab === 'daily' ? 'Últimos 7 días' : tab === 'weekly' ? 'Semanas' : 'Meses'}
+              </button>
+            ))}
+          </div>
 
           {activeChartTab === 'daily' && (() => {
                 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
@@ -315,13 +333,32 @@ export function PointsScreen() {
               })()}
           </div>
 
-          <TabContainer>
-            <Tab $active={activeSummaryTab === 'categories'} onClick={() => setActiveSummaryTab('categories')}>Categorías</Tab>
-            <Tab $active={activeSummaryTab === 'families'} onClick={() => setActiveSummaryTab('families')}>Familias</Tab>
-            <Tab $active={activeSummaryTab === 'level'} onClick={() => setActiveSummaryTab('level')}>Nivel</Tab>
-          </TabContainer>
+          <div style={{ background: '#42a59f', borderRadius: '34px', padding: '16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', gap: '4px', marginBottom: '16px', background: 'rgba(255,255,255,0.2)', borderRadius: '25px', padding: '4px' }}>
+              {['categories', 'families', 'level'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveSummaryTab(tab)}
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '25px',
+                    border: 'none',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    background: activeSummaryTab === tab ? 'white' : 'transparent',
+                    color: activeSummaryTab === tab ? '#42a59f' : 'rgba(255,255,255,0.8)',
+                    boxShadow: activeSummaryTab === tab ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {tab === 'categories' ? 'Categorías' : tab === 'families' ? 'Familias' : 'Nivel'}
+                </button>
+              ))}
+            </div>
 
-          {activeSummaryTab === 'categories' && (
+            {activeSummaryTab === 'categories' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
               {CATEGORIES.filter(c => c.id !== 'todos').map((cat) => {
                 const pts = (points.category_points || {})[cat.id] || 0
@@ -491,6 +528,7 @@ export function PointsScreen() {
               })}
             </TabContent>
           )}
+          </div>
         </>
       )}
 
