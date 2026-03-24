@@ -597,6 +597,42 @@ router.post('/add-report', authenticateToken, async (req, res) => {
   }
 });
 
+// Resetear puntos del usuario (fix para puntos duplicados)
+router.post('/reset', authenticateToken, async (req, res) => {
+  try {
+    const userPoints = await UserPoints.findOne({ user_id: req.user.id });
+    if (userPoints) {
+      userPoints.total_points = 0;
+      userPoints.report_points = 0;
+      userPoints.collect_points = 0;
+      userPoints.total_reports = 0;
+      userPoints.total_collected = 0;
+      userPoints.category_points = {};
+      userPoints.category_reports = {};
+      userPoints.category_collected = {};
+      userPoints.family_reports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
+      userPoints.family_collected = {};
+      userPoints.daily_reports = 0;
+      userPoints.daily_collected = 0;
+      userPoints.weekly_reports = 0;
+      userPoints.weekly_collected = 0;
+      userPoints.monthly_reports = 0;
+      userPoints.monthly_collected = 0;
+      userPoints.current_streak = 0;
+      userPoints.division = 'Curioso Verde';
+      userPoints.markModified('category_points');
+      userPoints.markModified('category_reports');
+      userPoints.markModified('category_collected');
+      userPoints.markModified('family_reports');
+      userPoints.markModified('family_collected');
+      await userPoints.save();
+    }
+    res.json({ message: 'Puntos reseteados' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Sincronizar puntos: recalcular siempre desde los items reales
 router.post('/sync', authenticateToken, async (req, res) => {
   try {
