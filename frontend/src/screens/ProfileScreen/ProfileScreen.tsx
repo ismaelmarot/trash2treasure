@@ -271,14 +271,14 @@ export function ProfileScreen() {
               <div style={{ position: 'relative', display: 'inline-block' }}>
                 <QRCodeSVG
                   value="https://trash2treasure-app.vercel.app"
-                  size={200}
+                  size={220}
                   bgColor="#ffffff"
                   fgColor="#1d1d1f"
                   level="H"
                   imageSettings={{
                     src: '/icon-192.png',
-                    height: 40,
-                    width: 40,
+                    height: 56,
+                    width: 56,
                     excavate: true
                   }}
                 />
