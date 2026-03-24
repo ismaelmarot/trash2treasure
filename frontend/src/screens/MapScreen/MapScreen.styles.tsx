@@ -170,18 +170,23 @@ export const SectionLabel = styled.p`
 `;
 
 export const DistanceGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
     gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
 `
 
 export const FilterChip = styled.button<{ $active: boolean }>`
-    padding: 8px 4px;
+    padding: 8px 14px;
     border-radius: 25px;
     border: 1px solid ${props => props.$active ? COLORS.info : COLORS.grey};
     background: ${props => props.$active ? '#0071e3' : 'transparent'};
     color: ${props => props.$active ? 'white' : COLORS.black};
     font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
