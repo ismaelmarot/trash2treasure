@@ -8,7 +8,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 &nbsp;&nbsp;&nbsp;&nbsp;
 
-![Version](https://img.shields.io/badge/version-1.0.2-orange?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.0.3-orange?style=for-the-badge)
 &nbsp;&nbsp;&nbsp;&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure/blob/HEAD/LICENSE)
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -65,7 +65,9 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 | **Backend Deployment** | ![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black) | Hosting del backend Node.js/Express con auto-deploy |
 | **Database** | ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) | Base de datos NoSQL en la nube (MongoDB Atlas) |
 | **Image Storage** | ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white) | Almacenamiento y transformación de imágenes |
-| **Email Service** | ![SendGrid](https://img.shields.io/badge/SendGrid-1A82E2?style=for-the-badge&logo=sendgrid&logoColor=white) | Servicio de envío de emails transaccionales |
+| **Email Service** | ![React Email](https://img.shields.io/badge/React_Email-000000?style=for-the-badge&logo=react&logoColor=white) | Plantillas de email diseñadas con React y componentes |
+| **Email Delivery** | ![SendGrid](https://img.shields.io/badge/SendGrid-1A82E2?style=for-the-badge&logo=sendgrid&logoColor=white) | Entrega de emails transaccionales |
+| **Error Monitoring** | ![Sentry](https://img.shields.io/badge/Sentry-362D59?style=for-the-badge&logo=sentry&logoColor=white) | Monitoreo de errores y performance |
 | **Analytics** | ![Vercel Analytics](https://img.shields.io/badge/Vercel_Analytics-000000?style=for-the-badge&logo=vercel&logoColor=white) | Analíticas de visitantes y rendimiento |
 | **UX/UI Design** | ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white) | Diseño de interfaces y prototipado |
 
@@ -142,11 +144,14 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 | Frontend Build      | Vite               | ^5.0.0  |
 | Frontend Styling    | styled-components  | ^6.0.0  |
 | Frontend Icons      | react-icons        | ^5.0.0  |
+| Error Monitoring    | Sentry             | Latest  |
 | Backend Framework   | Express            | ^4.18.0 |
 | Backend Language    | Node.js            | ^22.0.0 |
 | Database            | MongoDB + Mongoose | Latest  |
 | Authentication      | JWT                | ^9.0.0  |
 | Image Upload        | Cloudinary         | Latest  |
+| Email Templates     | React Email        | Latest  |
+| Email Delivery      | SendGrid           | Latest  |
 | Deployment Frontend | Vercel             |    -    |
 | Deployment Backend  | Render             |    -    |
 
