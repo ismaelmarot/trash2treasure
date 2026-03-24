@@ -86,6 +86,15 @@ export function PointsScreen() {
     if (!token) return
     setLoading(true)
     try {
+      // Reset de puntos duplicados (ejecutar una sola vez)
+      if (!localStorage.getItem('points_reset_done')) {
+        await fetch(`${API_BASE_URL}/points/sync`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        }).catch(() => {})
+        localStorage.setItem('points_reset_done', 'true')
+      }
+
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
