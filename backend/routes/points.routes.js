@@ -490,8 +490,20 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
     
-    // category_points: usar directamente del toObject (ya es objeto plano)
-    const categoryPoints = pointsObj.category_points || {};
+    // category_points: convertir Map de Mongoose a objeto plano
+    let categoryPoints = {};
+    try {
+      if (userPoints.category_points && typeof userPoints.category_points.get === 'function') {
+        // Es un Map de Mongoose
+        userPoints.category_points.forEach((value, key) => {
+          categoryPoints[key] = value;
+        });
+      } else if (pointsObj.category_points && typeof pointsObj.category_points === 'object') {
+        categoryPoints = { ...pointsObj.category_points };
+      }
+    } catch (e) {
+      categoryPoints = {};
+    }
     
     // family_reports
     const familyReports = pointsObj.family_reports || {};
