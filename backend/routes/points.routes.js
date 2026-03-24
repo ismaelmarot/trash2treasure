@@ -244,25 +244,20 @@ const initializeChallenges = async () => {
 // Llamar inicialización
 initializeChallenges();
 
-// Obtener puntos del usuario actual
+// Obtener puntos del usuario actual (endpoint rápido)
 router.get('/my-points', authenticateToken, async (req, res) => {
   try {
-    console.log('Step 1: my-points called for user:', req.user?.id);
+    const userId = req.user.id;
     
-    if (!req.user || !req.user.id) {
-      console.error('Step 1 FAIL: User not authenticated');
-      return res.status(401).json({ error: 'User not authenticated' });
-    }
+    // Queries en paralelo
+    const [userPoints, userItems] = await Promise.all([
+      getOrCreateUserPoints(userId),
+      Item.find({ user_id: userId }, 'category')
+    ]);
     
-    console.log('Step 2: Getting userPoints...');
-    const userPoints = await getOrCreateUserPoints(req.user.id);
-    console.log('Step 2 done, userPoints:', !!userPoints);
-    
-    // Calcular puntos desde los items reales (no depender de add-report)
-    const userItems = await Item.find({ user_id: req.user.id });
+    // Calcular puntos desde items
     const categoryPoints = {};
     let totalReportPoints = 0;
-    let totalReports = userItems.length;
     const familyReports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
     
     userItems.forEach(item => {
@@ -273,286 +268,114 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       familyReports[family] = (familyReports[family] || 0) + 1;
     });
     
-    // Actualizar UserPoints con los valores calculados
-    userPoints.total_points = totalReportPoints + (userPoints.collect_points || 0);
-    userPoints.report_points = totalReportPoints;
-    userPoints.total_reports = totalReports;
-    userPoints.category_points = categoryPoints;
-    userPoints.family_reports = familyReports;
-    await userPoints.save();
+    const totalPoints = totalReportPoints + (userPoints.collect_points || 0);
     
-    if (!userPoints) {
-      console.error('Step 2 FAIL: UserPoints not found');
-      return res.status(500).json({ error: 'UserPoints not found' });
-    }
-    
-    console.log('Step 3: Calculating division...');
+    // División
     let division = 'Curioso Verde';
     for (const div of DIVISIONS) {
-      if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
+      if (totalPoints >= div.minPoints && totalPoints < div.maxPoints) {
         division = div.name;
         break;
       }
     }
-    console.log('Step 3 done, division:', division);
     
-    // Paralelizar queries de logros
-    console.log('Step 4: Getting achievements...');
-    const [achievements] = await Promise.all([
-      Achievement.find({ user_id: req.user.id })
-    ]);
-    
-    const unlockedAchievementIds = achievements.map(a => a.achievement_id);
-    
-    const allAchievements = ACHIEVEMENTS.map(ach => ({
-      ...ach,
-      unlocked: unlockedAchievementIds.includes(ach.id),
-      unlocked_at: achievements.find(a => a.achievement_id === ach.id)?.unlocked_at
-    }));
-    console.log('Step 4 done, achievements count:', allAchievements.length);
-    
-    // Usar contadores de userPoints en lugar de query a Item
-    console.log('Step 5: Processing challenges...');
-    const now = new Date();
-    const dailyStart = getPeriodStart('daily');
-    const weeklyStart = getPeriodStart('weekly');
-    const monthlyStart = getPeriodStart('monthly');
-    const annualStart = getPeriodStart('annual');
-    
-    // Obtener progresos de desafíos en paralelo (cada uno con su período)
-    const challengeProgressPromises = CHALLENGE_DEFINITIONS.map(challenge => {
-      const periodStart = challenge.type === 'daily' ? dailyStart
-        : challenge.type === 'weekly' ? weeklyStart
-        : challenge.type === 'monthly' ? monthlyStart
-        : annualStart;
-      return getOrCreateChallengeProgress(req.user.id, challenge, periodStart);
-    });
-    const existingProgress = await Promise.all(challengeProgressPromises);
-    const progressMap = {};
-    existingProgress.forEach((p, i) => {
-      progressMap[CHALLENGE_DEFINITIONS[i].id] = p;
-    });
-    
-    // Calcular stats usando contadores existentes
-    const stats = {
-      reports: userPoints.daily_reports || 0,
-      families: Object.keys(userPoints.family_reports || {}).length,
-      familiesCount: userPoints.family_reports || {},
-      categories: Object.keys(userPoints.category_points || {}).length
-    };
-    
-    const challengeProgress = {};
-    
-    for (const challenge of CHALLENGE_DEFINITIONS) {
-      let progress = 0;
-      const periodStart = challenge.type === 'daily' ? dailyStart
-        : challenge.type === 'weekly' ? weeklyStart
-        : challenge.type === 'monthly' ? monthlyStart
-        : annualStart;
-      
-      // Calcular progreso según la categoría usando contadores
-      switch (challenge.category) {
-        case 'reports':
-          progress = challenge.type === 'daily' ? (userPoints.daily_reports || 0)
-               : challenge.type === 'weekly' ? (userPoints.weekly_reports || 0)
-               : challenge.type === 'monthly' ? (userPoints.monthly_reports || 0)
-               : (userPoints.total_reports || 0);
-          break;
-        case 'collected':
-          progress = challenge.type === 'daily' ? (userPoints.daily_collected || 0)
-               : challenge.type === 'weekly' ? (userPoints.weekly_collected || 0)
-               : challenge.type === 'monthly' ? (userPoints.monthly_collected || 0)
-               : (userPoints.total_collected || 0);
-          break;
-        case 'families':
-          progress = stats.families;
-          break;
-        case 'categories':
-          progress = stats.categories;
-          break;
-        case 'eco':
-          progress = userPoints.family_reports?.['eco'] || 0;
-          break;
-        case 'tech':
-          progress = userPoints.family_reports?.['tech'] || 0;
-          break;
-        case 'heavy':
-          progress = userPoints.family_reports?.['heavy'] || 0;
-          break;
-        case 'packaging':
-          progress = userPoints.family_reports?.['packaging'] || 0;
-          break;
-        case 'reuse':
-          progress = userPoints.family_reports?.['reuse'] || 0;
-          break;
-        case 'streak':
-          progress = challenge.type === 'monthly' ? (userPoints.max_streak || 0)
-               : (userPoints.current_streak || 0);
-          break;
-        default:
-          progress = userPoints.daily_reports || 0;
-      }
-      
-      // Actualizar progreso en la DB
-      const userProgress = progressMap[challenge.id];
-      if (!userProgress) {
-        console.error('No progress found for challenge:', challenge.id);
-        continue;
-      }
-      userProgress.current_progress = progress;
-      userProgress.last_updated = now;
-      
-      if (progress >= challenge.target && !userProgress.completed) {
-        userProgress.stars += 1;
-        
-        if (userProgress.stars >= challenge.max_stars) {
-          userProgress.trophies += 1;
-          userProgress.stars = 0;
-          userProgress.completed = true;
-        }
-      }
-      
-      await userProgress.save();
-      
-      challengeProgress[challenge.id] = {
-        current_progress: progress,
-        stars: userProgress.stars,
-        trophies: userProgress.trophies,
-        completed_this_period: progress >= challenge.target,
-        max_stars: challenge.max_stars,
-        target: challenge.target,
-        type: challenge.type
-      };
-    }
-    
-    console.log('Step 5 done. Calculating Eco Score...');
-    
-    // Calcular puntos semanales reales
-    // Si los puntos semanales son 0 pero hay totales, usar totales (migración)
-    let weeklyReportPts = userPoints.weekly_report_points || 0;
-    let weeklyCollectPts = userPoints.weekly_collect_points || 0;
-    if (weeklyReportPts === 0 && weeklyCollectPts === 0 && ((userPoints.report_points || 0) + (userPoints.collect_points || 0)) > 0) {
-      weeklyReportPts = userPoints.report_points || 0;
-      weeklyCollectPts = userPoints.collect_points || 0;
-    }
-    const weeklyScore = weeklyReportPts + weeklyCollectPts;
+    // Eco score
+    const weeklyScore = (userPoints.weekly_report_points || 0) + (userPoints.weekly_collect_points || 0);
     const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
+    const scoreChange = weeklyScore - prevWeeklyScore;
     
-    const weeklyPointsChange = weeklyScore - prevWeeklyScore;
-    
-    // Obtener ranking de usuarios para calcular percentil (top X%)
-    const weeklyReports = userPoints.weekly_reports || 0;
-    const weeklyCollected = userPoints.weekly_collected || 0;
-    const totalUsers = await UserPoints.countDocuments({ user_id: { $ne: null } });
-    const usersAbove = await UserPoints.countDocuments({ 
-      weekly_reports: { $gt: weeklyReports },
-      user_id: { $ne: null }
-    });
-    const usersSameLevel = await UserPoints.countDocuments({
-      weekly_reports: weeklyReports,
-      weekly_collected: { $gt: weeklyCollected },
-      user_id: { $ne: null }
-    });
-    const rank = usersAbove + Math.ceil(usersSameLevel / 2);
-    const percentile = totalUsers > 1 ? Math.max(1, Math.round((rank / totalUsers) * 100)) : 100;
-    
-    // Determinar grade basado en score
     let grade, gradeColor, gradeMessage;
-    if (weeklyScore >= 50) { 
-      grade = 'A+++'; 
-      gradeColor = '#27ae60';
-      gradeMessage = 'Maestro del reciclaje';
-    }
-    else if (weeklyScore >= 40) { 
-      grade = 'A++'; 
-      gradeColor = '#2ecc71';
-      gradeMessage = 'Reciclador experto';
-    }
-    else if (weeklyScore >= 30) { 
-      grade = 'A+'; 
-      gradeColor = '#58d68d';
-      gradeMessage = 'Reciclador avanzado';
-    }
-    else if (weeklyScore >= 20) { 
-      grade = 'A'; 
-      gradeColor = '#82e0aa';
-      gradeMessage = 'Reciclador activo';
-    }
-    else if (weeklyScore >= 15) { 
-      grade = 'B'; 
-      gradeColor = '#f9e79f';
-      gradeMessage = 'Reciclador aprendiz';
-    }
-    else if (weeklyScore >= 10) { 
-      grade = 'C'; 
-      gradeColor = '#f5b041';
-      gradeMessage = 'Reciclador principiante';
-    }
-    else if (weeklyScore >= 5) { 
-      grade = 'D'; 
-      gradeColor = '#eb984e';
-      gradeMessage = 'Empezando a reciclar';
-    }
-    else if (weeklyScore >= 2) { 
-      grade = 'E'; 
-      gradeColor = '#e74c3c';
-      gradeMessage = 'Novato verde';
-    }
-    else if (weeklyScore >= 1) { 
-      grade = 'F'; 
-      gradeColor = '#c0392b';
-      gradeMessage = 'Primeros pasos';
-    }
-    else { 
-      grade = 'G'; 
-      gradeColor = '#922b21';
-      gradeMessage = 'Aun no empiezas';
-    }
+    if (weeklyScore >= 50) { grade = 'A+++'; gradeColor = '#27ae60'; gradeMessage = 'Maestro del reciclaje'; }
+    else if (weeklyScore >= 40) { grade = 'A++'; gradeColor = '#2ecc71'; gradeMessage = 'Reciclador experto'; }
+    else if (weeklyScore >= 30) { grade = 'A+'; gradeColor = '#58d68d'; gradeMessage = 'Reciclador avanzado'; }
+    else if (weeklyScore >= 20) { grade = 'A'; gradeColor = '#82e0aa'; gradeMessage = 'Reciclador activo'; }
+    else if (weeklyScore >= 15) { grade = 'B'; gradeColor = '#f9e79f'; gradeMessage = 'Reciclador aprendiz'; }
+    else if (weeklyScore >= 10) { grade = 'C'; gradeColor = '#f5b041'; gradeMessage = 'Reciclador principiante'; }
+    else if (weeklyScore >= 5) { grade = 'D'; gradeColor = '#eb984e'; gradeMessage = 'Empezando a reciclar'; }
+    else if (weeklyScore >= 2) { grade = 'E'; gradeColor = '#e74c3c'; gradeMessage = 'Novato verde'; }
+    else if (weeklyScore >= 1) { grade = 'F'; gradeColor = '#c0392b'; gradeMessage = 'Primeros pasos'; }
+    else { grade = 'G'; gradeColor = '#922b21'; gradeMessage = 'Aun no empiezas'; }
     
-    const scoreChange = weeklyPointsChange;
-    
-    const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
-    
-    const response = {
+    res.json({
       points: {
-        ...pointsObj,
+        total_points: totalPoints,
+        report_points: totalReportPoints,
+        collect_points: userPoints.collect_points || 0,
+        total_reports: userItems.length,
+        total_collected: userPoints.total_collected || 0,
         category_points: categoryPoints,
         family_reports: familyReports,
+        weekly_report_points: userPoints.weekly_report_points || 0,
+        weekly_collect_points: userPoints.weekly_collect_points || 0,
+        weekly_reports: userPoints.weekly_reports || 0,
+        weekly_collected: userPoints.weekly_collected || 0,
+        current_streak: userPoints.current_streak || 0,
       },
       division,
-      achievements: allAchievements,
-      challengeProgress,
-      challenges: CHALLENGE_DEFINITIONS.map(c => ({
-        id: c.id,
-        name: c.name,
-        description: c.description,
-        icon: c.icon,
-        type: c.type,
-        target: c.target,
-        reward: c.reward,
-        max_stars: c.max_stars
-      })),
-      ecoScore: {
-        grade,
-        gradeColor,
-        weeklyScore,
-        prevWeeklyScore,
-        scoreChange,
-        trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same',
-        message: gradeMessage
-      },
+      ecoScore: { grade, gradeColor, weeklyScore, prevWeeklyScore, scoreChange, trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same', message: gradeMessage },
       history: {
         daily: userPoints.daily_history || [],
         weekly: userPoints.weekly_history || [],
         monthly: userPoints.monthly_history || []
       }
-    };
-    
-    console.log('Response prepared, sending...');
-    res.json(response);
-    console.log('Response sent successfully');
+    });
   } catch (error) {
-    console.error('Error in my-points:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Obtener logros y desafíos (endpoint separado, más lento)
+router.get('/achievements-challenges', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const [userPoints, achievements] = await Promise.all([
+      getOrCreateUserPoints(userId),
+      Achievement.find({ user_id: userId })
+    ]);
+    
+    const unlockedAchievementIds = achievements.map(a => a.achievement_id);
+    const allAchievements = ACHIEVEMENTS.map(ach => ({
+      ...ach,
+      unlocked: unlockedAchievementIds.includes(ach.id),
+      unlocked_at: achievements.find(a => a.achievement_id === ach.id)?.unlocked_at
+    }));
+    
+    // Desafíos
+    const dailyStart = getPeriodStart('daily');
+    const weeklyStart = getPeriodStart('weekly');
+    const monthlyStart = getPeriodStart('monthly');
+    const annualStart = getPeriodStart('annual');
+    const now = new Date();
+    
+    const challengeProgress = {};
+    for (const challenge of CHALLENGE_DEFINITIONS) {
+      let progress = 0;
+      switch (challenge.category) {
+        case 'reports': progress = challenge.type === 'daily' ? (userPoints.daily_reports || 0) : challenge.type === 'weekly' ? (userPoints.weekly_reports || 0) : challenge.type === 'monthly' ? (userPoints.monthly_reports || 0) : (userPoints.total_reports || 0); break;
+        case 'collected': progress = challenge.type === 'daily' ? (userPoints.daily_collected || 0) : challenge.type === 'weekly' ? (userPoints.weekly_collected || 0) : challenge.type === 'monthly' ? (userPoints.monthly_collected || 0) : (userPoints.total_collected || 0); break;
+        case 'streak': progress = userPoints.current_streak || 0; break;
+        default: progress = 0;
+      }
+      
+      const periodStart = challenge.type === 'daily' ? dailyStart : challenge.type === 'weekly' ? weeklyStart : challenge.type === 'monthly' ? monthlyStart : annualStart;
+      const userProgress = await getOrCreateChallengeProgress(userId, challenge, periodStart);
+      userProgress.current_progress = progress;
+      userProgress.last_updated = now;
+      if (progress >= challenge.target && !userProgress.completed) {
+        userProgress.stars += 1;
+        if (userProgress.stars >= challenge.max_stars) { userProgress.trophies += 1; userProgress.stars = 0; userProgress.completed = true; }
+      }
+      await userProgress.save();
+      
+      challengeProgress[challenge.id] = { current_progress: progress, stars: userProgress.stars, trophies: userProgress.trophies, completed_this_period: progress >= challenge.target, max_stars: challenge.max_stars, target: challenge.target, type: challenge.type };
+    }
+    
+    res.json({
+      achievements: allAchievements,
+      challengeProgress,
+      challenges: CHALLENGE_DEFINITIONS.map(c => ({ id: c.id, name: c.name, description: c.description, icon: c.icon, type: c.type, target: c.target, reward: c.reward, max_stars: c.max_stars }))
+    });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });

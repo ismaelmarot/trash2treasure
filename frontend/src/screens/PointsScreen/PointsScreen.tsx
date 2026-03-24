@@ -91,15 +91,23 @@ export function PointsScreen() {
       })
       const data = await pointsRes.json()
       setPointsData(data)
-      setAchievements(data.achievements || [])
-      setChallenges(data.challenges || [])
-      setChallengeProgress(data.challengeProgress || {})
+      setLoading(false)
       
-      const rankingRes = await fetch(`${API_BASE_URL}/points/ranking`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      if (rankingRes.ok) {
-        const rankingData = await rankingRes.json()
+      // Cargar logros, desafíos y ranking en paralelo (no bloquean la UI)
+      const [achRes, rankRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/points/achievements-challenges`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_BASE_URL}/points/ranking`, { headers: { 'Authorization': `Bearer ${token}` } })
+      ])
+      
+      if (achRes.ok) {
+        const achData = await achRes.json()
+        setAchievements(achData.achievements || [])
+        setChallenges(achData.challenges || [])
+        setChallengeProgress(achData.challengeProgress || {})
+      }
+      
+      if (rankRes.ok) {
+        const rankingData = await rankRes.json()
         setRanking(rankingData.ranking || [])
       }
     } catch (err) {
