@@ -295,7 +295,7 @@ export const ModalContent = styled.div`
 `
 
 export const ModalTitle = styled.h3`
-    font-size: 1.2rem;
+    font-size: 2rem;
     font-weight: 700;
     margin-bottom: ${SPACING.md};
     text-align: center;

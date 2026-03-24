@@ -184,7 +184,7 @@ export function ProfileScreen() {
           <MenuIconWrapper>
             <IconCircle />
           </MenuIconWrapper>
-          <MenuLabel>Logros</MenuLabel>
+          <MenuLabel>Próximamente</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
@@ -307,20 +307,20 @@ export function ProfileScreen() {
         <ModalOverlay onClick={() => setIsComingSoonOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px' }}>
             <ModalTitle>🎖️ Logros</ModalTitle>
-            <p style={{ textAlign: 'center', color: '#86868b', marginBottom: '24px', fontSize: '14px' }}>
-              Coming Soon
+            <p style={{ textAlign: 'center', color: '#000000', marginBottom: '24px', fontSize: '18px' }}>
+              Próximamente habrá imagenes personalizadas por los logros obtenidos.
             </p>
             <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(3, 1fr)', 
-              gap: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
               padding: '8px 0'
             }}>
-              <img src={achievement01} alt="Achievement 1" style={{ width: '100%', borderRadius: '12px' }} />
-              <img src={achievement02} alt="Achievement 2" style={{ width: '100%', borderRadius: '12px' }} />
-              <img src={achievement03} alt="Achievement 3" style={{ width: '100%', borderRadius: '12px' }} />
-              <img src={achievement04} alt="Achievement 4" style={{ width: '100%', borderRadius: '12px' }} />
-              <img src={achievement05} alt="Achievement 5" style={{ width: '100%', borderRadius: '12px' }} />
+              <img src={achievement01} alt="Achievement 1" style={{ width: '100%', borderRadius: '16px' }} />
+              <img src={achievement02} alt="Achievement 2" style={{ width: '100%', borderRadius: '16px' }} />
+              <img src={achievement03} alt="Achievement 3" style={{ width: '100%', borderRadius: '16px' }} />
+              <img src={achievement04} alt="Achievement 4" style={{ width: '100%', borderRadius: '16px' }} />
+              <img src={achievement05} alt="Achievement 5" style={{ width: '100%', borderRadius: '16px' }} />
             </div>
             <ModalClose onClick={() => setIsComingSoonOpen(false)}>×</ModalClose>
           </ModalContent>
