@@ -279,7 +279,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       }
     }
     
-    // Eco score
+    // Eco score - calcular correctamente desde los campos semanales
     const weeklyScore = (userPoints.weekly_report_points || 0) + (userPoints.weekly_collect_points || 0);
     const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
     const scoreChange = weeklyScore - prevWeeklyScore;
@@ -558,6 +558,13 @@ router.post('/sync', authenticateToken, async (req, res) => {
     userPoints.weekly_history = [];
     userPoints.monthly_history = [];
 
+    const weekStart = getPeriodStart('weekly');
+    const lastWeekStart = new Date(weekStart);
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+
+    let thisWeekReportPoints = 0;
+    let prevWeekReportPoints = 0;
+
     for (const item of allItems) {
       const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
       const family = CATEGORY_FAMILIES[item.category] || 'special';
@@ -568,7 +575,19 @@ router.post('/sync', authenticateToken, async (req, res) => {
       userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
       userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
       updateHistory(userPoints, 'reports', points);
+
+      if (item.created_at) {
+        const itemDate = new Date(item.created_at);
+        if (itemDate >= weekStart) {
+          thisWeekReportPoints += points;
+        } else if (itemDate >= lastWeekStart) {
+          prevWeekReportPoints += points;
+        }
+      }
     }
+
+    userPoints.weekly_report_points = thisWeekReportPoints;
+    userPoints.weekly_report_points_prev = prevWeekReportPoints;
 
     for (const div of DIVISIONS) {
       if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
@@ -586,7 +605,9 @@ router.post('/sync', authenticateToken, async (req, res) => {
     res.json({
       message: 'Puntos sincronizados',
       items_count: allItems.length,
-      total_points: userPoints.total_points
+      total_points: userPoints.total_points,
+      weekly_report_points: thisWeekReportPoints,
+      prev_week_report_points: prevWeekReportPoints
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

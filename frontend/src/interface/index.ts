@@ -1,5 +1,7 @@
 export type { Achievement } from './achievement.interface'
 export type { AchievementModalProps } from './achievementModal.interface'
+export type { ConfirmationConfig } from './confirmationConfig.interface'
+export type { ConfirmationModalProps } from './confirmationModal.interface'
 export type { ItemProps } from './Item.interface'
 export type { ItemCountdownProps } from './itemCountdown.interface'
 export type { PassWordValidationProps } from './PassWordValidation.interface'
