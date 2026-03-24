@@ -56,7 +56,7 @@ L.Icon.Default.mergeOptions({
 export function AddItemScreen() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [category, setCategory] = useState('muebles')
+  const [category, setCategory] = useState('otros')
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -306,7 +306,7 @@ export function AddItemScreen() {
       }
 
       // Agregar puntos por reportar
-      await fetch(`${API_BASE_URL}/points/add-report`, {
+      const pointsResponse = await fetch(`${API_BASE_URL}/points/add-report`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -314,6 +314,10 @@ export function AddItemScreen() {
         },
         body: JSON.stringify({ category, itemId })
       })
+      if (!pointsResponse.ok) {
+        const pointsError = await pointsResponse.json().catch(() => ({}))
+        console.error('Error al agregar puntos:', pointsError)
+      }
 
       // Refrescar datos de puntos en la pantalla de puntos
       if (typeof window !== 'undefined' && (window as any).refreshPointsData) {
