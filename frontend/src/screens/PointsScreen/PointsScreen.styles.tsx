@@ -181,8 +181,9 @@ export const UserName = styled.div`
 `
 
 export const UserDivision = styled.div`
-  font-size: 12px;
-  color: ${COLORS.greyDark};
+  font-size: 13px;
+  font-weight: 500;
+  color: #42a59f;
 `
 
 export const UserPoints = styled.div`
