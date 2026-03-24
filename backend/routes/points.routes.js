@@ -713,6 +713,9 @@ router.post('/sync', authenticateToken, async (req, res) => {
     userPoints.total_reports = 0;
     userPoints.category_points = {};
     userPoints.family_reports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
+    userPoints.daily_history = [];
+    userPoints.weekly_history = [];
+    userPoints.monthly_history = [];
 
     for (const item of allItems) {
       const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
@@ -723,6 +726,7 @@ router.post('/sync', authenticateToken, async (req, res) => {
       userPoints.total_reports += 1;
       userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
       userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
+      updateHistory(userPoints, 'reports', points);
     }
 
     for (const div of DIVISIONS) {

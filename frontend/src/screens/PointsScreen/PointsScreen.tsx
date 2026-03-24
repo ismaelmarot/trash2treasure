@@ -86,13 +86,13 @@ export function PointsScreen() {
     if (!token) return
     setLoading(true)
     try {
-      // Reset de puntos duplicados (ejecutar una sola vez)
-      if (!localStorage.getItem('points_reset_done')) {
+      // Sync para poblar historial (ejecutar una sola vez)
+      if (!localStorage.getItem('history_sync_done')) {
         await fetch(`${API_BASE_URL}/points/sync`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => {})
-        localStorage.setItem('points_reset_done', 'true')
+        localStorage.setItem('history_sync_done', 'true')
       }
 
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
@@ -198,9 +198,9 @@ export function PointsScreen() {
             <Tab $active={activeChartTab === 'monthly'} onClick={() => setActiveChartTab('monthly')}>Meses</Tab>
           </TabContainer>
 
-          {activeChartTab === 'daily' && pointsData?.history?.daily && (
+          {activeChartTab === 'daily' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
-              {(() => {
+              {pointsData?.history?.daily?.length > 0 ? (() => {
                 const data = pointsData.history.daily.slice(-7)
                 const maxVal = Math.max(...data.map((d: any) => Math.max(d.reports, d.collected)), 1)
                 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
@@ -224,13 +224,13 @@ export function PointsScreen() {
                     })}
                   </div>
                 )
-              })()}
+              })() : <div style={{ textAlign: 'center', padding: '40px', color: '#999', fontSize: '14px' }}>No hay datos aún. Reportá o reclamá items para ver tu historial.</div>}
             </TabContent>
           )}
 
-          {activeChartTab === 'weekly' && pointsData?.history?.weekly && (
+          {activeChartTab === 'weekly' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
-              {(() => {
+              {pointsData?.history?.weekly?.length > 0 ? (() => {
                 const data = pointsData.history.weekly.slice(-12)
                 const maxVal = Math.max(...data.map((d: any) => Math.max(d.reports, d.collected)), 1)
                 return (
@@ -251,13 +251,13 @@ export function PointsScreen() {
                     })}
                   </div>
                 )
-              })()}
+              })() : <div style={{ textAlign: 'center', padding: '40px', color: '#999', fontSize: '14px' }}>No hay datos aún.</div>}
             </TabContent>
           )}
 
-          {activeChartTab === 'monthly' && pointsData?.history?.monthly && (
+          {activeChartTab === 'monthly' && (
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
-              {(() => {
+              {pointsData?.history?.monthly?.length > 0 ? (() => {
                 const data = pointsData.history.monthly.slice(-12)
                 const maxVal = Math.max(...data.map((d: any) => Math.max(d.reports, d.collected)), 1)
                 const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
@@ -280,7 +280,7 @@ export function PointsScreen() {
                     })}
                   </div>
                 )
-              })()}
+              })() : <div style={{ textAlign: 'center', padding: '40px', color: '#999', fontSize: '14px' }}>No hay datos aún.</div>}
             </TabContent>
           )}
 
