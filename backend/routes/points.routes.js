@@ -258,13 +258,28 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const userPoints = await getOrCreateUserPoints(req.user.id);
     console.log('Step 2 done, userPoints:', !!userPoints);
     
-    // Calcular puntos por categoría desde los items reales
+    // Calcular puntos desde los items reales (no depender de add-report)
     const userItems = await Item.find({ user_id: req.user.id });
     const categoryPoints = {};
+    let totalReportPoints = 0;
+    let totalReports = userItems.length;
+    const familyReports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
+    
     userItems.forEach(item => {
       const pts = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
       categoryPoints[item.category] = (categoryPoints[item.category] || 0) + pts;
+      totalReportPoints += pts;
+      const family = CATEGORY_FAMILIES[item.category] || 'special';
+      familyReports[family] = (familyReports[family] || 0) + 1;
     });
+    
+    // Actualizar UserPoints con los valores calculados
+    userPoints.total_points = totalReportPoints + (userPoints.collect_points || 0);
+    userPoints.report_points = totalReportPoints;
+    userPoints.total_reports = totalReports;
+    userPoints.category_points = categoryPoints;
+    userPoints.family_reports = familyReports;
+    await userPoints.save();
     
     if (!userPoints) {
       console.error('Step 2 FAIL: UserPoints not found');
@@ -497,9 +512,6 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const scoreChange = weeklyPointsChange;
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
-    
-    // family_reports
-    const familyReports = pointsObj.family_reports || {};
     
     const response = {
       points: {
