@@ -86,14 +86,11 @@ export function PointsScreen() {
     if (!token) return
     setLoading(true)
     try {
-      // Sync para poblar historial y category_points (ejecutar una sola vez)
-      if (!localStorage.getItem('sync_v3_done')) {
-        await fetch(`${API_BASE_URL}/points/sync`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
-        }).catch(() => {})
-        localStorage.setItem('sync_v3_done', 'true')
-      }
+      // Sync siempre para asegurar datos correctos
+      await fetch(`${API_BASE_URL}/points/sync`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(() => {})
 
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
         headers: { 'Authorization': `Bearer ${token}` }
