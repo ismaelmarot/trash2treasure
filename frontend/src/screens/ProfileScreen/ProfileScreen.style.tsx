@@ -261,14 +261,14 @@ export const InfoContent = styled.div`
 
 export const InfoTitle = styled.div`
     font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 2px;
+    font-size: 16px;
+    margin-bottom: 4px;
 `
 
 export const InfoDetail = styled.div`
-    font-size: 11px;
+    font-size: 14px;
     color: ${COLORS.greyDark};
-    line-height: 1.4;
+    line-height: 1.5;
 `
 
 export const ModalOverlay = styled.div`
