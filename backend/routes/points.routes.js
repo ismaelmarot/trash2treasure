@@ -249,10 +249,10 @@ router.get('/my-points', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
     
-    // Queries en paralelo
+    // Queries en paralelo - pedir created_at para calcular semanal
     const [userPoints, userItems] = await Promise.all([
       getOrCreateUserPoints(userId),
-      Item.find({ user_id: userId }, 'category')
+      Item.find({ user_id: userId }, 'category created_at')
     ]);
     
     // Calcular puntos desde items
@@ -260,13 +260,41 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     let totalReportPoints = 0;
     const familyReports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
     
+    // Calcular semanas actual y anterior
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay() + 1);
+    weekStart.setHours(0, 0, 0, 0);
+    
+    const prevWeekStart = new Date(weekStart);
+    prevWeekStart.setDate(prevWeekStart.getDate() - 7);
+    
+    let thisWeekReportPoints = 0;
+    let prevWeekReportPoints = 0;
+    let thisWeekCollectPoints = 0;
+    let prevWeekCollectPoints = 0;
+    
     userItems.forEach(item => {
       const pts = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
       categoryPoints[item.category] = (categoryPoints[item.category] || 0) + pts;
       totalReportPoints += pts;
       const family = CATEGORY_FAMILIES[item.category] || 'special';
       familyReports[family] = (familyReports[family] || 0) + 1;
+      
+      // Calcular puntos de la semana desde la fecha del item
+      if (item.created_at) {
+        const itemDate = new Date(item.created_at);
+        if (itemDate >= weekStart) {
+          thisWeekReportPoints += pts;
+        } else if (itemDate >= prevWeekStart) {
+          prevWeekReportPoints += pts;
+        }
+      }
     });
+    
+    // Agregar puntos de recolectados (estos sí se acumulan en contadores)
+    thisWeekCollectPoints = userPoints.weekly_collect_points || 0;
+    prevWeekCollectPoints = userPoints.weekly_collect_points_prev || 0;
     
     const totalPoints = totalReportPoints + (userPoints.collect_points || 0);
     
@@ -279,9 +307,9 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       }
     }
     
-    // Calcular weekly score usando los campos semanales que se actualizan al reportar/recolectar
-    const weeklyScore = (userPoints.weekly_report_points || 0) + (userPoints.weekly_collect_points || 0);
-    const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
+    // Calcular weekly score
+    const weeklyScore = thisWeekReportPoints + thisWeekCollectPoints;
+    const prevWeeklyScore = prevWeekReportPoints + prevWeekCollectPoints;
     const scoreChange = weeklyScore - prevWeeklyScore;
     
     let grade, gradeColor, gradeMessage;
@@ -305,8 +333,8 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         total_collected: userPoints.total_collected || 0,
         category_points: categoryPoints,
         family_reports: familyReports,
-        weekly_report_points: userPoints.weekly_report_points || 0,
-        weekly_collect_points: userPoints.weekly_collect_points || 0,
+        weekly_report_points: thisWeekReportPoints,
+        weekly_collect_points: thisWeekCollectPoints,
         weekly_reports: userPoints.weekly_reports || 0,
         weekly_collected: userPoints.weekly_collected || 0,
         current_streak: userPoints.current_streak || 0,
