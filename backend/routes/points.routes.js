@@ -101,8 +101,12 @@ const getOrCreateUserPoints = async (userId) => {
     if (!lastWeekReset || weekStart > lastWeekReset) {
       userPoints.weekly_reports_prev = userPoints.weekly_reports || 0;
       userPoints.weekly_collected_prev = userPoints.weekly_collected || 0;
+      userPoints.weekly_report_points_prev = userPoints.report_points || 0;
+      userPoints.weekly_collect_points_prev = userPoints.collect_points || 0;
       userPoints.weekly_reports = 0;
       userPoints.weekly_collected = 0;
+      userPoints.report_points = 0;
+      userPoints.collect_points = 0;
       userPoints.last_weekly_reset = weekStart;
       needsSave = true;
     }
@@ -348,14 +352,9 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     console.log('Step 5 done. Calculating Eco Score...');
     
-    // Calcular scores semanales
-    const weeklyReports = userPoints.weekly_reports || 0;
-    const weeklyCollected = userPoints.weekly_collected || 0;
-    const weeklyScore = weeklyReports + (weeklyCollected * 2);
-    
-    const prevWeeklyReports = userPoints.weekly_reports_prev || 0;
-    const prevWeeklyCollected = userPoints.weekly_collected_prev || 0;
-    const prevWeeklyScore = prevWeeklyReports + (prevWeeklyCollected * 2);
+    // Calcular puntos semanales (puntos reales del usuario)
+    const weeklyScore = (userPoints.report_points || 0) + (userPoints.collect_points || 0);
+    const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
     
     const weeklyPointsChange = weeklyScore - prevWeeklyScore;
     
