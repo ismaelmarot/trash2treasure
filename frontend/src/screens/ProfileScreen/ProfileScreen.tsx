@@ -42,7 +42,6 @@ import {
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
 
 const POINTS_INFO = [
-  { icon: '🌍', title: '¿Qué son los Eco Points?', detail: 'Los Eco Points son puntos que ganás al reportar residuos en tu zona o reclamarlos para reciclar. Cuantos más puntos tengas, más alto será tu nivel y división en la comunidad Trash2Treasure.' },
   { icon: '📸', title: 'Reportar', detail: '+1 punto por cada reporte. +3 extra si la categoría es crítica (baterías, electrónicos, construcción, muebles)' },
   { icon: '♻️', title: 'Recolectar', detail: '+3 puntos por cada recolección. +3 extra si la categoría es crítica. +1 a +3 extra por rapidez (<3h: +1, <1h: +3)' },
   { icon: '⏱️', title: 'Bonus por tiempo', detail: '<1 hora: +3 puntos extra. <3 horas: +1 punto extra' },
@@ -67,6 +66,7 @@ export function ProfileScreen() {
   const [pointsData, setPointsData] = useState<any>(null)
   const [profileData, setProfileData] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEcoModalOpen, setIsEcoModalOpen] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -151,6 +151,13 @@ export function ProfileScreen() {
 
       <Section>
         <SectionTitle>Aplicación</SectionTitle>
+        <MenuItem onClick={() => setIsEcoModalOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+          </MenuIconWrapper>
+          <MenuLabel>¿Qué son los Eco Points?</MenuLabel>
+          <IconChevron />
+        </MenuItem>
         <MenuItem onClick={() => setIsModalOpen(true)}>
           <MenuIconWrapper>
             <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
@@ -160,7 +167,7 @@ export function ProfileScreen() {
         </MenuItem>
         <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
-            <IconCircle />
+            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
           </MenuIconWrapper>
           <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
           <IconChevron />
@@ -193,6 +200,38 @@ export function ProfileScreen() {
               ))}
             </InfoList>
             <ModalClose onClick={() => setIsModalOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {isEcoModalOpen && (
+        <ModalOverlay onClick={() => setIsEcoModalOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>ℹ️ ¿Qué son los Eco Points?</ModalTitle>
+            <InfoList>
+              <InfoItem>
+                <InfoIcon>🌍</InfoIcon>
+                <InfoContent>
+                  <InfoTitle>Tu impacto ambiental</InfoTitle>
+                  <InfoDetail>Los Eco Points son puntos que ganás al reportar residuos en tu zona o reclamarlos para reciclar. Reflejan tu contribución activa al cuidado del medio ambiente.</InfoDetail>
+                </InfoContent>
+              </InfoItem>
+              <InfoItem>
+                <InfoIcon>📈</InfoIcon>
+                <InfoContent>
+                  <InfoTitle>Nivel y división</InfoTitle>
+                  <InfoDetail>Cuantos más puntos acumules, más alto será tu nivel (de G a A+++) y tu división en la comunidad Trash2Treasure.</InfoDetail>
+                </InfoContent>
+              </InfoItem>
+              <InfoItem>
+                <InfoIcon>🏆</InfoIcon>
+                <InfoContent>
+                  <InfoTitle>Ranking y logros</InfoTitle>
+                  <InfoDetail>Competí con otros usuarios en el ranking semanal y desbloqueá logros y desafíos exclusivos mientras ayudás a tu comunidad.</InfoDetail>
+                </InfoContent>
+              </InfoItem>
+            </InfoList>
+            <ModalClose onClick={() => setIsEcoModalOpen(false)}>×</ModalClose>
           </ModalContent>
         </ModalOverlay>
       )}
