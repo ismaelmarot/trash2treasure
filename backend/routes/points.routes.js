@@ -606,65 +606,20 @@ router.post('/add-report', authenticateToken, async (req, res) => {
   }
 });
 
-// Sincronizar puntos de items existentes que no acreditaron puntos
+// Sincronizar puntos: recalcular siempre desde los items reales
 router.post('/sync', authenticateToken, async (req, res) => {
   try {
     const userPoints = await getOrCreateUserPoints(req.user.id);
-    const lastSync = userPoints.last_sync;
-    
-    // Primera vez: recalcular todo desde cero (fix puntos duplicados)
-    if (!lastSync) {
-      const allItems = await Item.find({ user_id: req.user.id });
-      
-      // Resetear contadores
-      userPoints.total_points = 0;
-      userPoints.report_points = 0;
-      userPoints.total_reports = 0;
-      userPoints.category_points = {};
-      userPoints.family_reports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
+    const allItems = await Item.find({ user_id: req.user.id });
 
-      for (const item of allItems) {
-        const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
-        const family = CATEGORY_FAMILIES[item.category] || 'special';
+    // Resetear y recalcular desde cero
+    userPoints.total_points = 0;
+    userPoints.report_points = 0;
+    userPoints.total_reports = 0;
+    userPoints.category_points = {};
+    userPoints.family_reports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 };
 
-        userPoints.total_points += points;
-        userPoints.report_points += points;
-        userPoints.total_reports += 1;
-        userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
-        userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
-      }
-
-      userPoints.last_sync = new Date();
-
-      for (const div of DIVISIONS) {
-        if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
-          userPoints.division = div.name;
-          break;
-        }
-      }
-
-      userPoints.markModified('category_points');
-      userPoints.markModified('family_reports');
-      userPoints.updated_at = new Date();
-      await userPoints.save();
-      checkAchievements(req.user.id, userPoints);
-
-      return res.json({
-        message: 'Puntos recalculados',
-        items_synced: allItems.length,
-        total_points: userPoints.total_points
-      });
-    }
-
-    // Sync incremental: solo items nuevos desde último sync
-    const newItems = await Item.find({ 
-      user_id: req.user.id,
-      created_at: { $gt: lastSync }
-    });
-
-    let totalAdded = 0;
-
-    for (const item of newItems) {
+    for (const item of allItems) {
       const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
       const family = CATEGORY_FAMILIES[item.category] || 'special';
 
@@ -673,17 +628,12 @@ router.post('/sync', authenticateToken, async (req, res) => {
       userPoints.total_reports += 1;
       userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
       userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
-      totalAdded += points;
     }
 
-    userPoints.last_sync = new Date();
-
-    if (totalAdded > 0) {
-      for (const div of DIVISIONS) {
-        if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
-          userPoints.division = div.name;
-          break;
-        }
+    for (const div of DIVISIONS) {
+      if (userPoints.total_points >= div.minPoints && userPoints.total_points < div.maxPoints) {
+        userPoints.division = div.name;
+        break;
       }
     }
 
@@ -691,15 +641,11 @@ router.post('/sync', authenticateToken, async (req, res) => {
     userPoints.markModified('family_reports');
     userPoints.updated_at = new Date();
     await userPoints.save();
-
-    if (totalAdded > 0) {
-      checkAchievements(req.user.id, userPoints);
-    }
+    checkAchievements(req.user.id, userPoints);
 
     res.json({
       message: 'Puntos sincronizados',
-      items_synced: newItems.length,
-      points_added: totalAdded,
+      items_count: allItems.length,
       total_points: userPoints.total_points
     });
   } catch (error) {

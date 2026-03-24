@@ -305,24 +305,7 @@ export function AddItemScreen() {
         if (!photoResponse.ok) throw new Error('Error al subir la imagen')
       }
 
-      // Agregar puntos por reportar
-      const pointsResponse = await fetch(`${API_BASE_URL}/points/add-report`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ category, itemId })
-      })
-      if (!pointsResponse.ok) {
-        const pointsError = await pointsResponse.json().catch(() => ({}))
-        console.error('Error al agregar puntos:', pointsError)
-      }
-
-      // Refrescar datos de puntos en la pantalla de puntos
-      if (typeof window !== 'undefined' && (window as any).refreshPointsData) {
-        (window as any).refreshPointsData()
-      }
+      // Los puntos se acreditan automáticamente al abrir la pantalla de puntos (sync)
 
       setSuccess(true)
       setTimeout(() => {
