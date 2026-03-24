@@ -86,13 +86,13 @@ export function PointsScreen() {
     if (!token) return
     setLoading(true)
     try {
-      // Sync para poblar historial (ejecutar una sola vez)
-      if (!localStorage.getItem('history_sync_done')) {
+      // Sync para poblar historial y category_points (ejecutar una sola vez)
+      if (!localStorage.getItem('sync_v2_done')) {
         await fetch(`${API_BASE_URL}/points/sync`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => {})
-        localStorage.setItem('history_sync_done', 'true')
+        localStorage.setItem('sync_v2_done', 'true')
       }
 
       const pointsRes = await fetch(`${API_BASE_URL}/points/my-points`, {
