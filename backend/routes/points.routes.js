@@ -258,6 +258,14 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const userPoints = await getOrCreateUserPoints(req.user.id);
     console.log('Step 2 done, userPoints:', !!userPoints);
     
+    // Calcular puntos por categoría desde los items reales
+    const userItems = await Item.find({ user_id: req.user.id });
+    const categoryPoints = {};
+    userItems.forEach(item => {
+      const pts = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
+      categoryPoints[item.category] = (categoryPoints[item.category] || 0) + pts;
+    });
+    
     if (!userPoints) {
       console.error('Step 2 FAIL: UserPoints not found');
       return res.status(500).json({ error: 'UserPoints not found' });
@@ -489,21 +497,6 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const scoreChange = weeklyPointsChange;
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
-    
-    // category_points: convertir Map de Mongoose a objeto plano
-    let categoryPoints = {};
-    try {
-      if (userPoints.category_points && typeof userPoints.category_points.get === 'function') {
-        // Es un Map de Mongoose
-        userPoints.category_points.forEach((value, key) => {
-          categoryPoints[key] = value;
-        });
-      } else if (pointsObj.category_points && typeof pointsObj.category_points === 'object') {
-        categoryPoints = { ...pointsObj.category_points };
-      }
-    } catch (e) {
-      categoryPoints = {};
-    }
     
     // family_reports
     const familyReports = pointsObj.family_reports || {};
