@@ -13,6 +13,7 @@ export const slideUp = keyframes`
 `
 
 export const Overlay = styled.div`
+    position: fixed;
     ${flex('column','center','center')}
     top: 0;
     left: 0;
