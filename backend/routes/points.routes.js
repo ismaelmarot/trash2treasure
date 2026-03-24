@@ -279,19 +279,9 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       }
     }
     
-    // Calcular weekly score desde el historial (que persiste aunque los items se borren)
-    const now = new Date();
-    const currentWeekKey = `${now.getFullYear()}-W${String(Math.ceil((now.getDate() - now.getDay() + 1) / 7)).padStart(2, '0')}`;
-    const prevWeekStart = new Date(now);
-    prevWeekStart.setDate(now.getDate() - now.getDay() - 6);
-    const prevWeekKey = `${prevWeekStart.getFullYear()}-W${String(Math.ceil((prevWeekStart.getDate() - prevWeekStart.getDay() + 1) / 7)).padStart(2, '0')}`;
-    
-    const weeklyHistory = userPoints.weekly_history || [];
-    const thisWeekEntry = weeklyHistory.find(e => e.period === currentWeekKey);
-    const prevWeekEntry = weeklyHistory.find(e => e.period === prevWeekKey);
-    
-    const weeklyScore = (thisWeekEntry?.points || 0) + (userPoints.weekly_collect_points || 0);
-    const prevWeeklyScore = (prevWeekEntry?.points || 0) + (userPoints.weekly_collect_points_prev || 0);
+    // Calcular weekly score usando los campos semanales que se actualizan al reportar/recolectar
+    const weeklyScore = (userPoints.weekly_report_points || 0) + (userPoints.weekly_collect_points || 0);
+    const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
     const scoreChange = weeklyScore - prevWeeklyScore;
     
     let grade, gradeColor, gradeMessage;
@@ -315,7 +305,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         total_collected: userPoints.total_collected || 0,
         category_points: categoryPoints,
         family_reports: familyReports,
-        weekly_report_points: thisWeekEntry?.points || 0,
+        weekly_report_points: userPoints.weekly_report_points || 0,
         weekly_collect_points: userPoints.weekly_collect_points || 0,
         weekly_reports: userPoints.weekly_reports || 0,
         weekly_collected: userPoints.weekly_collected || 0,
