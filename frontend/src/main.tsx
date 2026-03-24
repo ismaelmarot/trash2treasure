@@ -7,7 +7,7 @@ import './styles.css'
 
 // Inicializar Sentry
 Sentry.init({
-  dsn: "https://94d8daaf09f58514337-bedaee2b6ebfc@o4511101677600768.ingest.us.sentry.io/4511101683433472",
+  dsn: "https://94d8daaf09f58514337bedaee2b6ebfc@o4511101677600768.ingest.us.sentry.io/4511101683433472",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration({
