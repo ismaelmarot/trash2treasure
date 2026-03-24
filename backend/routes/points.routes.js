@@ -483,6 +483,7 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     userPoints.last_activity_date = new Date();
     userPoints.markModified('category_points');
     userPoints.markModified('family_reports');
+    userPoints.markModified('weekly_report_points');
     userPoints.markModified('daily_history');
     userPoints.markModified('weekly_history');
     userPoints.markModified('monthly_history');
@@ -601,6 +602,8 @@ router.post('/sync', authenticateToken, async (req, res) => {
 
     userPoints.markModified('category_points');
     userPoints.markModified('family_reports');
+    userPoints.markModified('weekly_report_points');
+    userPoints.markModified('weekly_report_points_prev');
     userPoints.markModified('daily_history');
     userPoints.markModified('weekly_history');
     userPoints.markModified('monthly_history');
@@ -660,6 +663,7 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
     userPoints.markModified('daily_history');
     userPoints.markModified('weekly_history');
     userPoints.markModified('monthly_history');
+    userPoints.markModified('weekly_collect_points');
     userPoints.last_activity_date = new Date();
     userPoints.updated_at = new Date();
     
