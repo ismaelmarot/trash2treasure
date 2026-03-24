@@ -93,6 +93,10 @@ const getOrCreateUserPoints = async (userId) => {
     if (userPoints.weekly_collected === undefined) { userPoints.weekly_collected = 0; needsSave = true; }
     if (userPoints.weekly_reports_prev === undefined) { userPoints.weekly_reports_prev = 0; needsSave = true; }
     if (userPoints.weekly_collected_prev === undefined) { userPoints.weekly_collected_prev = 0; needsSave = true; }
+    if (userPoints.weekly_report_points === undefined) { userPoints.weekly_report_points = 0; needsSave = true; }
+    if (userPoints.weekly_collect_points === undefined) { userPoints.weekly_collect_points = 0; needsSave = true; }
+    if (userPoints.weekly_report_points_prev === undefined) { userPoints.weekly_report_points_prev = 0; needsSave = true; }
+    if (userPoints.weekly_collect_points_prev === undefined) { userPoints.weekly_collect_points_prev = 0; needsSave = true; }
     
     // Resetear contadores semanales si es nueva semana
     const weekStart = getPeriodStart('weekly');
