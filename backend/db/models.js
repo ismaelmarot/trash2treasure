@@ -166,6 +166,26 @@ const userPointsSchema = new mongoose.Schema({
     default: {}
   },
   
+  // Historial para gráficas
+  daily_history: [{
+    period: String,
+    reports: { type: Number, default: 0 },
+    collected: { type: Number, default: 0 },
+    points: { type: Number, default: 0 }
+  }],
+  weekly_history: [{
+    period: String,
+    reports: { type: Number, default: 0 },
+    collected: { type: Number, default: 0 },
+    points: { type: Number, default: 0 }
+  }],
+  monthly_history: [{
+    period: String,
+    reports: { type: Number, default: 0 },
+    collected: { type: Number, default: 0 },
+    points: { type: Number, default: 0 }
+  }],
+  
   last_sync: { type: Date },
   
   created_at: { type: Date, default: Date.now },

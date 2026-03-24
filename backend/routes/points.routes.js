@@ -19,6 +19,53 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// Helper para actualizar historial de gráficas
+function updateHistory(userPoints, type, points) {
+  const now = new Date();
+  const dayKey = now.toISOString().split('T')[0]; // "2026-03-23"
+  const weekKey = `${now.getFullYear()}-W${String(Math.ceil((now.getDate() - now.getDay() + 1) / 7)).padStart(2, '0')}`;
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`; // "2026-03"
+
+  // Daily
+  let dayEntry = userPoints.daily_history.find(e => e.period === dayKey);
+  if (!dayEntry) {
+    dayEntry = { period: dayKey, reports: 0, collected: 0, points: 0 };
+    userPoints.daily_history.push(dayEntry);
+  }
+  dayEntry[type] += 1;
+  dayEntry.points += points;
+  // Mantener solo últimos 30 días
+  if (userPoints.daily_history.length > 30) {
+    userPoints.daily_history = userPoints.daily_history.slice(-30);
+  }
+
+  // Weekly
+  let weekEntry = userPoints.weekly_history.find(e => e.period === weekKey);
+  if (!weekEntry) {
+    weekEntry = { period: weekKey, reports: 0, collected: 0, points: 0 };
+    userPoints.weekly_history.push(weekEntry);
+  }
+  weekEntry[type] += 1;
+  weekEntry.points += points;
+  // Mantener solo últimas 12 semanas
+  if (userPoints.weekly_history.length > 12) {
+    userPoints.weekly_history = userPoints.weekly_history.slice(-12);
+  }
+
+  // Monthly
+  let monthEntry = userPoints.monthly_history.find(e => e.period === monthKey);
+  if (!monthEntry) {
+    monthEntry = { period: monthKey, reports: 0, collected: 0, points: 0 };
+    userPoints.monthly_history.push(monthEntry);
+  }
+  monthEntry[type] += 1;
+  monthEntry.points += points;
+  // Mantener solo últimos 12 meses
+  if (userPoints.monthly_history.length > 12) {
+    userPoints.monthly_history = userPoints.monthly_history.slice(-12);
+  }
+}
+
 // Mapeo de categorías a familias
 const CATEGORY_FAMILIES = {
   organic: 'eco', garden: 'eco', recycle: 'eco',
@@ -475,6 +522,11 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         scoreChange,
         trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same',
         message: gradeMessage
+      },
+      history: {
+        daily: userPoints.daily_history || [],
+        weekly: userPoints.weekly_history || [],
+        monthly: userPoints.monthly_history || []
       }
     };
     
@@ -590,6 +642,7 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     userPoints.last_activity_date = new Date();
     userPoints.markModified('category_points');
     userPoints.markModified('family_reports');
+    updateHistory(userPoints, 'reports', points);
     userPoints.updated_at = new Date();
     
     for (const div of DIVISIONS) {
@@ -731,6 +784,7 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
     userPoints.weekly_collected += 1;
     userPoints.monthly_collected += 1;
     
+    updateHistory(userPoints, 'collected', points);
     userPoints.last_activity_date = new Date();
     userPoints.updated_at = new Date();
     

@@ -69,6 +69,7 @@ export function PointsScreen() {
   const [activeTab, setActiveTab] = useState('summary')
   const [activeChallengePeriod, setActiveChallengePeriod] = useState('daily')
   const [activeSummaryTab, setActiveSummaryTab] = useState('categories')
+  const [activeChartTab, setActiveChartTab] = useState('daily')
   const [expandedLevels, setExpandedLevels] = useState<string[]>(['bajo'])
 
   const openAchievementModal = (achievement: any) => {
@@ -188,6 +189,99 @@ export function PointsScreen() {
                 </div>
               </div>
             </EcoScoreCard>
+          )}
+
+          {/* Gráficas de historial */}
+          <TabContainer>
+            <Tab $active={activeChartTab === 'daily'} onClick={() => setActiveChartTab('daily')}>Últimos 7 días</Tab>
+            <Tab $active={activeChartTab === 'weekly'} onClick={() => setActiveChartTab('weekly')}>Semanas</Tab>
+            <Tab $active={activeChartTab === 'monthly'} onClick={() => setActiveChartTab('monthly')}>Meses</Tab>
+          </TabContainer>
+
+          {activeChartTab === 'daily' && pointsData?.history?.daily && (
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
+              {(() => {
+                const data = pointsData.history.daily.slice(-7)
+                const maxVal = Math.max(...data.map((d: any) => Math.max(d.reports, d.collected)), 1)
+                const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+                return (
+                  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '160px', padding: '10px 0' }}>
+                    {data.map((d: any, i: number) => {
+                      const date = new Date(d.period + 'T00:00:00')
+                      const dayName = dayNames[date.getDay()]
+                      const reportH = (d.reports / maxVal) * 100
+                      const collectH = (d.collected / maxVal) * 100
+                      return (
+                        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
+                            <div style={{ width: '14px', height: `${Math.max(reportH, 4)}%`, background: '#3498db', borderRadius: '4px 4px 0 0' }} title={`Reportes: ${d.reports}`} />
+                            <div style={{ width: '14px', height: `${Math.max(collectH, 4)}%`, background: '#27ae60', borderRadius: '4px 4px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                          </div>
+                          <div style={{ fontSize: '11px', color: '#666' }}>{dayName}</div>
+                          <div style={{ fontSize: '10px', color: '#999' }}>{d.points} pts</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              })()}
+            </TabContent>
+          )}
+
+          {activeChartTab === 'weekly' && pointsData?.history?.weekly && (
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
+              {(() => {
+                const data = pointsData.history.weekly.slice(-12)
+                const maxVal = Math.max(...data.map((d: any) => Math.max(d.reports, d.collected)), 1)
+                return (
+                  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '160px', padding: '10px 0' }}>
+                    {data.map((d: any, i: number) => {
+                      const reportH = (d.reports / maxVal) * 100
+                      const collectH = (d.collected / maxVal) * 100
+                      return (
+                        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
+                            <div style={{ width: '10px', height: `${Math.max(reportH, 4)}%`, background: '#3498db', borderRadius: '4px 4px 0 0' }} title={`Reportes: ${d.reports}`} />
+                            <div style={{ width: '10px', height: `${Math.max(collectH, 4)}%`, background: '#27ae60', borderRadius: '4px 4px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                          </div>
+                          <div style={{ fontSize: '10px', color: '#666' }}>{d.period.split('-W')[1]}</div>
+                          <div style={{ fontSize: '9px', color: '#999' }}>{d.points} pts</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              })()}
+            </TabContent>
+          )}
+
+          {activeChartTab === 'monthly' && pointsData?.history?.monthly && (
+            <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
+              {(() => {
+                const data = pointsData.history.monthly.slice(-12)
+                const maxVal = Math.max(...data.map((d: any) => Math.max(d.reports, d.collected)), 1)
+                const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+                return (
+                  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '160px', padding: '10px 0' }}>
+                    {data.map((d: any, i: number) => {
+                      const monthNum = parseInt(d.period.split('-')[1]) - 1
+                      const reportH = (d.reports / maxVal) * 100
+                      const collectH = (d.collected / maxVal) * 100
+                      return (
+                        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
+                            <div style={{ width: '10px', height: `${Math.max(reportH, 4)}%`, background: '#3498db', borderRadius: '4px 4px 0 0' }} title={`Reportes: ${d.reports}`} />
+                            <div style={{ width: '10px', height: `${Math.max(collectH, 4)}%`, background: '#27ae60', borderRadius: '4px 4px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                          </div>
+                          <div style={{ fontSize: '10px', color: '#666' }}>{monthNames[monthNum]}</div>
+                          <div style={{ fontSize: '9px', color: '#999' }}>{d.points} pts</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              })()}
+            </TabContent>
           )}
 
           <TabContainer>
