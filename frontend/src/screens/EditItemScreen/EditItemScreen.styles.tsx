@@ -65,6 +65,7 @@ export const TextArea = styled.textarea`
     min-height: 10rem;
     border: 1px solid ${COLORS.grey};
     font-size: 16px;
+    font-family: inherit;
     background: #fbfbfd;
     resize: none;
     
