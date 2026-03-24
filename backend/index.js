@@ -13,7 +13,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { connectDB } = require('./db/mongodb');
-const { Item, ItemPhoto } = require('./db/models');
+const { Item, ItemPhoto, UserPoints } = require('./db/models');
 const cloudinary = require('cloudinary').v2;
 
 const app = express();
@@ -74,26 +74,68 @@ app.listen(PORT, '0.0.0.0', () => {
       console.log('Ejecutando limpieza de items...');
       const now = new Date();
       
-      // 1. Marcar como expirados los items que ya pasaron su tiempo (24h) y no están reclamados
-      const markResult = await Item.updateMany(
-        { 
-          expires_at: { $lt: now },
-          claimed_by: null,
-          is_expired: { $ne: true }
-        },
-        { $set: { is_expired: true } }
-      );
-      console.log(`Items marcados como expirados: ${markResult.modifiedCount}`);
+      // 1. Marcar como expirados y acreditar puntos
+      const CRITICAL_CATEGORIES = ['batteries', 'electronics', 'construction', 'furniture'];
+      const CATEGORY_FAMILIES = {
+        organic: 'eco', garden: 'eco', recycle: 'eco',
+        electronics: 'tech', batteries: 'tech',
+        construction: 'heavy', furniture: 'heavy', wood: 'heavy',
+        cardboard: 'packaging', paper: 'packaging', plastic: 'packaging', bottle: 'packaging', glass: 'packaging',
+        clothes: 'reuse', books: 'reuse',
+        star: 'special', sparkles: 'special',
+        carton: 'packaging', botellas: 'packaging', mixto: 'special', otros: 'special'
+      };
+      
+      const expiredItems = await Item.find({
+        expires_at: { $lt: now },
+        claimed_by: null,
+        is_expired: { $ne: true }
+      });
+      
+      console.log(`Items a expirar: ${expiredItems.length}`);
+      
+      for (const item of expiredItems) {
+        // Calcular puntos del item
+        const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
+        
+        // Acreditar puntos al usuario
+        const userPoints = await UserPoints.findOne({ user_id: item.user_id });
+        if (userPoints) {
+          userPoints.total_points += points;
+          userPoints.report_points += points;
+          userPoints.weekly_report_points = (userPoints.weekly_report_points || 0) + points;
+          userPoints.total_reports += 1;
+          userPoints.daily_reports += 1;
+          userPoints.weekly_reports += 1;
+          userPoints.monthly_reports += 1;
+          
+          const family = CATEGORY_FAMILIES[item.category] || 'special';
+          if (!userPoints.family_reports) userPoints.family_reports = {};
+          userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
+          
+          if (!userPoints.category_points) userPoints.category_points = {};
+          userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
+          
+          userPoints.markModified('category_points');
+          userPoints.markModified('family_reports');
+          await userPoints.save();
+          
+          console.log(`Puntos acreditados: ${points} para usuario ${item.user_id}`);
+        }
+        
+        // Marcar como expirado
+        item.is_expired = true;
+        await item.save();
+      }
       
       // 2. Borrar items que están marcados como expirados hace más de 1 hora
       const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-      const expiredItems = await Item.find({ 
+      const toDelete = await Item.find({ 
         is_expired: true,
         expires_at: { $lt: oneHourAgo }
       }).select('_id');
       
-      // Borrar fotos de Cloudinary y DB
-      for (const item of expiredItems) {
+      for (const item of toDelete) {
         const photos = await ItemPhoto.find({ item_id: item._id });
         for (const photo of photos) {
           if (photo.cloudinary_public_id) {
@@ -107,7 +149,6 @@ app.listen(PORT, '0.0.0.0', () => {
         await ItemPhoto.deleteMany({ item_id: item._id });
       }
       
-      // Borrar los items
       const deleteResult = await Item.deleteMany({ 
         is_expired: true,
         expires_at: { $lt: oneHourAgo }

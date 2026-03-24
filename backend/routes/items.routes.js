@@ -3,7 +3,7 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 const path = require('path');
-const { Item, ItemPhoto, Rating } = require('../db/models');
+const { Item, ItemPhoto, Rating, UserPoints } = require('../db/models');
 const authenticateToken = require('../middleware/auth.middleware');
 
 const router = express.Router();
@@ -297,6 +297,19 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 
     if (item.user_id?.toString() !== req.user.id) {
       return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    // Restar puntos del item (1 punto normal, 4 si es categoría crítica)
+    const CRITICAL_CATEGORIES = ['batteries', 'electronics', 'construction', 'furniture'];
+    const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
+    
+    const userPoints = await UserPoints.findOne({ user_id: item.user_id });
+    if (userPoints) {
+      userPoints.total_points = Math.max(0, (userPoints.total_points || 0) - points);
+      userPoints.report_points = Math.max(0, (userPoints.report_points || 0) - points);
+      userPoints.total_reports = Math.max(0, (userPoints.total_reports || 0) - 1);
+      userPoints.markModified('category_points');
+      await userPoints.save();
     }
 
     // Obtener todas las fotos del item
