@@ -348,10 +348,16 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     console.log('Step 5 done. Calculating Eco Score...');
     
-    // Calcular Eco Score semanal
+    // Calcular scores semanales
     const weeklyReports = userPoints.weekly_reports || 0;
     const weeklyCollected = userPoints.weekly_collected || 0;
-    const weeklyScore = weeklyReports + (weeklyCollected * 2); // collected vale doble
+    const weeklyScore = weeklyReports + (weeklyCollected * 2);
+    
+    const prevWeeklyReports = userPoints.weekly_reports_prev || 0;
+    const prevWeeklyCollected = userPoints.weekly_collected_prev || 0;
+    const prevWeeklyScore = prevWeeklyReports + (prevWeeklyCollected * 2);
+    
+    const weeklyPointsChange = weeklyScore - prevWeeklyScore;
     
     // Obtener ranking de usuarios para calcular percentil (top X%)
     const totalUsers = await UserPoints.countDocuments({ user_id: { $ne: null } });
@@ -420,11 +426,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
       gradeMessage = 'Aun no empiezas';
     }
     
-    // Comparar con semana anterior (usando monthly_reports como proxy si no hay weekly_prev)
-    const prevWeeklyScore = userPoints.weekly_reports_prev || 0;
-    const prevWeeklyCollected = userPoints.weekly_collected_prev || 0;
-    const prevScore = prevWeeklyScore + (prevWeeklyCollected * 2);
-    const scoreChange = weeklyScore - prevScore;
+    const scoreChange = weeklyPointsChange;
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
     
@@ -457,7 +459,7 @@ router.get('/my-points', authenticateToken, async (req, res) => {
         grade,
         gradeColor,
         weeklyScore,
-        percentile,
+        prevWeeklyScore,
         scoreChange,
         trend: scoreChange > 0 ? 'up' : scoreChange < 0 ? 'down' : 'same',
         message: gradeMessage

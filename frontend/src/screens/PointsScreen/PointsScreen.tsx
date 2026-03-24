@@ -175,12 +175,15 @@ export function PointsScreen() {
             <EcoScoreCard $bgColor={ecoScore.gradeColor}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
-                <EcoScoreTrend $trend={ecoScore.trend}>
-                  {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
-                  {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
-                </EcoScoreTrend>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '12px', color: '#666' }}>Anterior: {ecoScore.prevWeeklyScore || 0} pts</div>
+                  <EcoScoreTrend $trend={ecoScore.trend}>
+                    {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
+                    {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
+                  </EcoScoreTrend>
+                </div>
               </div>
-              <EcoScoreLetter>{ecoScore.grade}</EcoScoreLetter>
+              <EcoScoreLetter>{ecoScore.weeklyScore || 0} pts</EcoScoreLetter>
               <EcoScoreSubtitle>{ecoScore.message}</EcoScoreSubtitle>
             </EcoScoreCard>
           )}
