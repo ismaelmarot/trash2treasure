@@ -95,35 +95,8 @@ app.listen(PORT, '0.0.0.0', () => {
       console.log(`Items a expirar: ${expiredItems.length}`);
       
       for (const item of expiredItems) {
-        // Calcular puntos del item
-        const points = CRITICAL_CATEGORIES.includes(item.category) ? 4 : 1;
-        
-        // Acreditar puntos al usuario
-        const userPoints = await UserPoints.findOne({ user_id: item.user_id });
-        if (userPoints) {
-          userPoints.total_points += points;
-          userPoints.report_points += points;
-          userPoints.weekly_report_points = (userPoints.weekly_report_points || 0) + points;
-          userPoints.total_reports += 1;
-          userPoints.daily_reports += 1;
-          userPoints.weekly_reports += 1;
-          userPoints.monthly_reports += 1;
-          
-          const family = CATEGORY_FAMILIES[item.category] || 'special';
-          if (!userPoints.family_reports) userPoints.family_reports = {};
-          userPoints.family_reports[family] = (userPoints.family_reports[family] || 0) + 1;
-          
-          if (!userPoints.category_points) userPoints.category_points = {};
-          userPoints.category_points[item.category] = (userPoints.category_points[item.category] || 0) + points;
-          
-          userPoints.markModified('category_points');
-          userPoints.markModified('family_reports');
-          await userPoints.save();
-          
-          console.log(`Puntos acreditados: ${points} para usuario ${item.user_id}`);
-        }
-        
-        // Marcar como expirado
+        // Los puntos ya fueron acreditados cuando se reportó el item
+        // Solo marcar como expirado
         item.is_expired = true;
         await item.save();
       }
