@@ -428,26 +428,17 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
     
-    // category_points es un Map de Mongoose, convertirlo a objeto plano
-    let categoryPointsConverted = {};
-    try {
-      if (userPoints.category_points instanceof Map) {
-        categoryPointsConverted = Object.fromEntries(userPoints.category_points);
-      } else if (userPoints.category_points && typeof userPoints.category_points === 'object') {
-        categoryPointsConverted = { ...userPoints.category_points };
-      }
-    } catch (e) {
-      console.error('Error converting category_points:', e);
-    }
+    // category_points: usar directamente del toObject (ya es objeto plano)
+    const categoryPoints = pointsObj.category_points || {};
     
-    // family_reports ya es un objeto, no necesita conversión
-    const familyReportsConverted = userPoints.family_reports || {};
+    // family_reports
+    const familyReports = pointsObj.family_reports || {};
     
     const response = {
       points: {
         ...pointsObj,
-        category_points: categoryPointsConverted,
-        family_reports: familyReportsConverted,
+        category_points: categoryPoints,
+        family_reports: familyReports,
       },
       division,
       achievements: allAchievements,
