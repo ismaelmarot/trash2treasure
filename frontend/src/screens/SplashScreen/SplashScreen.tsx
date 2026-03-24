@@ -108,7 +108,7 @@ export function SplashScreen() {
         <Dot $delay={0.4} />
       </LoadingDots>
 
-      <AppVersion>Versión 1.0.2 Stable</AppVersion>
+      <AppVersion>Versión 1.0.3 Stable</AppVersion>
       <Developer>Developed by Ismael Marot</Developer>
     </Container>
   )
