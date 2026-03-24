@@ -22,6 +22,7 @@ import {
   EcoScoreSubtitle,
   EcoScoreTitle,
   EcoScoreTrend,
+  EcoScoreLetter,
   Header,
   Loading,
   PointsCard,
@@ -172,18 +173,21 @@ export function PointsScreen() {
 
           {ecoScore && (
             <EcoScoreCard $bgColor={ecoScore.gradeColor}>
-              <EcoScoreTitle>Eco Impacto Semanal</EcoScoreTitle>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <div style={{ fontSize: '13px', color: '#666', marginBottom: '4px' }}>Semana anterior: {ecoScore.prevWeeklyScore || 0} pts</div>
-                  <div style={{ fontSize: '18px', fontWeight: '700', color: '#1d1d1f' }}>Actual: {ecoScore.weeklyScore || 0} pts</div>
+                  <EcoScoreTitle style={{ color: '#fff', marginBottom: '4px' }}>Eco Impacto semanal</EcoScoreTitle>
+                  <EcoScoreLetter style={{ color: '#fff', fontSize: '32px', fontWeight: '700', margin: '4px 0' }}>{ecoScore.grade}</EcoScoreLetter>
+                  <EcoScoreSubtitle style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>{ecoScore.message}</EcoScoreSubtitle>
                 </div>
-                <EcoScoreTrend $trend={ecoScore.trend}>
-                  {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
-                  {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
-                </EcoScoreTrend>
+                <div style={{ textAlign: 'right', color: '#fff' }}>
+                  <div style={{ fontSize: '13px', opacity: 0.85, marginBottom: '2px' }}>Semana anterior: {ecoScore.prevWeeklyScore || 0} pts</div>
+                  <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '4px' }}>Actual: {ecoScore.weeklyScore || 0} pts</div>
+                  <EcoScoreTrend $trend={ecoScore.trend} style={{ color: '#fff', fontSize: '14px', fontWeight: '700' }}>
+                    {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
+                    {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
+                  </EcoScoreTrend>
+                </div>
               </div>
-              <EcoScoreSubtitle style={{ marginTop: '8px' }}>{ecoScore.message}</EcoScoreSubtitle>
             </EcoScoreCard>
           )}
 
