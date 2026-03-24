@@ -101,12 +101,12 @@ const getOrCreateUserPoints = async (userId) => {
     if (!lastWeekReset || weekStart > lastWeekReset) {
       userPoints.weekly_reports_prev = userPoints.weekly_reports || 0;
       userPoints.weekly_collected_prev = userPoints.weekly_collected || 0;
-      userPoints.weekly_report_points_prev = userPoints.report_points || 0;
-      userPoints.weekly_collect_points_prev = userPoints.collect_points || 0;
+      userPoints.weekly_report_points_prev = userPoints.weekly_report_points || 0;
+      userPoints.weekly_collect_points_prev = userPoints.weekly_collect_points || 0;
       userPoints.weekly_reports = 0;
       userPoints.weekly_collected = 0;
-      userPoints.report_points = 0;
-      userPoints.collect_points = 0;
+      userPoints.weekly_report_points = 0;
+      userPoints.weekly_collect_points = 0;
       userPoints.last_weekly_reset = weekStart;
       needsSave = true;
     }
@@ -352,8 +352,8 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     console.log('Step 5 done. Calculating Eco Score...');
     
-    // Calcular puntos semanales (puntos reales del usuario)
-    const weeklyScore = (userPoints.report_points || 0) + (userPoints.collect_points || 0);
+    // Calcular puntos semanales reales
+    const weeklyScore = (userPoints.weekly_report_points || 0) + (userPoints.weekly_collect_points || 0);
     const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
     
     const weeklyPointsChange = weeklyScore - prevWeeklyScore;
@@ -543,6 +543,7 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     
     userPoints.total_points += points;
     userPoints.report_points += points;
+    userPoints.weekly_report_points += points;
     userPoints.total_reports += 1;
     userPoints.daily_reports += 1;
     userPoints.weekly_reports += 1;
@@ -711,6 +712,7 @@ router.post('/add-collect', authenticateToken, async (req, res) => {
     // Actualizar contadores
     userPoints.total_points += points;
     userPoints.collect_points += points;
+    userPoints.weekly_collect_points += points;
     userPoints.total_collected += 1;
     userPoints.daily_collected += 1;
     userPoints.weekly_collected += 1;
