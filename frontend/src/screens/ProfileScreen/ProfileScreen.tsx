@@ -153,21 +153,21 @@ export function ProfileScreen() {
         <SectionTitle>Aplicación</SectionTitle>
         <MenuItem onClick={() => setIsEcoModalOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+            <IconCircle />
           </MenuIconWrapper>
           <MenuLabel>¿Qué son los Eco Points?</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsModalOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+            <IconCircle />
           </MenuIconWrapper>
           <MenuLabel>Cómo obtener puntos</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+            <IconCircle />
           </MenuIconWrapper>
           <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
           <IconChevron />
