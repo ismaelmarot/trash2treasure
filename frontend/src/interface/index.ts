@@ -1,4 +1,6 @@
+export type { Achievement } from './achievement.interface'
+export type { AchievementModalProps } from './achievementModal.interface'
 export type { ItemProps } from './Item.interface'
 export type { ItemCountdownProps } from './itemCountdown.interface'
-export type { PhotoProps } from './Photo.interface'
 export type { PassWordValidationProps } from './PassWordValidation.interface'
+export type { PhotoProps } from './Photo.interface'

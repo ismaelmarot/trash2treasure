@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@react-email/render": "^2.0.4",
     "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.2",
@@ -27,7 +28,8 @@
     "passport": "^0.7.0",
     "passport-apple": "^2.0.2",
     "passport-facebook": "^3.0.0",
-    "passport-jwt": "^4.0.1"
+    "passport-jwt": "^4.0.1",
+    "react-email": "^5.2.10"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components'
 import { COLORS } from '@/constants'
+import type { TrophiesTextProps } from '@/interface/trophiesTextProps.interface'
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -17,7 +18,7 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: ${COLORS.shadow};
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -50,7 +51,7 @@ export const Icon = styled.div<{ $unlocked?: boolean }>`
 export const Title = styled.h3<{ $unlocked?: boolean }>`
   font-size: 22px;
   font-weight: 700;
-  color: ${props => props.$unlocked ? COLORS.black : '#999'};
+  color: ${props => props.$unlocked ? COLORS.black : COLORS.grey};
   margin: 0 0 8px 0;
 `
 
@@ -64,7 +65,7 @@ export const Description = styled.p`
 export const PointsBadge = styled.div<{ $unlocked?: boolean }>`
   display: inline-block;
   background: ${props => props.$unlocked ? '#0071e3' : '#e0e0e0'};
-  color: ${props => props.$unlocked ? 'white' : '#999'};
+  color: ${props => props.$unlocked ? 'white' : COLORS.grey};
   padding: 8px 20px;
   border-radius: 20px;
   font-size: 16px;
@@ -94,4 +95,11 @@ export const CloseButton = styled.button`
   &:hover {
     background: #e0e0e0;
   }
+`
+
+export const TrophiesText = styled.div<TrophiesTextProps>`
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ hasTrophies }) => (hasTrophies ? '#34c759' : COLORS.grey)};
 `
