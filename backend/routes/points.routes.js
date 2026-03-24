@@ -582,6 +582,8 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     }
     
     userPoints.last_activity_date = new Date();
+    userPoints.markModified('category_points');
+    userPoints.markModified('family_reports');
     userPoints.updated_at = new Date();
     
     for (const div of DIVISIONS) {
@@ -632,6 +634,8 @@ router.post('/sync', authenticateToken, async (req, res) => {
         }
       }
 
+      userPoints.markModified('category_points');
+      userPoints.markModified('family_reports');
       userPoints.updated_at = new Date();
       await userPoints.save();
       checkAchievements(req.user.id, userPoints);
