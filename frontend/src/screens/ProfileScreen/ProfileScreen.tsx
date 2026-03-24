@@ -276,7 +276,7 @@ export function ProfileScreen() {
                   fgColor="#1d1d1f"
                   level="H"
                   imageSettings={{
-                    src: '/app-icon.png',
+                    src: '/icon-192.png',
                     height: 40,
                     width: 40,
                     excavate: true
