@@ -133,17 +133,18 @@ export const ResultsGrid = styled.div`
     }
 `
 
-export const ResultCard = styled.div`
-    background: ${COLORS.allWhite};
+export const ResultCard = styled.div<{ $isExpired?: boolean }>`
+    background: ${props => props.$isExpired ? COLORS.grey : COLORS.allWhite};
     border-radius: ${SPACING.lg};
     overflow: hidden;
     box-shadow: 0 4px 20px ${COLORS.shadow};
-    cursor: pointer;
+    cursor: ${props => props.$isExpired ? 'not-allowed' : 'pointer'};
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
+    opacity: ${props => props.$isExpired ? 0.6 : 1};
     
     &:hover {
-        transform: translateY(-6px);
+        transform: ${props => props.$isExpired ? 'none' : 'translateY(-6px)'};
     }
 `
 

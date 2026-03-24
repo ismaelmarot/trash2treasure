@@ -13,4 +13,5 @@ export interface ItemProps {
     claimed_by: number | string | null;
     main_image: string | null;
     photos?: PhotoProps[];
+    is_expired?: boolean;
 }

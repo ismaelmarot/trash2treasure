@@ -230,26 +230,27 @@ export const ItemsList = styled.div`
     background: transparent;
 `
 
-export const ItemCard = styled.div`
+export const ItemCard = styled.div<{ $isExpired?: boolean }>`
     display: flex;
     align-items: center;
     gap: 16px;
     padding: 16px;
-    background: ${COLORS.allWhite};
+    background: ${props => props.$isExpired ? COLORS.grey : COLORS.allWhite};
     border-radius: 20px;
     margin-bottom: 12px;
-    cursor: pointer;
+    cursor: ${props => props.$isExpired ? 'not-allowed' : 'pointer'};
     transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     border: 1px solid ${COLORS.shadow};
     box-shadow: 0 2px 10px ${COLORS.shadow};
+    opacity: ${props => props.$isExpired ? 0.6 : 1};
 
     &:hover {
-        transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 8px 16px ${COLORS.shadow};
+        transform: ${props => props.$isExpired ? 'none' : 'translateY(-2px) scale(1.01)'};
+        box-shadow: ${props => props.$isExpired ? 'none' : '0 8px 16px ' + COLORS.shadow};
     }
 
     &:active {
-        transform: translateY(0) scale(0.98);
+        transform: ${props => props.$isExpired ? 'none' : 'translateY(0) scale(0.98)'};
     }
 `
 

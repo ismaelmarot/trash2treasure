@@ -183,7 +183,11 @@ export function SearchScreen() {
       ) : (
         <ResultsGrid>
           {filteredItems.map(item => (
-            <ResultCard key={item.id} onClick={() => navigate(`/app/item/${item.id}`)}>
+            <ResultCard 
+              key={item.id} 
+              $isExpired={item.is_expired}
+              onClick={() => !item.is_expired && navigate(`/app/item/${item.id}`)}
+            >
               <ImageWrapper>
                 {item.main_image ? (
                   <ItemImage src={getImageUrl(item.main_image, API_BASE_URL)} alt={item.title} />

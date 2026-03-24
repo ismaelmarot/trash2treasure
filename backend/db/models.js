@@ -263,6 +263,7 @@ const itemSchema = new mongoose.Schema({
   longitude: { type: Number, required: true },
   created_at: { type: Date, default: Date.now },
   expires_at: { type: Date },
+  is_expired: { type: Boolean, default: false },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   claimed_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   main_image: { type: String }, // URL de la imagen principal

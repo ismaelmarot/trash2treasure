@@ -512,12 +512,11 @@ export function MapScreen() {
             </EmptyState>
           ) : (
             filteredItems.map(item => (
-              <ItemCard key={item.id} onClick={() => {
-                if (item.latitude != null && item.longitude != null) {
-                  setUserLocation([item.latitude, item.longitude]);
-                  setShouldRecenter(prev => prev + 1);
-                }
-              }}>
+              <ItemCard 
+                key={item.id} 
+                $isExpired={item.is_expired}
+                onClick={() => !item.is_expired && item.latitude != null && item.longitude != null && (setUserLocation([item.latitude, item.longitude]), setShouldRecenter(prev => prev + 1))}
+              >
                 <ItemThumbnail 
                   src={item.main_image 
                     ? getImageUrl(item.main_image, API_BASE_URL) 
