@@ -357,7 +357,14 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     console.log('Step 5 done. Calculating Eco Score...');
     
     // Calcular puntos semanales reales
-    const weeklyScore = (userPoints.weekly_report_points || 0) + (userPoints.weekly_collect_points || 0);
+    // Si los puntos semanales son 0 pero hay totales, usar totales (migración)
+    let weeklyReportPts = userPoints.weekly_report_points || 0;
+    let weeklyCollectPts = userPoints.weekly_collect_points || 0;
+    if (weeklyReportPts === 0 && weeklyCollectPts === 0 && ((userPoints.report_points || 0) + (userPoints.collect_points || 0)) > 0) {
+      weeklyReportPts = userPoints.report_points || 0;
+      weeklyCollectPts = userPoints.collect_points || 0;
+    }
+    const weeklyScore = weeklyReportPts + weeklyCollectPts;
     const prevWeeklyScore = (userPoints.weekly_report_points_prev || 0) + (userPoints.weekly_collect_points_prev || 0);
     
     const weeklyPointsChange = weeklyScore - prevWeeklyScore;
