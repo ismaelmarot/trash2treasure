@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
+import achievement01 from '@/assets/achievements-img/achievement-01.png'
+import achievement02 from '@/assets/achievements-img/achievement-02.png'
+import achievement03 from '@/assets/achievements-img/achievement-03.png'
+import achievement04 from '@/assets/achievements-img/achievement-04.png'
+import achievement05 from '@/assets/achievements-img/achievement-05.png'
 import {
   Avatar,
   AvatarImage,
@@ -69,6 +74,7 @@ export function ProfileScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEcoModalOpen, setIsEcoModalOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -172,6 +178,13 @@ export function ProfileScreen() {
             <IconCircle />
           </MenuIconWrapper>
           <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+        <MenuItem onClick={() => setIsComingSoonOpen(true)}>
+          <MenuIconWrapper>
+            <IconCircle />
+          </MenuIconWrapper>
+          <MenuLabel>Logros</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
@@ -290,6 +303,29 @@ export function ProfileScreen() {
         </ModalOverlay>
       )}
 
+      {isComingSoonOpen && (
+        <ModalOverlay onClick={() => setIsComingSoonOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px' }}>
+            <ModalTitle>🎖️ Logros</ModalTitle>
+            <p style={{ textAlign: 'center', color: '#86868b', marginBottom: '24px', fontSize: '14px' }}>
+              Coming Soon
+            </p>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(3, 1fr)', 
+              gap: '12px',
+              padding: '8px 0'
+            }}>
+              <img src={achievement01} alt="Achievement 1" style={{ width: '100%', borderRadius: '12px' }} />
+              <img src={achievement02} alt="Achievement 2" style={{ width: '100%', borderRadius: '12px' }} />
+              <img src={achievement03} alt="Achievement 3" style={{ width: '100%', borderRadius: '12px' }} />
+              <img src={achievement04} alt="Achievement 4" style={{ width: '100%', borderRadius: '12px' }} />
+              <img src={achievement05} alt="Achievement 5" style={{ width: '100%', borderRadius: '12px' }} />
+            </div>
+            <ModalClose onClick={() => setIsComingSoonOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </Container>
   )
 }
