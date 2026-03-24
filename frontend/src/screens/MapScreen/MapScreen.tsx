@@ -147,7 +147,7 @@ export function MapScreen() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [maxDistance, setMaxDistance] = useState<number>(3000); // Default 3km
+  const [maxDistance, setMaxDistance] = useState<number>(1000); // Default 1km
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371e3; // Earth radius in meters
@@ -470,7 +470,7 @@ export function MapScreen() {
           <FilterSection>
             <SectionLabel>Máxima Distancia</SectionLabel>
             <DistanceGrid>
-              {[500, 1000, 2000, 3000].map(dist => (
+              {[500, 1000, 2000, 3000, 5000].map(dist => (
                 <FilterChip 
                   key={dist} 
                   $active={maxDistance === dist}
