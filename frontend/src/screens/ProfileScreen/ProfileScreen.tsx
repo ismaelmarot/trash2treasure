@@ -42,6 +42,7 @@ import {
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
 
 const POINTS_INFO = [
+  { icon: '🌍', title: '¿Qué son los Eco Points?', detail: 'Los Eco Points son puntos que ganás al reportar residuos en tu zona o reclamarlos para reciclar. Cuantos más puntos tengas, más alto será tu nivel y división en la comunidad Trash2Treasure.' },
   { icon: '📸', title: 'Reportar', detail: '+1 punto por cada reporte. +3 extra si la categoría es crítica (baterías, electrónicos, construcción, muebles)' },
   { icon: '♻️', title: 'Recolectar', detail: '+3 puntos por cada recolección. +3 extra si la categoría es crítica. +1 a +3 extra por rapidez (<3h: +1, <1h: +3)' },
   { icon: '⏱️', title: 'Bonus por tiempo', detail: '<1 hora: +3 puntos extra. <3 horas: +1 punto extra' },
