@@ -68,14 +68,14 @@ app.use((err, req, res, next) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
   
-  // Tarea de limpieza: Marcar items expirados (ya no se borran, quedan visibles pero marcados)
+  // Tarea de limpieza: Marcar items expirados y luego borrarlos
   setInterval(async () => {
     try {
-      console.log('Marcando items expirados...');
+      console.log('Ejecutando limpieza de items...');
       const now = new Date();
       
-      // Marcar como expirados los items que ya pasaron su tiempo y no están reclamados
-      const result = await Item.updateMany(
+      // 1. Marcar como expirados los items que ya pasaron su tiempo (24h) y no están reclamados
+      const markResult = await Item.updateMany(
         { 
           expires_at: { $lt: now },
           claimed_by: null,
@@ -83,10 +83,38 @@ app.listen(PORT, '0.0.0.0', () => {
         },
         { $set: { is_expired: true } }
       );
+      console.log(`Items marcados como expirados: ${markResult.modifiedCount}`);
       
-      console.log(`Items marcados como expirados: ${result.modifiedCount}`);
+      // 2. Borrar items que están marcados como expirados hace más de 1 hora
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+      const expiredItems = await Item.find({ 
+        is_expired: true,
+        expires_at: { $lt: oneHourAgo }
+      }).select('_id');
+      
+      // Borrar fotos de Cloudinary y DB
+      for (const item of expiredItems) {
+        const photos = await ItemPhoto.find({ item_id: item._id });
+        for (const photo of photos) {
+          if (photo.cloudinary_public_id) {
+            try {
+              await cloudinary.uploader.destroy(photo.cloudinary_public_id);
+            } catch (err) {
+              console.error('Error borrando foto de Cloudinary:', err.message);
+            }
+          }
+        }
+        await ItemPhoto.deleteMany({ item_id: item._id });
+      }
+      
+      // Borrar los items
+      const deleteResult = await Item.deleteMany({ 
+        is_expired: true,
+        expires_at: { $lt: oneHourAgo }
+      });
+      console.log(`Items eliminados: ${deleteResult.deletedCount}`);
     } catch (err) {
-      console.error('Error marcando items expirados:', err.message);
+      console.error('Error en la limpieza de items:', err.message);
     }
   }, 60 * 60 * 1000); // 1 hora
 });
