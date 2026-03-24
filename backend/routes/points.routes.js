@@ -134,6 +134,7 @@ const getOrCreateUserPoints = async (userId) => {
     if (userPoints.daily_collected === undefined) { userPoints.daily_collected = 0; needsSave = true; }
     // No sobreescribir family_reports si ya tiene valores
     if (!userPoints.family_reports) { userPoints.family_reports = { eco: 0, tech: 0, heavy: 0, packaging: 0, reuse: 0, special: 0 }; needsSave = true; }
+    if (!userPoints.category_points) { userPoints.category_points = {}; needsSave = true; }
     if (!userPoints.daily_family_reports) { userPoints.daily_family_reports = {}; needsSave = true; }
     if (!userPoints.daily_category_reports) { userPoints.daily_category_reports = {}; needsSave = true; }
     if (userPoints.weekly_reports === undefined) { userPoints.weekly_reports = 0; needsSave = true; }
