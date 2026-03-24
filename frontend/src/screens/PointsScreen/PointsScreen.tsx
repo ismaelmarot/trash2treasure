@@ -153,12 +153,20 @@ export function PointsScreen() {
             </PointsHeader>
             <StatsRow>
               <StatItem>
+                <StatValue>{points.total_reports || 0}</StatValue>
+                <StatLabel>Reportes</StatLabel>
+              </StatItem>
+              <StatItem>
+                <StatValue>{points.total_collected || 0}</StatValue>
+                <StatLabel>Recolectados</StatLabel>
+              </StatItem>
+              <StatItem>
                 <StatValue>{points.report_points || 0}</StatValue>
-                <StatLabel>Puntos por Reportes</StatLabel>
+                <StatLabel>Pts Reportes</StatLabel>
               </StatItem>
               <StatItem>
                 <StatValue>{points.collect_points || 0}</StatValue>
-                <StatLabel>Puntos por Recolectados</StatLabel>
+                <StatLabel>Pts Recolectados</StatLabel>
               </StatItem>
             </StatsRow>
           </PointsCard>
