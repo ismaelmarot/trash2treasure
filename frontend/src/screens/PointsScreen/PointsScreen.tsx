@@ -179,7 +179,7 @@ export function PointsScreen() {
                   <EcoScoreSubtitle style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>{ecoScore.message}</EcoScoreSubtitle>
                 </div>
                 <div style={{ textAlign: 'right', color: '#fff' }}>
-                  <div style={{ fontSize: '14px', opacity: 0.85, marginBottom: '2px' }}>Semana anterior: {ecoScore.prevWeeklyScore || 0} pts</div>
+                  <div style={{ fontSize: '14px', marginBottom: '2px' }}>Semana anterior: {ecoScore.prevWeeklyScore || 0} pts</div>
                   <div style={{ fontSize: '14px', fontWeight: '600' }}>actual: {ecoScore.weeklyScore || 0} pts</div>
                   <div style={{ fontSize: '14px', fontWeight: '700', marginTop: '8px' }}>
                     {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
