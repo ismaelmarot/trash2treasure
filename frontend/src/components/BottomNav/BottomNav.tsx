@@ -1,6 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom'
-import { navigationItems } from '../../navigation/navigation'
-import { useAuth } from '@/hooks'
+import { useBottomNav } from './useBottomNav'
 import {
   BottomNavContainer,
   BottomNavItem,
@@ -8,20 +6,15 @@ import {
   AvatarImage,
 } from './BottomNav.styles'
 
-const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
-
-function getAvatarColor(name: string): string {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
-}
-
 export const BottomNav = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { user } = useAuth()
+  const {
+    navigationItems,
+    handleNavigate,
+    isActive,
+    getProfileAvatar
+  } = useBottomNav()
+
+  const avatar = getProfileAvatar()
 
   return (
     <BottomNavContainer>
@@ -32,16 +25,16 @@ export const BottomNav = () => {
         return (
           <BottomNavItem
             key={item.path}
-            $active={location.pathname === item.path}
-            onClick={() => navigate(item.path)}
+            $active={isActive(item.path)}
+            onClick={() => handleNavigate(item.path)}
           >
-            {isProfileTab && user?.profile_image ? (
+            {isProfileTab && avatar.type === 'image' ? (
               <UserAvatar $hasImage>
-                <AvatarImage src={user.profile_image} alt="Profile" />
+                <AvatarImage src={avatar.src} alt="Profile" />
               </UserAvatar>
-            ) : isProfileTab && user?.name ? (
-              <UserAvatar $bgColor={getAvatarColor(user.name)}>
-                {user.name.charAt(0).toUpperCase()}
+            ) : isProfileTab && avatar.type === 'initial' ? (
+              <UserAvatar $bgColor={avatar.color}>
+                {avatar.initial}
               </UserAvatar>
             ) : (
               <Icon size={24} />
