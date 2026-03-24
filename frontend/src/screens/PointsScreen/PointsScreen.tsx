@@ -359,6 +359,7 @@ export function PointsScreen() {
             </div>
 
             {activeSummaryTab === 'categories' && (
+            <div style={{ background: '#fff', borderRadius: '25px', padding: '16px' }}>
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
               {CATEGORIES.filter(c => c.id !== 'todos').map((cat) => {
                 const pts = (points.category_points || {})[cat.id] || 0
@@ -382,9 +383,11 @@ export function PointsScreen() {
                 )
               })}
             </TabContent>
+            </div>
           )}
 
           {activeSummaryTab === 'families' && (
+            <div style={{ background: '#fff', borderRadius: '25px', padding: '16px' }}>
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '8px', padding: '0 8px' }}>
               {Object.entries(points.family_reports || {}).map(([family, count]) => {
                 const maxCount = Math.max(...Object.values(points.family_reports || {}).map((v: any) => Number(v)), 1)
@@ -407,9 +410,11 @@ export function PointsScreen() {
                 )
               })}
             </TabContent>
+            </div>
           )}
 
           {activeSummaryTab === 'level' && (
+            <div style={{ background: '#fff', borderRadius: '25px', padding: '16px' }}>
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '12px', padding: '0 8px' }}>
               {[
                 { id: 'bajo', icon: '🌱', name: 'Nivel bajo', levels: [
@@ -527,6 +532,7 @@ export function PointsScreen() {
                 )
               })}
             </TabContent>
+            </div>
           )}
           </div>
         </>
