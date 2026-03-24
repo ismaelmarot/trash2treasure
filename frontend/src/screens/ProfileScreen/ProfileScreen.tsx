@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
 import {
@@ -67,6 +68,7 @@ export function ProfileScreen() {
   const [profileData, setProfileData] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEcoModalOpen, setIsEcoModalOpen] = useState(false)
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -175,6 +177,31 @@ export function ProfileScreen() {
       </Section>
 
       <Section>
+        <SectionTitle>Compartir app</SectionTitle>
+        <MenuItem onClick={() => setIsQrModalOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>📱</span>
+          </MenuIconWrapper>
+          <MenuLabel>Código QR</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+        <MenuItem onClick={() => window.open('mailto:?subject=Trash2Treasure&body=¡Descubrí Trash2Treasure! Una app para reportar y reciclar residuos en tu zona. 🌍%0A%0Ahttps://trash2treasure-app.vercel.app')}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>✉️</span>
+          </MenuIconWrapper>
+          <MenuLabel>Enviar por mail</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+        <MenuItem onClick={() => window.open('https://wa.me/?text=¡Descubrí Trash2Treasure! 🌍 Una app para reportar y reciclar residuos en tu zona.%0A%0Ahttps://trash2treasure-app.vercel.app')}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>💬</span>
+          </MenuIconWrapper>
+          <MenuLabel>WhatsApp</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+      </Section>
+
+      <Section>
         <SectionTitle>Configuración</SectionTitle>
         <MenuItem onClick={logout}>
             <ExitText>Cerrar Sesión</ExitText>
@@ -232,6 +259,33 @@ export function ProfileScreen() {
               </InfoItem>
             </InfoList>
             <ModalClose onClick={() => setIsEcoModalOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {isQrModalOpen && (
+        <ModalOverlay onClick={() => setIsQrModalOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
+            <ModalTitle>📱 Código QR</ModalTitle>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <QRCodeSVG
+                  value="https://trash2treasure-app.vercel.app"
+                  size={200}
+                  bgColor="#ffffff"
+                  fgColor="#1d1d1f"
+                  level="H"
+                  imageSettings={{
+                    src: '/app-icon.png',
+                    height: 40,
+                    width: 40,
+                    excavate: true
+                  }}
+                />
+              </div>
+            </div>
+            <p style={{ fontSize: '14px', color: '#666', margin: '0' }}>Escaneá para descargar Trash2Treasure</p>
+            <ModalClose onClick={() => setIsQrModalOpen(false)}>×</ModalClose>
           </ModalContent>
         </ModalOverlay>
       )}
