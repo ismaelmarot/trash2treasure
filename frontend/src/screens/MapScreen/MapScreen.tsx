@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -100,12 +100,16 @@ const userIcon = L.divIcon({
   iconAnchor: [10, 10]
 })
 
-// Component to recenter map when location changes
+// Component to recenter map only when triggered
 function ChangeView({ center, trigger }: { center: L.LatLngExpression, trigger?: number }) {
   const map = useMap();
+  const lastTrigger = useRef(trigger);
   useEffect(() => {
-    map.setView(center, map.getZoom());
-  }, [center, trigger]); // Removed map from deps to avoid infinite loops in some cases
+    if (trigger !== lastTrigger.current) {
+      lastTrigger.current = trigger;
+      map.setView(center, map.getZoom());
+    }
+  }, [trigger]);
   return null;
 }
 
