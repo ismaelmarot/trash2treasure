@@ -33,9 +33,23 @@ const userPointsSchema = new mongoose.Schema({
   
   // Puntos por categoría
   category_points: {
-    type: Map,
-    of: Number,
-    default: {}
+    paper: { type: Number, default: 0 },
+    plastic: { type: Number, default: 0 },
+    glass: { type: Number, default: 0 },
+    metal: { type: Number, default: 0 },
+    clothes: { type: Number, default: 0 },
+    books: { type: Number, default: 0 },
+    electronics: { type: Number, default: 0 },
+    batteries: { type: Number, default: 0 },
+    organic: { type: Number, default: 0 },
+    furniture: { type: Number, default: 0 },
+    construction: { type: Number, default: 0 },
+    wood: { type: Number, default: 0 },
+    garden: { type: Number, default: 0 },
+    carton: { type: Number, default: 0 },
+    botellas: { type: Number, default: 0 },
+    mixto: { type: Number, default: 0 },
+    otros: { type: Number, default: 0 }
   },
   
   // Contadores por categoría
