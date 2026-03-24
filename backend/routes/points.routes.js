@@ -428,13 +428,13 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     
     const pointsObj = userPoints.toObject ? userPoints.toObject() : userPoints;
     
-    // category_points es un Map, convertirlo
-    const categoryPointsConverted = {};
+    // category_points es un Map de Mongoose, convertirlo a objeto plano
+    let categoryPointsConverted = {};
     try {
-      if (userPoints.category_points && typeof userPoints.category_points.forEach === 'function') {
-        userPoints.category_points.forEach((value, key) => {
-          categoryPointsConverted[key] = value;
-        });
+      if (userPoints.category_points instanceof Map) {
+        categoryPointsConverted = Object.fromEntries(userPoints.category_points);
+      } else if (userPoints.category_points && typeof userPoints.category_points === 'object') {
+        categoryPointsConverted = { ...userPoints.category_points };
       }
     } catch (e) {
       console.error('Error converting category_points:', e);
