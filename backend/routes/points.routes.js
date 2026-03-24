@@ -363,6 +363,8 @@ router.get('/my-points', authenticateToken, async (req, res) => {
     const weeklyPointsChange = weeklyScore - prevWeeklyScore;
     
     // Obtener ranking de usuarios para calcular percentil (top X%)
+    const weeklyReports = userPoints.weekly_reports || 0;
+    const weeklyCollected = userPoints.weekly_collected || 0;
     const totalUsers = await UserPoints.countDocuments({ user_id: { $ne: null } });
     const usersAbove = await UserPoints.countDocuments({ 
       weekly_reports: { $gt: weeklyReports },
