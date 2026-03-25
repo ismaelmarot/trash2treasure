@@ -109,6 +109,22 @@ export function AddItemScreen() {
     }
   }, [])
 
+  // Prevenir zoom cuando la cámara está abierta
+  useEffect(() => {
+    if (isCameraOpen) {
+      const preventZoom = (e: Event) => {
+        if ((e as TouchEvent).touches && (e as TouchEvent).touches.length > 1) {
+          e.preventDefault()
+        }
+      }
+      document.addEventListener('touchmove', preventZoom, { passive: false })
+      
+      return () => {
+        document.removeEventListener('touchmove', preventZoom)
+      }
+    }
+  }, [isCameraOpen])
+
   const centerOnMe = () => {
     if (navigator.geolocation) {
       setError('')
