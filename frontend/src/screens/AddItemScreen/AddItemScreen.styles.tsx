@@ -325,12 +325,14 @@ export const CameraViewWrapper = styled.div`
     position: relative;
     ${size('100%','100%')}
     max-width: 500px;
+    touch-action: none;
 `
 
 export const VideoFeed = styled.video`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    touch-action: none;
 `
 
 export const CameraControls = styled.div`
