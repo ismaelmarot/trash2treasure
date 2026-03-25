@@ -75,6 +75,27 @@ export function ProfileScreen() {
   const [isEcoModalOpen, setIsEcoModalOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false)
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
+  const [inviteEmail, setInviteEmail] = useState('')
+
+  const handleSendInvite = async () => {
+    if (!inviteEmail) return
+    try {
+      await fetch(`${API_BASE_URL}/users/invite`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email: inviteEmail })
+      })
+      setInviteEmail('')
+      setIsInviteModalOpen(false)
+      alert('¡Invitación enviada! 🎉')
+    } catch (err) {
+      console.error('Error sending invite:', err)
+    }
+  }
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -205,6 +226,13 @@ export function ProfileScreen() {
           <MenuLabel>Enviar por mail</MenuLabel>
           <IconChevron />
         </MenuItem>
+        <MenuItem onClick={() => setIsInviteModalOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>📨</span>
+          </MenuIconWrapper>
+          <MenuLabel>Invitar amigo</MenuLabel>
+          <IconChevron />
+        </MenuItem>
         <MenuItem onClick={() => window.open('https://wa.me/?text=¡Descubrí Trash2Treasure! 🌍 Una app para reportar y reciclar residuos en tu zona.%0A%0Ahttps://trash2treasure-app.vercel.app')}>
           <MenuIconWrapper>
             <span style={{ fontSize: '1.2rem' }}>💬</span>
@@ -323,6 +351,49 @@ export function ProfileScreen() {
               <img src={achievement05} alt="Achievement 5" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
             </div>
             <ModalClose onClick={() => setIsComingSoonOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {isInviteModalOpen && (
+        <ModalOverlay onClick={() => setIsInviteModalOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px', textAlign: 'center' }}>
+            <ModalTitle>📨 Invitar amigo</ModalTitle>
+            <p style={{ color: '#86868b', fontSize: '14px', marginBottom: '20px' }}>
+              El recibirá un email con el diseño de Trash2Treasure
+            </p>
+            <input
+              type="email"
+              placeholder="email@ejemplo.com"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '12px',
+                border: '1px solid #e5e5ea',
+                fontSize: '16px',
+                marginBottom: '16px',
+                boxSizing: 'border-box'
+              }}
+            />
+            <Button 
+              onClick={handleSendInvite}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '12px',
+                border: 'none',
+                background: '#42a59f',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Enviar invitación
+            </Button>
+            <ModalClose onClick={() => setIsInviteModalOpen(false)}>×</ModalClose>
           </ModalContent>
         </ModalOverlay>
       )}
