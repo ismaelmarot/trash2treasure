@@ -76,6 +76,7 @@ export function ProfileScreen() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false)
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
+  const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
 
   const handleSendInvite = async () => {
@@ -91,7 +92,7 @@ export function ProfileScreen() {
       })
       setInviteEmail('')
       setIsInviteModalOpen(false)
-      alert('¡Invitación enviada! 🎉')
+      setIsInviteSentOpen(true)
     } catch (err) {
       console.error('Error sending invite:', err)
     }
@@ -394,6 +395,35 @@ export function ProfileScreen() {
               Enviar invitación
             </Button>
             <ModalClose onClick={() => setIsInviteModalOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {isInviteSentOpen && (
+        <ModalOverlay onClick={() => setIsInviteSentOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '40px 24px', textAlign: 'center' }}>
+            <div style={{ fontSize: '60px', marginBottom: '16px' }}>🎉</div>
+            <ModalTitle style={{ marginBottom: '12px' }}>¡Invitación enviada!</ModalTitle>
+            <p style={{ color: '#86868b', fontSize: '15px', lineHeight: 1.5 }}>
+              Tu amigo recibirá un email con la invitación a Trash2Treasure
+            </p>
+            <Button 
+              onClick={() => setIsInviteSentOpen(false)}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '12px',
+                border: 'none',
+                background: '#42a59f',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                marginTop: '24px'
+              }}
+            >
+              Cerrar
+            </Button>
           </ModalContent>
         </ModalOverlay>
       )}
