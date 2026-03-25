@@ -318,6 +318,7 @@ export const CameraModal = styled.div`
     bottom: 0;
     background: ${COLORS.black};
     z-index: 3000;
+    touch-action: none;
 `
 
 export const CameraViewWrapper = styled.div`
@@ -331,6 +332,7 @@ export const VideoFeed = styled.video`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    touch-action: manipulation;
 `
 
 export const CameraControls = styled.div`
