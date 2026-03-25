@@ -398,7 +398,7 @@ router.post('/profile/image', authenticateToken, upload.single('image'), async (
   }
 });
 
-// Enviar invitación por email usando React Email
+// Enviar invitación por email
 router.post('/invite', authenticateToken, async (req, res) => {
   try {
     const { email } = req.body;
@@ -412,10 +412,66 @@ router.post('/invite', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Email requerido' });
     }
     
-    const { render } = require('@react-email/render');
-    const { ShareEmail } = require('../emails/templates/index');
+    const APP_ICON = 'https://trash2treasure-app.vercel.app/icon-192.png';
+    const APP_URL = 'https://trash2treasure-app.vercel.app';
     
-    const html = await render(ShareEmail({ senderName: sender.name }));
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f7;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background-color:#ffffff;border-radius:20px;padding:48px 40px;box-shadow:0 2px 20px rgba(0,0,0,0.06);">
+          <tr>
+            <td align="center" style="padding-bottom:24px;">
+              <img src="${APP_ICON}" alt="Trash2Treasure" style="width:72px;height:72px;border-radius:18px;display:block;margin:0 auto;">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="font-size:28px;font-weight:700;color:#1d1d1f;margin-bottom:8px;letter-spacing:-0.5px;">
+              Trash2Treasure
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="font-size:17px;color:#86868b;margin-bottom:32px;line-height:1.5;">
+              Reportá, reciclá y sumá Eco Points
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="font-size:17px;color:#86868b;margin-bottom:32px;line-height:1.5;">
+              <span style="color:#42a59f;font-weight:600;">${sender?.name || 'Alguien'}</span> te invita a unirte a Trash2Treasure, la app para reportar y reciclar residuos en tu zona.
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding-top:16px;">
+              <a href="${APP_URL}" style="background-color:#42a59f;color:#ffffff;padding:16px 40px;border-radius:980px;text-decoration:none;font-size:17px;font-weight:600;letter-spacing:0.2px;display:inline-block;">
+                Descargar ahora
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding-top:40px;border-top:1px solid #e5e5ea;">
+              <p style="font-size:13px;color:#86868b;margin:0;line-height:1.6;">
+                Trash2Treasure · Cuidemos el planeta juntos
+              </p>
+              <a href="${APP_URL}" style="color:#42a59f;text-decoration:none;font-size:13px;">
+                trash2treasure-app.vercel.app
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    `;
+    
     console.log('Sending email to:', email);
     
     await sgMail.send({
