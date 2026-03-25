@@ -398,4 +398,33 @@ router.post('/profile/image', authenticateToken, upload.single('image'), async (
   }
 });
 
+// Enviar invitación por email usando React Email
+router.post('/invite', authenticateToken, async (req, res) => {
+  try {
+    const { email } = req.body;
+    const sender = await User.findById(req.user.id);
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email requerido' });
+    }
+    
+    const { render } = require('@react-email/render');
+    const { ShareEmail } = require('../emails/templates/index');
+    
+    const html = await render(ShareEmail({ senderName: sender.name }));
+    
+    await sgMail.send({
+      to: email,
+      from: process.env.APP_EMAIL || 'noreply@trash2treasure-app.vercel.app',
+      subject: '¡Te invito a usar Trash2Treasure! 🌍',
+      html: html,
+    });
+    
+    res.json({ message: 'Invitación enviada' });
+  } catch (error) {
+    console.error('Error sending invite:', error);
+    res.status(500).json({ error: 'Error al enviar invitación' });
+  }
+});
+
 module.exports = router;
