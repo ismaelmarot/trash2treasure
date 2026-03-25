@@ -356,6 +356,7 @@ export const CaptureButton = styled.button`
     background: none;
     padding: 4px;
     cursor: pointer;
+    touch-action: none;
     
     &:active {
         transform: scale(0.92);
@@ -375,4 +376,5 @@ export const CancelCapture = styled.button`
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
+    touch-action: none;
 `
