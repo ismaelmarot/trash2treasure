@@ -402,7 +402,11 @@ router.post('/profile/image', authenticateToken, upload.single('image'), async (
 router.post('/invite', authenticateToken, async (req, res) => {
   try {
     const { email } = req.body;
+    console.log('Invite request - email:', email);
+    console.log('User id:', req.user.id);
+    
     const sender = await User.findById(req.user.id);
+    console.log('Sender:', sender?.name);
     
     if (!email) {
       return res.status(400).json({ error: 'Email requerido' });
@@ -412,6 +416,7 @@ router.post('/invite', authenticateToken, async (req, res) => {
     const { ShareEmail } = require('../emails/templates/index');
     
     const html = await render(ShareEmail({ senderName: sender.name }));
+    console.log('Sending email to:', email);
     
     await sgMail.send({
       to: email,
@@ -420,10 +425,11 @@ router.post('/invite', authenticateToken, async (req, res) => {
       html: html,
     });
     
+    console.log('Email sent successfully');
     res.json({ message: 'Invitación enviada' });
   } catch (error) {
-    console.error('Error sending invite:', error);
-    res.status(500).json({ error: 'Error al enviar invitación' });
+    console.error('Error sending invite:', error.message);
+    res.status(500).json({ error: 'Error al enviar invitación: ' + error.message });
   }
 });
 
