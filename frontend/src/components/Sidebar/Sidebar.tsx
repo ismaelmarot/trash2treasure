@@ -35,7 +35,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
     { label: t('nav.add'), path: '/app/add', icon: FaPlus },
     { label: t('nav.activity'), path: '/app/activity', icon: FaBell },
     { label: t('nav.points'), path: '/app/points', icon: FaTrophy },
-    { label: t('nav.profile'), path: '/app/profile', icon: FaUser },
+    { label: t('nav.profile'), path: '/app/profile', icon: FaUser, isProfile: true },
   ]
 
   return (
@@ -50,7 +50,27 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
         const Icon = item.icon
         const active = location.pathname === item.path
         const isLast = index === navigationItems.length - 1
-        const isProfileTab = item.path === '/app/profile'
+        const isProfile = item.isProfile
+
+        const renderIcon = () => {
+          if (isProfile) {
+            if (user?.profile_image) {
+              return (
+                <UserAvatar $hasImage>
+                  <AvatarImage src={user.profile_image} alt={user.name || 'Profile'} />
+                </UserAvatar>
+              )
+            }
+            if (user?.name) {
+              return (
+                <UserAvatar $bgColor={getAvatarColor(user.name)}>
+                  {user.name.charAt(0).toUpperCase()}
+                </UserAvatar>
+              )
+            }
+          }
+          return <Icon size={24} />
+        }
 
         return (
           <NavItem
@@ -62,17 +82,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
             title={collapsed ? item.label : ''}
           >
             <StyledIcon $collapsed={collapsed} $isLast={isLast}>
-              {isProfileTab && user?.profile_image ? (
-                <UserAvatar $hasImage>
-                  <AvatarImage src={user.profile_image} alt="Profile" />
-                </UserAvatar>
-              ) : isProfileTab && user?.name ? (
-                <UserAvatar $bgColor={getAvatarColor(user.name)}>
-                  {user.name.charAt(0).toUpperCase()}
-                </UserAvatar>
-              ) : (
-                <Icon />
-              )}
+              {renderIcon()}
             </StyledIcon>
 
             {!collapsed && item.label}
