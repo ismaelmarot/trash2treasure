@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 import { FiInfo, FiHelpCircle, FiBookOpen, FiClock, FiGlobe, FiLogOut, FiSmartphone, FiMail, FiUserPlus, FiMessageCircle } from 'react-icons/fi'
+import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
@@ -74,6 +75,7 @@ function getAvatarColor(name: string): string {
 }
 
 export function ProfileScreen() {
+  const { t } = useTranslation()
   const { user, token, logout: authLogout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const [pointsData, setPointsData] = useState<any>(null)
@@ -139,9 +141,9 @@ export function ProfileScreen() {
     return (
       <Container>
         <Card>
-          <h1>Tu Perfil</h1>
-          <p>Inicia sesión para ver tu actividad y gestionar tus publicaciones.</p>
-          <Button onClick={() => navigate('/login')}>Ir a Login</Button>
+          <h1>{t('profile.title')}</h1>
+          <p>{t('auth.loginRequired')}</p>
+          <Button onClick={() => navigate('/login')}>{t('auth.login')}</Button>
         </Card>
       </Container>
     );
@@ -168,14 +170,14 @@ export function ProfileScreen() {
           </div>
         )}
         <EditProfileButton onClick={() => navigate('/app/edit-profile')}>
-          Editar Perfil
+          {t('profile.editProfile')}
         </EditProfileButton>
       </Card>
 
       <Section>
         <SectionTitle>🌿 Eco Points</SectionTitle>
         <PointsCard onClick={() => navigate('/app/points')}>
-          <PointsLabel>Total Eco Points</PointsLabel>
+          <PointsLabel>{t('points.totalPoints')}</PointsLabel>
           <PointsValue>{pointsData?.points?.total_points || 0}</PointsValue>
           <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
             {pointsData?.division || 'Curioso Verde'}
@@ -184,71 +186,71 @@ export function ProfileScreen() {
         <StatsRow>
           <StatItem>
             <StatValue>{pointsData?.points?.total_reports || 0}</StatValue>
-            <StatLabel>Reportes</StatLabel>
+            <StatLabel>{t('points.reports')}</StatLabel>
           </StatItem>
           <StatItem>
             <StatValue>{pointsData?.points?.total_collected || 0}</StatValue>
-            <StatLabel>Recolectados</StatLabel>
+            <StatLabel>{t('points.collected')}</StatLabel>
           </StatItem>
         </StatsRow>
       </Section>
 
       <Section>
-        <SectionTitle>Aplicación</SectionTitle>
+        <SectionTitle>{t('profile.settings')}</SectionTitle>
         <MenuItem onClick={() => setIsEcoModalOpen(true)}>
           <MenuIconWrapper>
             <FiInfo size={20} />
           </MenuIconWrapper>
-          <MenuLabel>¿Qué son los Eco Points?</MenuLabel>
+          <MenuLabel>{t('profile.whatAreEcoPoints')}</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsModalOpen(true)}>
           <MenuIconWrapper>
             <FiHelpCircle size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Cómo obtener puntos</MenuLabel>
+          <MenuLabel>{t('profile.howToEarnPoints')}</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
             <FiBookOpen size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
+          <MenuLabel>{t('profile.about')}</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsComingSoonOpen(true)}>
           <MenuIconWrapper>
             <FiClock size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Próximamente</MenuLabel>
+          <MenuLabel>{t('profile.comingSoon')}</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
 
       <Section>
-        <SectionTitle>Compartir app</SectionTitle>
+        <SectionTitle>{t('profile.shareApp')}</SectionTitle>
         <MenuItem onClick={() => setIsQrModalOpen(true)}>
           <MenuIconWrapper>
             <FiSmartphone size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Código QR</MenuLabel>
+          <MenuLabel>{t('profile.qrCode')}</MenuLabel>
           <IconChevron />
         </MenuItem>
-        <MenuItem onClick={() => window.open('mailto:?subject=Trash2Treasure&body=¡Descubrí Trash2Treasure! Una app para reportar y reciclar residuos en tu zona. 🌍%0A%0Ahttps://trash2treasure-app.vercel.app')}>
+        <MenuItem onClick={() => window.open('mailto:?subject=Trash2Treasure&body=Discover Trash2Treasure! An app to report and recycle waste in your area. 🌍%0A%0Ahttps://trash2treasure-app.vercel.app')}>
           <MenuIconWrapper>
             <FiMail size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Enviar por mail</MenuLabel>
+          <MenuLabel>{t('profile.sendByEmail')}</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsInviteModalOpen(true)}>
           <MenuIconWrapper>
             <FiUserPlus size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Invitar amigo</MenuLabel>
+          <MenuLabel>{t('profile.inviteFriend')}</MenuLabel>
           <IconChevron />
         </MenuItem>
-        <MenuItem onClick={() => window.open('https://wa.me/?text=¡Descubrí Trash2Treasure! 🌍 Una app para reportar y reciclar residuos en tu zona.%0A%0Ahttps://trash2treasure-app.vercel.app')}>
+        <MenuItem onClick={() => window.open('https://wa.me/?text=Discover%20Trash2Treasure!%20%F0%9F%8C%8D%20An%20app%20to%20report%20and%20recycle%20waste%20in%20your%20area.%0A%0Ahttps://trash2treasure-app.vercel.app')}>
           <MenuIconWrapper>
             <FiMessageCircle size={20} />
           </MenuIconWrapper>
@@ -258,12 +260,12 @@ export function ProfileScreen() {
       </Section>
 
       <Section>
-        <SectionTitle>Configuración</SectionTitle>
+        <SectionTitle>{t('profile.configuration')}</SectionTitle>
         <MenuItem>
           <MenuIconWrapper>
             <FiGlobe size={20} />
           </MenuIconWrapper>
-          <MenuLabel>Language</MenuLabel>
+          <MenuLabel>{t('profile.language')}</MenuLabel>
           <LanguageSelect 
             value={currentLang} 
             onChange={(e) => changeLanguage(e.target.value)}
@@ -273,7 +275,7 @@ export function ProfileScreen() {
           </LanguageSelect>
         </MenuItem>
         <MenuItem onClick={() => setIsLogoutModalOpen(true)}>
-            <ExitText>Cerrar Sesión</ExitText>
+            <ExitText>{t('profile.logout')}</ExitText>
           <MenuIconWrapper>
             <FiLogOut size={20} />
           </MenuIconWrapper>
@@ -284,14 +286,14 @@ export function ProfileScreen() {
         <ModalOverlay onClick={() => setIsLogoutModalOpen(false)}>
           <ConfirmModalContent onClick={(e) => e.stopPropagation()}>
             <ConfirmIcon>👋</ConfirmIcon>
-            <ConfirmTitle>¿Cerrar sesión?</ConfirmTitle>
-            <ConfirmText>¿Estás seguro de que quieres cerrar tu sesión?</ConfirmText>
+            <ConfirmTitle>{t('profile.logoutTitle')}</ConfirmTitle>
+            <ConfirmText>{t('profile.logoutText')}</ConfirmText>
             <ConfirmButtons>
               <ConfirmButton $variant="cancel" onClick={() => setIsLogoutModalOpen(false)}>
-                Cancelar
+                {t('common.cancel')}
               </ConfirmButton>
               <ConfirmButton $variant="danger" onClick={logout}>
-                Cerrar Sesión
+                {t('profile.logout')}
               </ConfirmButton>
             </ConfirmButtons>
           </ConfirmModalContent>
@@ -301,7 +303,7 @@ export function ProfileScreen() {
       {isModalOpen && (
         <ModalOverlay onClick={() => setIsModalOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ModalTitle>ℹ️ Cómo obtener puntos</ModalTitle>
+            <ModalTitle>ℹ️ {t('profile.howToEarnPoints')}</ModalTitle>
             <InfoList>
               {POINTS_INFO.map((info, index) => (
                 <InfoItem key={index}>
@@ -321,31 +323,58 @@ export function ProfileScreen() {
       {isEcoModalOpen && (
         <ModalOverlay onClick={() => setIsEcoModalOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ModalTitle>ℹ️ ¿Qué son los Eco Points?</ModalTitle>
+            <ModalTitle>ℹ️ {t('profile.whatAreEcoPoints')}</ModalTitle>
             <InfoList>
               <InfoItem>
                 <InfoIcon>🌍</InfoIcon>
                 <InfoContent>
-                  <InfoTitle>Tu impacto ambiental</InfoTitle>
-                  <InfoDetail>Los Eco Points son puntos que ganás al reportar residuos en tu zona o reclamarlos para reciclar. Reflejan tu contribución activa al cuidado del medio ambiente.</InfoDetail>
+                  <InfoTitle>{t('profile.ecoImpactTitle')}</InfoTitle>
+                  <InfoDetail>{t('profile.ecoImpactDetail')}</InfoDetail>
                 </InfoContent>
               </InfoItem>
               <InfoItem>
                 <InfoIcon>📈</InfoIcon>
                 <InfoContent>
-                  <InfoTitle>Nivel y división</InfoTitle>
-                  <InfoDetail>Cuantos más puntos acumules, más alto será tu nivel (de G a A+++) y tu división en la comunidad Trash2Treasure.</InfoDetail>
+                  <InfoTitle>{t('profile.levelTitle')}</InfoTitle>
+                  <InfoDetail>{t('profile.levelDetail')}</InfoDetail>
                 </InfoContent>
               </InfoItem>
               <InfoItem>
                 <InfoIcon>🏆</InfoIcon>
                 <InfoContent>
-                  <InfoTitle>Ranking y logros</InfoTitle>
-                  <InfoDetail>Competí con otros usuarios en el ranking semanal y desbloqueá logros y desafíos exclusivos mientras ayudás a tu comunidad.</InfoDetail>
+                  <InfoTitle>{t('profile.rankingTitle')}</InfoTitle>
+                  <InfoDetail>{t('profile.rankingDetail')}</InfoDetail>
                 </InfoContent>
               </InfoItem>
             </InfoList>
             <ModalClose onClick={() => setIsEcoModalOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {isQrModalOpen && (
+        <ModalOverlay onClick={() => setIsQrModalOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
+            <ModalTitle>📱 {t('profile.qrCode')}</ModalTitle>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <QRCodeSVG
+                  value="https://trash2treasure-app.vercel.app"
+                  size={220}
+                  bgColor="#ffffff"
+                  fgColor="#1d1d0f"
+                  level="H"
+                  imageSettings={{
+                    src: '/icon-192.png',
+                    height: 56,
+                    width: 56,
+                    excavate: true
+                  }}
+                />
+              </div>
+            </div>
+            <p style={{ fontSize: '14px', color: '#666', margin: '0' }}>{t('profile.qrScan')}</p>
+            <ModalClose onClick={() => setIsQrModalOpen(false)}>×</ModalClose>
           </ModalContent>
         </ModalOverlay>
       )}
