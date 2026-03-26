@@ -643,7 +643,7 @@ export const PublishButton = styled.button.attrs({
     }
     
     &:active:not(:disabled) {
-        background: #003a8c;
+        background: #006aff;
         transform: scale(0.98);
     }
     
