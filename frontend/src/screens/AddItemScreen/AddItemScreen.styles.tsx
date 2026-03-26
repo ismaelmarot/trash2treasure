@@ -12,6 +12,7 @@ export const Container = styled.div`
 export const Card = styled.div`
     background: ${COLORS.allWhite};
     padding: 35px;
+    padding-top: 60px;
     border-radius: 28px;
     width: 100%;
     max-width: 600px;
@@ -20,25 +21,32 @@ export const Card = styled.div`
 `
 
 export const Header = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
 `
 
 export const CloseButton = styled.button`
     ${flex('column','center','center')}
-    ${size('36px','36px')}
+    ${size('44px','44px')}
     border: none;
     border-radius: 50%;
-    background: ${COLORS.grey};
+    background: rgba(255, 255, 255, 0.9);
     color: ${COLORS.black};
     cursor: pointer;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 
     &:hover {
-        background: ${COLORS.greyDark};
+        background: ${COLORS.grey};
+    }
+    
+    &:active {
+        transform: scale(0.95);
     }
 `
 
@@ -47,12 +55,15 @@ export const Title = styled.h1`
     font-weight: 700;
     margin-bottom: 8px;
     color: ${COLORS.black};
+    text-align: center;
+    margin-top: 0;
 `
 
 export const Subtitle = styled.p`
     color: ${COLORS.greyDark};
     margin-bottom: 32px;
     font-size: 15px;
+    text-align: center;
 `
 
 export const SuccessView = styled.div`

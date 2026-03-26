@@ -277,9 +277,9 @@ export function AddItemScreen() {
         ) : (
           <form onSubmit={handleSubmit}>
             <Header>
-              <Title>{t('add.title')}</Title>
               <CloseButton onClick={() => navigate('/app/activity')}>×</CloseButton>
             </Header>
+            <Title>{t('add.title')}</Title>
             <Subtitle>{t('add.subtitle')}</Subtitle>
 
             <InputGroup>
