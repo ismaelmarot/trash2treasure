@@ -1,87 +1,138 @@
-// Achievement Engine - Processes user events and unlocks achievements
+// Achievement Engine - Optimized for performance
+// - In-memory cache for unlocked achievements
+// - Async processing (non-blocking)
+// - Only checks relevant achievements per event
+
 import { UserEvent, UserEventType, eventBus } from './userEvents'
-import { ACHIEVEMENT_DEFINITIONS, getAchievementById } from './achievementDefinitions'
-import { CHALLENGE_DEFINITIONS, getChallengeById } from './challengeDefinitions'
+import { ACHIEVEMENT_DEFINITIONS, AchievementDefinition } from './achievementDefinitions'
+import { CHALLENGE_DEFINITIONS } from './challengeDefinitions'
 
 const { UserPoints, Achievement } = require('@/db/models')
 
+// In-memory cache: userId -> Set of unlocked achievement IDs
+const achievementCache = new Map<string, Set<string>>()
+
 // Initialize event listeners
 export function initializeAchievementEngine(): void {
-  // Subscribe to relevant events
   eventBus.subscribe(UserEventType.REPORT_CREATED, handleReportCreated)
   eventBus.subscribe(UserEventType.REPORT_DELETED, handleReportDeleted)
   eventBus.subscribe(UserEventType.ITEM_CLAIMED, handleItemClaimed)
   eventBus.subscribe(UserEventType.ITEM_UNCLAIMED, handleItemUnclaimed)
+  
+  // Warm up cache on startup
+  warmUpCache()
+  
+  console.log('🏆 Achievement Engine initialized')
 }
 
-async function handleReportCreated(event: UserEvent): Promise<void> {
-  const { userId, data } = event
-  
+// Warm up cache from DB (runs once on startup)
+async function warmUpCache(): Promise<void> {
   try {
-    const userPoints = await UserPoints.findOne({ user_id: userId })
-    if (!userPoints) return
-
-    // Check achievements
-    await checkAndUnlockAchievements(userId, userPoints)
-
-    // Check challenges
-    await updateChallengeProgress(userId, userPoints, 'reports')
+    const allAchievements = await Achievement.find({})
+    for (const ach of allAchievements) {
+      const userId = ach.user_id
+      if (!achievementCache.has(userId)) {
+        achievementCache.set(userId, new Set())
+      }
+      achievementCache.get(userId)!.add(ach.achievement_id)
+    }
+    console.log(`📦 Cache warmed: ${achievementCache.size} users loaded`)
   } catch (error) {
-    console.error('Error in handleReportCreated:', error)
+    console.error('Error warming up achievement cache:', error)
   }
 }
 
+// Async handler - doesn't block the main request
+async function handleReportCreated(event: UserEvent): Promise<void> {
+  const { userId, data } = event
+  
+  // Run in background - don't await
+  setImmediate(async () => {
+    try {
+      const userPoints = await UserPoints.findOne({ user_id: userId })
+      if (!userPoints) return
+
+      // Only check relevant achievements for reports
+      const relevantConditions = ['totalReports', 'streak', 'criticalReports', 'weeklyReports']
+      await checkRelevantAchievements(userId, userPoints, relevantConditions)
+
+      // Update challenges
+      await updateRelevantChallenges(userId, userPoints, 'reports')
+      
+      // Update cache
+      await updateCache(userId)
+    } catch (error) {
+      console.error('Error in handleReportCreated:', error)
+    }
+  })
+}
+
 async function handleReportDeleted(event: UserEvent): Promise<void> {
-  // For now, we don't revoke achievements when reports are deleted
-  // This is intentional - achievements are permanent milestones
+  // No achievements revoked - intentionally permanent
 }
 
 async function handleItemClaimed(event: UserEvent): Promise<void> {
   const { userId } = event
   
-  try {
-    const userPoints = await UserPoints.findOne({ user_id: userId })
-    if (!userPoints) return
+  setImmediate(async () => {
+    try {
+      const userPoints = await UserPoints.findOne({ user_id: userId })
+      if (!userPoints) return
 
-    // Check achievements
-    await checkAndUnlockAchievements(userId, userPoints)
+      // Only check relevant achievements for collected
+      const relevantConditions = ['totalCollected', 'weeklyCollected']
+      await checkRelevantAchievements(userId, userPoints, relevantConditions)
 
-    // Check challenges
-    await updateChallengeProgress(userId, userPoints, 'collected')
-  } catch (error) {
-    console.error('Error in handleItemClaimed:', error)
-  }
+      // Update challenges
+      await updateRelevantChallenges(userId, userPoints, 'collected')
+      
+      // Update cache
+      await updateCache(userId)
+    } catch (error) {
+      console.error('Error in handleItemClaimed:', error)
+    }
+  })
 }
 
 async function handleItemUnclaimed(event: UserEvent): Promise<void> {
-  // Similar to report deleted - don't revoke achievements
+  // No achievements revoked
 }
 
-async function checkAndUnlockAchievements(userId: string, userPoints: any): Promise<void> {
-  // Get already unlocked achievements
-  const unlockedAchievements = await Achievement.find({ user_id: userId })
-  const unlockedIds = unlockedAchievements.map(a => a.achievement_id)
+// Only check achievements that match the relevant conditions
+async function checkRelevantAchievements(
+  userId: string,
+  userPoints: any,
+  relevantConditions: string[]
+): Promise<void> {
+  // Get cached unlocked achievements
+  let cachedUnlocked = achievementCache.get(userId)
+  if (!cachedUnlocked) {
+    cachedUnlocked = new Set()
+    achievementCache.set(userId, cachedUnlocked)
+  }
 
-  // Check each achievement definition
-  for (const def of ACHIEVEMENT_DEFINITIONS) {
-    // Skip if already unlocked
-    if (unlockedIds.includes(def.id)) continue
+  // Filter achievements to only relevant ones
+  const relevantAchievements = ACHIEVEMENT_DEFINITIONS.filter(
+    def => relevantConditions.includes(def.condition)
+  )
 
-    // Check condition
-    const achieved = checkAchievementCondition(def.condition, def.threshold, userPoints)
+  // Check only relevant achievements
+  for (const def of relevantAchievements) {
+    if (cachedUnlocked.has(def.id)) continue
+
+    const achieved = checkAchievementCondition(def, userPoints)
     
     if (achieved) {
       await unlockAchievement(userId, def)
+      cachedUnlocked.add(def.id)
     }
   }
 }
 
-function checkAchievementCondition(
-  condition: string,
-  threshold: number,
-  userPoints: any
-): boolean {
-  switch (condition) {
+function checkAchievementCondition(def: AchievementDefinition, userPoints: any): boolean {
+  const threshold = def.threshold
+  
+  switch (def.condition) {
     case 'totalReports':
       return (userPoints.total_reports || 0) >= threshold
     case 'totalCollected':
@@ -89,9 +140,7 @@ function checkAchievementCondition(
     case 'streak':
       return (userPoints.current_streak || 0) >= threshold
     case 'criticalReports':
-      // Count critical categories
-      const criticalCount = getCriticalReportsCount(userPoints)
-      return criticalCount >= threshold
+      return getCriticalReportsCount(userPoints) >= threshold
     case 'weeklyReports':
       return (userPoints.weekly_reports || 0) >= threshold
     case 'weeklyCollected':
@@ -103,9 +152,9 @@ function checkAchievementCondition(
 
 function getCriticalReportsCount(userPoints: any): number {
   const CRITICAL_CATEGORIES = ['batteries', 'electronics', 'construction', 'furniture']
-  let count = 0
   const categoryPoints = userPoints.category_points || {}
   
+  let count = 0
   for (const cat of CRITICAL_CATEGORIES) {
     if (categoryPoints[cat]) {
       count += categoryPoints[cat]
@@ -115,7 +164,7 @@ function getCriticalReportsCount(userPoints: any): number {
   return count
 }
 
-async function unlockAchievement(userId: string, def: any): Promise<void> {
+async function unlockAchievement(userId: string, def: AchievementDefinition): Promise<void> {
   try {
     const achievement = new Achievement({
       user_id: userId,
@@ -129,44 +178,46 @@ async function unlockAchievement(userId: string, def: any): Promise<void> {
     
     await achievement.save()
     
-    // Add bonus points to user
+    // Add bonus points
     await UserPoints.findOneAndUpdate(
       { user_id: userId },
       { $inc: { total_points: def.points } }
     )
     
-    console.log(`Achievement unlocked: ${def.id} for user ${userId}`)
+    console.log(`🏆 Achievement unlocked: ${def.id} for user ${userId}`)
   } catch (error) {
     console.error(`Error unlocking achievement ${def.id}:`, error)
   }
 }
 
-async function updateChallengeProgress(
+// Only update challenges relevant to this action type
+async function updateRelevantChallenges(
   userId: string,
   userPoints: any,
   actionType: 'reports' | 'collected'
 ): Promise<void> {
   const now = new Date()
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const weekStart = getWeekStart(now)
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  // Check all challenges and update progress
-  for (const challenge of CHALLENGE_DEFINITIONS) {
+  // Filter challenges to only those relevant to this action
+  const relevantChallenges = CHALLENGE_DEFINITIONS.filter(
+    c => c.category === actionType || c.category === 'mixed'
+  )
+
+  for (const challenge of relevantChallenges) {
     const progressKey = `challenge_progress.${challenge.id}`
     const completedKey = `challenge_completed.${challenge.id}`
 
-    // Skip if already completed this period
     const user = await UserPoints.findOne({ user_id: userId })
     if (!user) continue
 
+    // Check if already completed this period
     const completedPeriod = user.get(completedKey)
     if (completedPeriod) {
       const periodStart = getPeriodStart(challenge.type, now)
       if (completedPeriod >= periodStart.getTime()) continue
     }
 
-    // Calculate current progress
+    // Calculate progress
     let currentProgress = 0
     if (challenge.category === 'reports' || challenge.category === 'mixed') {
       currentProgress += getChallengeCount(userPoints, challenge.type, 'reports')
@@ -184,13 +235,9 @@ async function updateChallengeProgress(
       }
     )
 
-    // Check if completed
-    const targetReports = challenge.target.reports || 0
-    const targetCollected = challenge.target.collected || 0
-    const targetTotal = targetReports + targetCollected
-
+    // Check if completed and reward
+    const targetTotal = (challenge.target.reports || 0) + (challenge.target.collected || 0)
     if (currentProgress >= targetTotal) {
-      // Award challenge reward
       await UserPoints.findOneAndUpdate(
         { user_id: userId },
         { $inc: { total_points: challenge.reward } }
@@ -244,4 +291,19 @@ function getPeriodStart(type: string, date: Date): Date {
   }
 }
 
-export { checkAndUnlockAchievements, unlockAchievement }
+async function updateCache(userId: string): Promise<void> {
+  try {
+    const unlockedAchievements = await Achievement.find({ user_id: userId })
+    const ids: Set<string> = new Set(unlockedAchievements.map(a => a.achievement_id))
+    achievementCache.set(userId, ids)
+  } catch (error) {
+    console.error('Error updating cache for user', userId, error)
+  }
+}
+
+// Force refresh cache for a user (call when needed)
+export async function refreshUserCache(userId: string): Promise<void> {
+  await updateCache(userId)
+}
+
+export { checkRelevantAchievements, unlockAchievement }

@@ -12,6 +12,7 @@ export type { ChallengeDefinition } from './challengeDefinitions'
 
 export { 
   initializeAchievementEngine, 
-  checkAndUnlockAchievements, 
-  unlockAchievement 
+  checkRelevantAchievements, 
+  unlockAchievement,
+  refreshUserCache
 } from './achievementEngine'
