@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL, COLORS } from '@/constants'
 import { useAuth } from '@/hooks'
 import { COUNTRIES, STATES } from '@/data/locationData'
@@ -42,6 +43,7 @@ function getAvatarColor(name: string): string {
 }
 
 export function EditProfileScreen() {
+  const { t } = useTranslation();
   const navigate = useNavigate()
   const { token, user, login } = useAuth()
 
@@ -78,14 +80,14 @@ export function EditProfileScreen() {
         setProfileImage(data.profile_image || null)
       } catch (err) {
         console.error('Error fetching profile:', err)
-        setError('Error al cargar el perfil')
+        setError(t('editProfile.loadError'))
       } finally {
         setLoading(false)
       }
     }
 
     fetchProfile()
-  }, [token])
+  }, [token, t])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -111,7 +113,7 @@ export function EditProfileScreen() {
       }
     } catch (err) {
       console.error('Error accessing camera:', err)
-      setError('No se pudo acceder a la cámara')
+      setError(t('editProfile.cameraError'))
       setIsCameraOpen(false)
     }
   }
@@ -151,26 +153,24 @@ export function EditProfileScreen() {
     setSuccess('')
 
     if (!name.trim()) {
-      setError('El nombre es obligatorio')
+      setError(t('editProfile.nameRequired'))
       setSaving(false)
       return
     }
 
     try {
-      // Verificar si el nombre ya existe
       if (name.trim() !== user?.name) {
         const checkResponse = await fetch(`${API_BASE_URL}/users/check-name/${encodeURIComponent(name.trim())}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
         const checkData = await checkResponse.json()
         if (checkData.exists) {
-          setError('Este nombre de usuario ya está en uso')
+          setError(t('editProfile.nameTaken'))
           setSaving(false)
           return
         }
       }
 
-      // Actualizar nombre y ubicación
       const response = await fetch(`${API_BASE_URL}/users/profile`, {
         method: 'PUT',
         headers: {
@@ -186,9 +186,8 @@ export function EditProfileScreen() {
       })
 
       const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Error al actualizar perfil')
+      if (!response.ok) throw new Error(data.error || t('editProfile.updateError'))
 
-      // Subir nueva imagen si existe
       if (newImage) {
         const formData = new FormData()
         formData.append('image', newImage)
@@ -200,13 +199,12 @@ export function EditProfileScreen() {
         })
 
         const imageData = await imageResponse.json()
-        if (!imageResponse.ok) throw new Error(imageData.error || 'Error al subir imagen')
+        if (!imageResponse.ok) throw new Error(imageData.error || t('editProfile.imageError'))
 
         setProfileImage(imageData.profile_image)
         setNewImage(null)
         setNewImagePreview(null)
 
-        // Actualizar contexto con la nueva imagen
         const updatedUser = { 
           id: user!.id, 
           name: name.trim(), 
@@ -215,7 +213,6 @@ export function EditProfileScreen() {
         }
         login(token!, updatedUser)
       } else {
-        // Sin imagen nueva, actualizar solo nombre
         const updatedUser = { 
           id: user!.id, 
           name: name.trim(), 
@@ -225,7 +222,7 @@ export function EditProfileScreen() {
         login(token!, updatedUser)
       }
 
-      setSuccess('Perfil actualizado correctamente')
+      setSuccess(t('editProfile.success'))
       setTimeout(() => {
         navigate('/app/profile')
       }, 1500)
@@ -236,7 +233,7 @@ export function EditProfileScreen() {
     }
   }
 
-  if (loading) return <Loading>Cargando...</Loading>
+  if (loading) return <Loading>{t('common.loading')}</Loading>
 
   const currentImage = newImagePreview || profileImage
   const avatarColor = getAvatarColor(name || 'U')
@@ -244,10 +241,10 @@ export function EditProfileScreen() {
   return (
     <Container>
       <Card>
-        <BackButton onClick={() => navigate(-1)}>Cancelar</BackButton>
+        <BackButton onClick={() => navigate(-1)}>{t('common.cancel')}</BackButton>
 
-        <Title>Editar Perfil</Title>
-        <Subtitle>Actualiza tu información personal</Subtitle>
+        <Title>{t('editProfile.title')}</Title>
+        <Subtitle>{t('editProfile.subtitle')}</Subtitle>
 
         <form onSubmit={handleSubmit}>
           <AvatarSection>
@@ -290,7 +287,7 @@ export function EditProfileScreen() {
                   cursor: 'pointer'
                 }}
               >
-                📁 Galería
+                📁 {t('editProfile.gallery')}
               </button>
               <button
                 type="button"
@@ -304,23 +301,23 @@ export function EditProfileScreen() {
                   cursor: 'pointer'
                 }}
               >
-                📸 Cámara
+                📸 {t('add.camera')}
               </button>
             </div>
           </AvatarSection>
 
           <InputGroup>
-            <Label>Nombre de usuario</Label>
+            <Label>{t('editProfile.username')}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Tu nombre"
+              placeholder={t('auth.namePlaceholder')}
               required
             />
           </InputGroup>
 
           <InputGroup>
-            <Label>País</Label>
+            <Label>{t('editProfile.country')}</Label>
             <Select
               value={country}
               onChange={(e) => {
@@ -328,7 +325,7 @@ export function EditProfileScreen() {
                 setState('')
               }}
             >
-              <option value="">Seleccionar país</option>
+              <option value="">{t('editProfile.selectCountry')}</option>
               {COUNTRIES.map(c => (
                 <option key={c.code} value={c.name}>{c.name}</option>
               ))}
@@ -336,13 +333,13 @@ export function EditProfileScreen() {
           </InputGroup>
 
           <InputGroup>
-            <Label>Provincia / Estado</Label>
+            <Label>{t('editProfile.state')}</Label>
             <Select
               value={state}
               onChange={(e) => setState(e.target.value)}
               disabled={!country}
             >
-              <option value="">{country ? 'Seleccionar provincia/estado' : 'Primero selecciona un país'}</option>
+              <option value="">{country ? t('editProfile.selectState') : t('editProfile.selectCountryFirst')}</option>
               {country && STATES[COUNTRIES.find(c => c.name === country)?.code || '']?.map(s => (
                 <option key={s.code} value={s.name}>{s.name}</option>
               ))}
@@ -350,11 +347,11 @@ export function EditProfileScreen() {
           </InputGroup>
 
           <InputGroup>
-            <Label>Ciudad</Label>
+            <Label>{t('editProfile.city')}</Label>
             <Input
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              placeholder="Ej: La Plata"
+              placeholder={t('editProfile.cityPlaceholder')}
             />
           </InputGroup>
 
@@ -362,7 +359,7 @@ export function EditProfileScreen() {
           {success && <SuccessMessage>{success}</SuccessMessage>}
 
           <SubmitButton type="submit" disabled={saving}>
-            {saving ? 'Guardando...' : 'Guardar Cambios'}
+            {saving ? t('editProfile.saving') : t('editProfile.saveButton')}
           </SubmitButton>
         </form>
       </Card>
@@ -372,7 +369,7 @@ export function EditProfileScreen() {
           <VideoFeed ref={videoRef} autoPlay playsInline />
           <canvas ref={canvasRef} style={{ display: 'none' }} />
           <CameraControls>
-            <CancelButton onClick={closeCamera}>Cancelar</CancelButton>
+            <CancelButton onClick={closeCamera}>{t('common.cancel')}</CancelButton>
             <CaptureButton onClick={capturePhoto}>
               <CaptureInner />
             </CaptureButton>

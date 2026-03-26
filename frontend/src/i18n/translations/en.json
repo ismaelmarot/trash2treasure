@@ -450,5 +450,27 @@
     "uppercase": "One uppercase letter",
     "lowercase": "One lowercase letter",
     "number": "One number"
+  },
+  "editProfile": {
+    "title": "Edit Profile",
+    "subtitle": "Update your personal information",
+    "username": "Username",
+    "country": "Country",
+    "state": "Province / State",
+    "city": "City",
+    "selectCountry": "Select country",
+    "selectState": "Select province/state",
+    "selectCountryFirst": "First select a country",
+    "cityPlaceholder": "E.g: New York",
+    "gallery": "Gallery",
+    "saving": "Saving...",
+    "saveButton": "Save Changes",
+    "loadError": "Error loading profile",
+    "cameraError": "Could not access camera",
+    "nameRequired": "Name is required",
+    "nameTaken": "This username is already in use",
+    "updateError": "Error updating profile",
+    "imageError": "Error uploading image",
+    "success": "Profile updated successfully"
   }
 }

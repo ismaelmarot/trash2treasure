@@ -450,5 +450,27 @@
     "uppercase": "Una mayúscula",
     "lowercase": "Una minúscula",
     "number": "Un número"
+  },
+  "editProfile": {
+    "title": "Editar Perfil",
+    "subtitle": "Actualiza tu información personal",
+    "username": "Nombre de usuario",
+    "country": "País",
+    "state": "Provincia / Estado",
+    "city": "Ciudad",
+    "selectCountry": "Seleccionar país",
+    "selectState": "Seleccionar provincia/estado",
+    "selectCountryFirst": "Primero selecciona un país",
+    "cityPlaceholder": "Ej: La Plata",
+    "gallery": "Galería",
+    "saving": "Guardando...",
+    "saveButton": "Guardar Cambios",
+    "loadError": "Error al cargar el perfil",
+    "cameraError": "No se pudo acceder a la cámara",
+    "nameRequired": "El nombre es obligatorio",
+    "nameTaken": "Este nombre de usuario ya está en uso",
+    "updateError": "Error al actualizar perfil",
+    "imageError": "Error al subir imagen",
+    "success": "Perfil actualizado correctamente"
   }
 }
