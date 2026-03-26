@@ -1,8 +1,9 @@
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaMap, FaSearch, FaPlus, FaBell, FaTrophy, FaUser } from 'react-icons/fa'
 import { useAuth } from '@/hooks'
-import { AVATAR_COLORS } from '@/constants'
+import { API_BASE_URL, AVATAR_COLORS } from '@/constants'
 
 function getAvatarColor(name: string): string {
     let hash = 0
@@ -16,7 +17,23 @@ export function useBottomNav() {
     const navigate = useNavigate()
     const location = useLocation()
     const { t } = useTranslation();
-    const { user } = useAuth()
+    const { user, token } = useAuth()
+    const [profileImage, setProfileImage] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (token && user) {
+            fetch(`${API_BASE_URL}/users/profile`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.profile_image) {
+                        setProfileImage(data.profile_image)
+                    }
+                })
+                .catch(() => {})
+        }
+    }, [token, user])
 
     const navigationItems = [
         { label: t('nav.map'), path: '/app', icon: FaMap },
@@ -38,10 +55,11 @@ export function useBottomNav() {
     const getProfileAvatar = () => {
         if (!user) return { type: 'icon' }
 
-        if (user.profile_image) {
+        const imageSrc = profileImage || user.profile_image
+        if (imageSrc) {
             return {
                 type: 'image',
-                src: user.profile_image
+                src: imageSrc
             }
         }
 
