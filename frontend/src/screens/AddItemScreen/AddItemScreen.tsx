@@ -323,6 +323,7 @@ export function AddItemScreen() {
                 <MapContainer
                   center={[location.lat, location.lng]}
                   zoom={15}
+                  style={{ height: '100%', width: '100%' }}
                   ref={mapRef}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
