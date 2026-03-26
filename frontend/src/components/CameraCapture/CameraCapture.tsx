@@ -40,22 +40,22 @@ export function CameraCapture({ isOpen, onClose, onCapture }: CameraCaptureProps
 
     return (
         <CameraModal>
-        <CameraViewWrapper>
-            <VideoFeed ref={videoRef} autoPlay playsInline />
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
+            <CameraViewWrapper>
+                <VideoFeed ref={videoRef} autoPlay playsInline />
+                <canvas ref={canvasRef} style={{ display: 'none' }} />
+            </CameraViewWrapper>
 
             <CameraControls>
-            <CancelCapture onClick={onClose}>
-                Cancelar
-            </CancelCapture>
+                <CancelCapture onClick={onClose}>
+                    Cancelar
+                </CancelCapture>
 
-            <CaptureButton onClick={capturePhoto}>
-                <CaptureInner />
-            </CaptureButton>
+                <CaptureButton onClick={capturePhoto}>
+                    <CaptureInner />
+                </CaptureButton>
 
-            <div style={{ width: '60px' }} />
+                <div style={{ width: '60px' }} />
             </CameraControls>
-        </CameraViewWrapper>
         </CameraModal>
     )
 }

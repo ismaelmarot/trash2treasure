@@ -24,7 +24,6 @@ export const CameraViewWrapper = styled.div`
     height: 80vh;
     /* margin-bottom: 20px; */
     touch-action: manipulation;
-    border: 3px solid red;
 `
 
 export const VideoFeed = styled.video`
