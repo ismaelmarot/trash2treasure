@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { FiInfo, FiHelpCircle, FiBookOpen, FiClock } from 'react-icons/fi'
+import { FiInfo, FiHelpCircle, FiBookOpen, FiClock, FiGlobe, FiLogOut, FiSmartphone, FiMail, FiUserPlus, FiMessageCircle } from 'react-icons/fi'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
@@ -18,7 +18,6 @@ import {
   Container,
   EditProfileButton,
   Email,
-  GoOut,
   IconChevron,
   LanguageSelect,
   MenuIconWrapper,
@@ -223,28 +222,28 @@ export function ProfileScreen() {
         <SectionTitle>Compartir app</SectionTitle>
         <MenuItem onClick={() => setIsQrModalOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>📱</span>
+            <FiSmartphone size={20} />
           </MenuIconWrapper>
           <MenuLabel>Código QR</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => window.open('mailto:?subject=Trash2Treasure&body=¡Descubrí Trash2Treasure! Una app para reportar y reciclar residuos en tu zona. 🌍%0A%0Ahttps://trash2treasure-app.vercel.app')}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>✉️</span>
+            <FiMail size={20} />
           </MenuIconWrapper>
           <MenuLabel>Enviar por mail</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsInviteModalOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>📨</span>
+            <FiUserPlus size={20} />
           </MenuIconWrapper>
           <MenuLabel>Invitar amigo</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => window.open('https://wa.me/?text=¡Descubrí Trash2Treasure! 🌍 Una app para reportar y reciclar residuos en tu zona.%0A%0Ahttps://trash2treasure-app.vercel.app')}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>💬</span>
+            <FiMessageCircle size={20} />
           </MenuIconWrapper>
           <MenuLabel>WhatsApp</MenuLabel>
           <IconChevron />
@@ -255,7 +254,7 @@ export function ProfileScreen() {
         <SectionTitle>Configuración</SectionTitle>
         <MenuItem>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>🌐</span>
+            <FiGlobe size={20} />
           </MenuIconWrapper>
           <MenuLabel>Language</MenuLabel>
           <LanguageSelect 
@@ -269,7 +268,7 @@ export function ProfileScreen() {
         <MenuItem onClick={logout}>
             <ExitText>Cerrar Sesión</ExitText>
           <MenuIconWrapper>
-            <GoOut />
+            <FiLogOut size={20} />
           </MenuIconWrapper>
           </MenuItem>
       </Section>
