@@ -2,6 +2,12 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const { User, UserPoints, Item, Achievement, ChallengeDefinition, UserChallengeProgress, ACHIEVEMENTS, CHALLENGE_DEFINITIONS, initializeChallengeDefinitions } = require('../db/models');
 
+// Import achievement services
+const { initializeAchievementEngine, eventBus, UserEventType } = require('../services/achievements');
+
+// Initialize achievement engine
+initializeAchievementEngine();
+
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
 
