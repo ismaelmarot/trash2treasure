@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
+import { FiInfo, FiHelpCircle, FiBookOpen, FiClock } from 'react-icons/fi'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
@@ -190,28 +191,28 @@ export function ProfileScreen() {
         <SectionTitle>Aplicación</SectionTitle>
         <MenuItem onClick={() => setIsEcoModalOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+            <FiInfo size={20} />
           </MenuIconWrapper>
           <MenuLabel>¿Qué son los Eco Points?</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsModalOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>💡</span>
+            <FiHelpCircle size={20} />
           </MenuIconWrapper>
           <MenuLabel>Cómo obtener puntos</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>📖</span>
+            <FiBookOpen size={20} />
           </MenuIconWrapper>
           <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => setIsComingSoonOpen(true)}>
           <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>🚀</span>
+            <FiClock size={20} />
           </MenuIconWrapper>
           <MenuLabel>Próximamente</MenuLabel>
           <IconChevron />
