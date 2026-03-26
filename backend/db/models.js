@@ -387,8 +387,46 @@ const initializeChallengeDefinitions = async () => {
   }
 };
 
+// Create MongoDB indexes for better query performance
+const createIndexes = async () => {
+  try {
+    // User indexes
+    await User.createIndex({ email: 1 }, { unique: true });
+    
+    // Item indexes - most queried fields
+    await Item.createIndex({ user_id: 1 });
+    await Item.createIndex({ claimed_by: 1 });
+    await Item.createIndex({ category: 1 });
+    await Item.createIndex({ status: 1 });
+    await Item.createIndex({ created_at: -1 });
+    await Item.createIndex({ expires_at: 1 }, { sparse: true });
+    await Item.createIndex({ location: '2dsphere' });
+    await Item.createIndex({ user_id: 1, created_at: -1 });
+    await Item.createIndex({ claimed_by: 1, status: 1 });
+    
+    // UserPoints indexes
+    await UserPoints.createIndex({ user_id: 1 }, { unique: true });
+    await UserPoints.createIndex({ total_points: -1 }); // For ranking
+    
+    // Achievement indexes
+    await Achievement.createIndex({ user_id: 1 });
+    await Achievement.createIndex({ user_id: 1, achievement_id: 1 }, { unique: true });
+    
+    // Rating indexes
+    await Rating.createIndex({ item_id: 1 });
+    await Rating.createIndex({ user_id: 1 });
+    
+    // ItemPhoto indexes
+    await ItemPhoto.createIndex({ item_id: 1 });
+    
+    console.log('✅ MongoDB indexes created successfully');
+  } catch (error) {
+    console.error('Error creating MongoDB indexes:', error);
+  }
+};
+
 module.exports = { 
   User, Item, ItemPhoto, Rating, UserPoints, Achievement, 
   ChallengeDefinition, UserChallengeProgress, ACHIEVEMENTS, CHALLENGE_DEFINITIONS,
-  initializeChallengeDefinitions 
+  initializeChallengeDefinitions, createIndexes
 };

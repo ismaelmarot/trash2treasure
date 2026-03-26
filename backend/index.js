@@ -13,7 +13,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { connectDB } = require('./db/mongodb');
-const { Item, ItemPhoto, UserPoints } = require('./db/models');
+const { Item, ItemPhoto, UserPoints, createIndexes } = require('./db/models');
 const cloudinary = require('cloudinary').v2;
 
 const app = express();
@@ -30,8 +30,11 @@ cloudinary.config({
 app.use(cors());
 app.use(bodyParser.json());
 
-// Conectar a MongoDB
-connectDB();
+// Conectar a MongoDB y crear índices
+(async () => {
+  await connectDB();
+  await createIndexes();
+})();
 
 // Ruta de prueba
 app.get('/', (req, res) => {
