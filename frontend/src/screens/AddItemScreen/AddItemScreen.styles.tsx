@@ -622,55 +622,26 @@ export const ButtonContainer = styled.div`
     width: 100%;
 `
 
-export const PublishButton = styled.button.attrs({
-  type: 'submit'
-})`
+export const PublishButton = styled.button`
     width: 100%;
     max-width: 320px;
-    padding: 16px 32px;
-    background: #0070f3;
-    color: white;
+    padding: 16px;
+    background: #007aff;
+    color: #fff;
     border: none;
-    border-radius: 34px;
+    border-radius: 12px;
     font-size: 17px;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover:not(:disabled) {
-        background: #0050b3;
-        transform: scale(1.02);
-    }
-    
-    &:active:not(:disabled) {
-        background: #006aff;
-        transform: scale(0.98);
-    }
-    
-    &:disabled {
-        background: #91caff;
-        color: white;
-        cursor: not-allowed;
-    }
 `
 
-export const CancelButton = styled.button.attrs({
-  type: 'button'
-})`
+export const CancelButton = styled.button`
     width: 100%;
     max-width: 320px;
-    padding: 14px 32px;
+    padding: 12px;
     background: transparent;
-    color: ${COLORS.greyDark};
+    color: #666;
     border: none;
     font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    
-    &:hover {
-        color: ${COLORS.black};
-    }
 `
 
 /* =========================
