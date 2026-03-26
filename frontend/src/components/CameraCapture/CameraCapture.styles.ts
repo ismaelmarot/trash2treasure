@@ -11,6 +11,9 @@ export const CameraModal = styled.div`
     bottom: 0;
     background: ${COLORS.black};
     z-index: 3000;
+
+    touch-action: none; /* 🔥 bloquea zoom del navegador */
+    overscroll-behavior: contain;
 `
 
 export const CameraViewWrapper = styled.div`
@@ -18,15 +21,17 @@ export const CameraViewWrapper = styled.div`
     position: relative;
     width: 100%;
     max-width: 500px;
-    height: 70vh;
-    margin-bottom: 20px;
+    height: 80vh;
+    /* margin-bottom: 20px; */
     touch-action: manipulation;
+    border: 3px solid red;
 `
 
 export const VideoFeed = styled.video`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    touch-action: pan-x pan-y; /* permite interacción controlada */
 `
 
 export const CameraControls = styled.div`
