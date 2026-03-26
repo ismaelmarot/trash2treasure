@@ -168,6 +168,8 @@ const getOrCreateUserPoints = async (userId) => {
     const lastMonthReset = userPoints.last_monthly_reset ? new Date(userPoints.last_monthly_reset) : null;
     
     if (!lastMonthReset || monthStart > lastMonthReset) {
+      userPoints.monthly_reports_prev = userPoints.monthly_reports || 0;
+      userPoints.monthly_collected_prev = userPoints.monthly_collected || 0;
       userPoints.monthly_reports = 0;
       userPoints.monthly_collected = 0;
       userPoints.last_monthly_reset = monthStart;

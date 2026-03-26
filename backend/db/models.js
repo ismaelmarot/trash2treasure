@@ -100,6 +100,8 @@ const userPointsSchema = new mongoose.Schema({
   weekly_collect_points_prev: { type: Number, default: 0 },
   monthly_reports: { type: Number, default: 0 },
   monthly_collected: { type: Number, default: 0 },
+  monthly_reports_prev: { type: Number, default: 0 },
+  monthly_collected_prev: { type: Number, default: 0 },
   last_weekly_reset: { type: Date },
   last_monthly_reset: { type: Date },
   
