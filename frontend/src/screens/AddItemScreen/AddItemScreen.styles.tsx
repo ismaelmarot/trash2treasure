@@ -628,8 +628,8 @@ export const PublishButton = styled.button.attrs({
     width: 100%;
     max-width: 320px;
     padding: 16px 32px;
-    background: rgba(24, 144, 255, 1);
-    color: rgba(255, 255, 255, 1);
+    background: #0070f3;
+    color: white;
     border: none;
     border-radius: 34px;
     font-size: 17px;
@@ -638,16 +638,18 @@ export const PublishButton = styled.button.attrs({
     transition: all 0.2s ease;
     
     &:hover:not(:disabled) {
-        opacity: 0.9;
+        background: #0050b3;
         transform: scale(1.02);
     }
     
     &:active:not(:disabled) {
+        background: #003a8c;
         transform: scale(0.98);
     }
     
     &:disabled {
-        background: rgba(216, 219, 226, 1);
+        background: #91caff;
+        color: white;
         cursor: not-allowed;
     }
 `
