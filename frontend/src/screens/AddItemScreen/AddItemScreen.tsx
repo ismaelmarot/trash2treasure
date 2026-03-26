@@ -388,8 +388,10 @@ import {
   OptionsContainer,
   PreviewImage,
   PreviewWrapper,
+  PublishButton,
+  CancelButton,
+  ButtonContainer,
   RemoveImage,
-  SubmitButton,
   Subtitle,
   SuccessIcon,
   SuccessText,
@@ -691,9 +693,15 @@ export function AddItemScreen() {
 
             {error && <ErrorMessage>{error}</ErrorMessage>}
 
-            <SubmitButton disabled={!isFormValid || loading}>
-              {loading ? 'Publicando...' : 'Publicar'}
-            </SubmitButton>
+            <ButtonContainer>
+              <PublishButton disabled={!isFormValid || loading}>
+                {loading ? 'Publicando...' : 'Publicar'}
+              </PublishButton>
+
+              <CancelButton onClick={() => navigate('/app/activity')}>
+                Cancelar
+              </CancelButton>
+            </ButtonContainer>
 
           </form>
         )}

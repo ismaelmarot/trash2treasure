@@ -613,16 +613,62 @@ export const ErrorMessage = styled.p`
     color: ${COLORS.danger};
 `
 
-export const SubmitButton = styled.button.attrs({
+export const ButtonContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    width: 100%;
+`
+
+export const PublishButton = styled.button.attrs({
   type: 'submit'
 })`
-    background: ${COLORS.info};
-    color: ${COLORS.allWhite};
+    width: 100%;
+    max-width: 320px;
+    padding: 16px 32px;
+    background: rgba(24, 144, 255, 1);
+    color: rgba(255, 255, 255, 1);
     border: none;
-    padding: 18px;
-    border-radius: 35px;
+    border-radius: 34px;
     font-size: 17px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+    
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+    
+    &:disabled {
+        background: rgba(216, 219, 226, 1);
+        cursor: not-allowed;
+    }
+`
+
+export const CancelButton = styled.button.attrs({
+  type: 'button'
+})`
+    width: 100%;
+    max-width: 320px;
+    padding: 14px 32px;
+    background: transparent;
+    color: ${COLORS.greyDark};
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    &:hover {
+        color: ${COLORS.black};
+    }
 `
 
 /* =========================
