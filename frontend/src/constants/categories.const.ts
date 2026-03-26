@@ -7,14 +7,49 @@ export const CATEGORIES = [
         icon: CATEGORIES_ICONS.star
     },
     {
-        id: 'paper',
-        label: 'Paper',
-        icon: CATEGORIES_ICONS.paper
+        id: 'batteries',
+        label: 'Batteries',
+        icon: CATEGORIES_ICONS.batteries
     },
     {
-        id: 'plastic',
-        label: 'Plastic',
-        icon: CATEGORIES_ICONS.plastic
+        id: 'books',
+        label: 'Books',
+        icon: CATEGORIES_ICONS.books
+    },
+    {
+        id: 'botellas',
+        label: 'Bottles',
+        icon: CATEGORIES_ICONS.bottle
+    },
+    {
+        id: 'carton',
+        label: 'Cardboard',
+        icon: CATEGORIES_ICONS.cardboard
+    },
+    {
+        id: 'clothes',
+        label: 'Clothes',
+        icon: CATEGORIES_ICONS.clothes
+    },
+    {
+        id: 'construction',
+        label: 'Construction',
+        icon: CATEGORIES_ICONS.construction
+    },
+    {
+        id: 'electronics',
+        label: 'Electronics',
+        icon: CATEGORIES_ICONS.electronics
+    },
+    {
+        id: 'furniture',
+        label: 'Furniture',
+        icon: CATEGORIES_ICONS.furniture
+    },
+    {
+        id: 'garden',
+        label: 'Garden',
+        icon: CATEGORIES_ICONS.garden
     },
     {
         id: 'glass',
@@ -27,24 +62,9 @@ export const CATEGORIES = [
         icon: CATEGORIES_ICONS.metal
     },
     {
-        id: 'clothes',
-        label: 'Clothes',
-        icon: CATEGORIES_ICONS.clothes
-    },
-    {
-        id: 'books',
-        label: 'Books',
-        icon: CATEGORIES_ICONS.books
-    },
-    {
-        id: 'electronics',
-        label: 'Electronics',
-        icon: CATEGORIES_ICONS.electronics
-    },
-    {
-        id: 'batteries',
-        label: 'Batteries',
-        icon: CATEGORIES_ICONS.batteries
+        id: 'mixto',
+        label: 'Mixed',
+        icon: CATEGORIES_ICONS.recycle
     },
     {
         id: 'organic',
@@ -52,43 +72,23 @@ export const CATEGORIES = [
         icon: CATEGORIES_ICONS.organic
     },
     {
-        id: 'furniture',
-        label: 'Furniture',
-        icon: CATEGORIES_ICONS.furniture
+        id: 'otros',
+        label: 'Others',
+        icon: CATEGORIES_ICONS.sparkles
     },
     {
-        id: 'construction',
-        label: 'Construction',
-        icon: CATEGORIES_ICONS.construction
+        id: 'paper',
+        label: 'Paper',
+        icon: CATEGORIES_ICONS.paper
+    },
+    {
+        id: 'plastic',
+        label: 'Plastic',
+        icon: CATEGORIES_ICONS.plastic
     },
     {
         id: 'wood',
         label: 'Wood',
         icon: CATEGORIES_ICONS.wood
-    },
-    {
-        id: 'garden',
-        label: 'Garden',
-        icon: CATEGORIES_ICONS.garden
-    },
-    {
-        id: 'carton',
-        label: 'Cardboard',
-        icon: CATEGORIES_ICONS.cardboard
-    },
-    {
-        id: 'botellas',
-        label: 'Bottles',
-        icon: CATEGORIES_ICONS.bottle
-    },
-    {
-        id: 'mixto',
-        label: 'Mixed',
-        icon: CATEGORIES_ICONS.recycle
-    },
-    {
-        id: 'otros',
-        label: 'Others',
-        icon: CATEGORIES_ICONS.sparkles
     },
 ]
