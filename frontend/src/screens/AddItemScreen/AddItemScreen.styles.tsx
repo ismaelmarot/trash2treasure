@@ -599,6 +599,7 @@ export const CoordsText = styled.p`
     color: ${COLORS.greyDark};
     text-align: right;
     width: 100%;
+    padding-right: 2rem;
 `
 
 /* =========================
@@ -618,7 +619,7 @@ export const ButtonContainer = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    margin-top: 24px;
+    margin-top: 3rem;
     width: 100%;
 `
 
@@ -637,6 +638,7 @@ export const PublishButton = styled.button`
 export const CancelButton = styled.button`
     width: 100%;
     max-width: 320px;
+    margin-top: .8rem;
     padding: 12px;
     background: transparent;
     color: ${COLORS.greyDark};
