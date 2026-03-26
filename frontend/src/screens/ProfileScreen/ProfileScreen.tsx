@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
@@ -71,7 +70,6 @@ function getAvatarColor(name: string): string {
 export function ProfileScreen() {
   const { user, token, logout: authLogout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
-  const { t } = useTranslation()
   const [pointsData, setPointsData] = useState<any>(null)
   const [profileData, setProfileData] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
