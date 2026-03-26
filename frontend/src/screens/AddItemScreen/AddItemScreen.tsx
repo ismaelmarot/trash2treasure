@@ -56,7 +56,7 @@ export function AddItemScreen() {
   const { t } = useTranslation();
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [category, setCategory] = useState('todos')
+  const [category, setCategory] = useState('carton')
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
