@@ -19,7 +19,6 @@ import {
   Email,
   GoOut,
   IconChevron,
-  IconCircle,
   LanguageSelect,
   MenuIconWrapper,
   MenuItem,
@@ -188,37 +187,6 @@ export function ProfileScreen() {
       </Section>
 
       <Section>
-        <SectionTitle>Settings</SectionTitle>
-        <MenuItem>
-          <MenuIconWrapper>
-            <span style={{ fontSize: '1.2rem' }}>🌐</span>
-          </MenuIconWrapper>
-          <MenuLabel>Language</MenuLabel>
-          <LanguageSelect 
-            value={currentLang} 
-            onChange={(e) => changeLanguage(e.target.value)}
-          >
-            <option value="en">🇬🇧 English</option>
-            <option value="es">🇪🇸 Español</option>
-          </LanguageSelect>
-        </MenuItem>
-        <MenuItem onClick={() => setIsEcoModalOpen(true)}>
-          <MenuIconWrapper>
-            <IconCircle />
-          </MenuIconWrapper>
-          <MenuLabel>What are Eco Points?</MenuLabel>
-          <IconChevron />
-        </MenuItem>
-        <MenuItem onClick={() => navigate('/app/about')}>
-          <MenuIconWrapper>
-            <IconCircle />
-          </MenuIconWrapper>
-          <MenuLabel>About Trash2Treasure</MenuLabel>
-          <IconChevron />
-        </MenuItem>
-      </Section>
-
-      <Section>
         <SectionTitle>Compartir app</SectionTitle>
         <MenuItem onClick={() => setIsQrModalOpen(true)}>
           <MenuIconWrapper>
@@ -252,6 +220,19 @@ export function ProfileScreen() {
 
       <Section>
         <SectionTitle>Configuración</SectionTitle>
+        <MenuItem>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>🌐</span>
+          </MenuIconWrapper>
+          <MenuLabel>Language</MenuLabel>
+          <LanguageSelect 
+            value={currentLang} 
+            onChange={(e) => changeLanguage(e.target.value)}
+          >
+            <option value="en">🇬🇧 English</option>
+            <option value="es">🇪🇸 Español</option>
+          </LanguageSelect>
+        </MenuItem>
         <MenuItem onClick={logout}>
             <ExitText>Cerrar Sesión</ExitText>
           <MenuIconWrapper>
