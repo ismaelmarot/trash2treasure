@@ -16,6 +16,30 @@ export const Card = styled.div`
     width: 100%;
     max-width: 600px;
     box-shadow: 0 4px 20px ${COLORS.shadow};
+    position: relative;
+`
+
+export const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+`
+
+export const CloseButton = styled.button`
+    ${flex('column','center','center')}
+    ${size('36px','36px')}
+    border: none;
+    border-radius: 50%;
+    background: ${COLORS.grey};
+    color: ${COLORS.black};
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+
+    &:hover {
+        background: ${COLORS.greyDark};
+    }
 `
 
 export const Title = styled.h1`
@@ -79,7 +103,7 @@ export const Label = styled.label<{ required?: boolean }>`
             color: ${COLORS.danger};
         }
     `}
-`;
+`
 
 export const Input = styled.input`
     padding: 14px 0px 14px 30px;
@@ -119,6 +143,41 @@ export const Select = styled.select`
     font-size: 16px;
     background: ${COLORS.allWhite};
     cursor: pointer;
+    width: 100%;
+`
+
+export const CategorySelectWrapper = styled.div`
+    position: relative;
+    width: 100%;
+`
+
+export const CategoryIcon = styled.span`
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    pointer-events: none;
+`
+
+export const CategorySelect = styled.select`
+    padding: 14px 40px 14px 50px;
+    border-radius: 35px;
+    border: 1px solid ${COLORS.grey};
+    font-size: 16px;
+    background: #fbfbfd;
+    cursor: pointer;
+    width: 100%;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+
+    &:focus {
+        border-color: ${COLORS.info};
+        outline: none;
+        box-shadow: 0 0 0 4px ${COLORS.shadow};
+    }
 `
 
 /* =========================

@@ -100,6 +100,7 @@
     "title": "Publish Treasure",
     "subtitle": "Give it a second life",
     "titleLabel": "Title",
+    "category": "Category",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Describe the treasure...",
     "imageLabel": "Image",

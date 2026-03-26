@@ -7,7 +7,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 import { useAuth } from '@/hooks'
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { savePendingItem, isOnline, fileToBase64 } from '@/services/offlineDB'
 import { OfflineModal } from '@/components/OfflineModal'
 import { CameraCapture } from '@/components/CameraCapture/CameraCapture'
@@ -39,6 +39,9 @@ import {
   SuccessView,
   TextArea,
   Title,
+  Header,
+  CloseButton,
+  CategorySelect,
 } from './AddItemScreen.styles'
 
 // @ts-ignore
@@ -53,7 +56,7 @@ export function AddItemScreen() {
   const { t } = useTranslation();
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [category] = useState('otros')
+  const [category, setCategory] = useState('todos')
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -76,7 +79,8 @@ export function AddItemScreen() {
   const isFormValid =
     title.trim() !== '' &&
     description.trim() !== '' &&
-    image !== null
+    image !== null &&
+    category !== 'todos'
 
   const getIPLocation = async () => {
     try {
@@ -267,12 +271,29 @@ export function AddItemScreen() {
           </SuccessView>
         ) : (
           <form onSubmit={handleSubmit}>
-
-            <Title>{t('add.title')}</Title>
+            <Header>
+              <Title>{t('add.title')}</Title>
+              <CloseButton onClick={() => navigate('/app/activity')}>×</CloseButton>
+            </Header>
             <Subtitle>{t('add.subtitle')}</Subtitle>
+
             <InputGroup>
               <Label required>{t('add.titleLabel')}</Label>
               <Input value={title} onChange={e => setTitle(e.target.value)} />
+            </InputGroup>
+
+            <InputGroup>
+              <Label required>{t('add.category')}</Label>
+              <CategorySelect
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+              >
+                {CATEGORIES.filter(c => c.id !== 'todos').map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.icon} {cat.label}
+                  </option>
+                ))}
+              </CategorySelect>
             </InputGroup>
 
             <InputGroup>
