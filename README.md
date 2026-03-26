@@ -8,7 +8,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 &nbsp;&nbsp;&nbsp;&nbsp;
 
-![Version](https://img.shields.io/badge/version-1.0.3-orange?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.1.0-orange?style=for-the-badge)
 &nbsp;&nbsp;&nbsp;&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://github.com/ismaelmarot/trash2treasure/blob/HEAD/LICENSE)
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -48,10 +48,11 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 - **Eco Points system**: Earn points by reporting and collecting items
 - **Daily, weekly, monthly, and yearly challenges**: Complete missions to earn stars and trophies
 - **Unlockable achievements**: Unlock achievements by reaching specific milestones
-- **Community ranking: Compete with other users on the recycler leaderboard
+- **Community ranking**: Compete with other users on the recycler leaderboard
 - **Weekly Eco Score**: Rating from A+++ to G based on your weekly activity
 - **Level system**: Progress from "Green Curious" to "Ascended Gaia"
 - **Categories and families**: Classify items by type (electronics, organic, construction, etc.)
+- **🌐 Multi-language support**: Full internationalization with Spanish and English
 
 &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -107,6 +108,8 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 - Fully typed with TypeScript
 - Styled-components for CSS-in-JS
 - CI/CD deployment with Vercel (frontend) and Render (backend)
+- 🌐 Full internationalization (i18n) with react-i18next
+- 🌎 Browser language detection with localStorage persistence
 
 &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -127,7 +130,8 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 | Division levels     | Progressive recycling level system                               |
 | Community ranking   | User ranking based on total points                               |
 | Categories          | Classification by type: electronics, organic, construction, etc. |
-| Families            | Grouping: ECO, TECH, HEAVY, PACKAGING, REUSE                     |
+| Families            | Grouping: ECO, TECH, HEAVY, PACKAGING, REUSE                   |
+| Internationalization | Multi-language support (Spanish & English) with browser detection |
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -144,6 +148,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 | Frontend Build      | Vite               | ^5.0.0  |
 | Frontend Styling    | styled-components  | ^6.0.0  |
 | Frontend Icons      | react-icons        | ^5.0.0  |
+| Frontend i18n       | react-i18next      | ^23.0.0 |
 | Error Monitoring    | Sentry             | Latest  |
 | Backend Framework   | Express            | ^4.18.0 |
 | Backend Language    | Node.js            | ^22.0.0 |
@@ -539,6 +544,7 @@ flowchart TD
 
 | Version | Date       | Changes                                                                                                         |
 |---------|------------|-----------------------------------------------------------------------------------------------------------------|
+| 1.1.0   | 26/03/2026 | Full i18n implementation - Spanish & English translations, browser detection, language selector in Profile      |
 | 1.0.0   | 22/03/2026 | Initial release - Core app with reporting, collecting, points, challenges, achievements, ranking, and Eco Score |
 
 &nbsp;&nbsp;&nbsp;&nbsp;

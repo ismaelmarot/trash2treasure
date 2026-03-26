@@ -112,7 +112,7 @@ export function SplashScreen() {
         <Dot $delay={0.4} />
       </LoadingDots>
 
-      <AppVersion>{t('about.version')} 1.0.3 Stable</AppVersion>
+      <AppVersion>{t('about.version')} 1.1.0 Stable</AppVersion>
       <Developer>{t('splash.developedBy')}</Developer>
     </Container>
   )

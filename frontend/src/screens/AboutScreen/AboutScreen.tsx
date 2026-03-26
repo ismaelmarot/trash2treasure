@@ -50,7 +50,7 @@ export function AboutScreen() {
         <HeroSection>
           <AppIcon src={appIcon} alt="App logo" />
           <AppName>Trash2Treasure</AppName>
-          <AppVersion>{t('about.version')} 1.0.3 Stable</AppVersion>
+          <AppVersion>{t('about.version')} 1.1.0 Stable</AppVersion>
           <USP>{t('about.tagline')}</USP>
         </HeroSection>
 
