@@ -171,7 +171,12 @@ export function AddItemScreen() {
     setLoading(true)
 
     try {
-      const imageBase64 = await fileToBase64(image!)
+      if (!image) {
+        setError(t('add.imageRequired'))
+        setLoading(false)
+        return
+      }
+      const imageBase64 = await fileToBase64(image)
       await savePendingItem({
         title,
         description,

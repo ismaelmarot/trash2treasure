@@ -106,7 +106,10 @@ export function ItemDetailScreen() {
   useEffect(() => {
     const fetchItemDetail = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/items/${id}`)
+        const response = await fetch(`${API_BASE_URL}/items/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        if (!response.ok) throw new Error('Failed to fetch item')
         const data = await response.json()
         setItem(normalizeItem(data))
       } catch (error) {
@@ -117,7 +120,7 @@ export function ItemDetailScreen() {
     };
 
     fetchItemDetail()
-  }, [id])
+  }, [id, token])
 
   const handleUnclaimClick = () => {
     setIsModalOpen(true)

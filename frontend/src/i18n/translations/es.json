@@ -114,7 +114,8 @@
     "redirecting": "Redirigiendo...",
     "required": "Obligatorio",
     "removeImage": "Eliminar imagen",
-    "requiredFields": "Todos los campos obligatorios"
+    "requiredFields": "Todos los campos obligatorios",
+    "imageRequired": "Se requiere una imagen para publicar sin conexión"
   },
   "activity": {
     "title": "Actividad",

@@ -379,33 +379,6 @@ export function ProfileScreen() {
         </ModalOverlay>
       )}
 
-      {isQrModalOpen && (
-        <ModalOverlay onClick={() => setIsQrModalOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
-            <ModalTitle>📱 Código QR</ModalTitle>
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <QRCodeSVG
-                  value="https://trash2treasure-app.vercel.app"
-                  size={220}
-                  bgColor="#ffffff"
-                  fgColor="#1d1d1f"
-                  level="H"
-                  imageSettings={{
-                    src: '/icon-192.png',
-                    height: 56,
-                    width: 56,
-                    excavate: true
-                  }}
-                />
-              </div>
-            </div>
-            <p style={{ fontSize: '14px', color: '#666', margin: '0' }}>Escaneá para descargar Trash2Treasure</p>
-            <ModalClose onClick={() => setIsQrModalOpen(false)}>×</ModalClose>
-          </ModalContent>
-        </ModalOverlay>
-      )}
-
       {isComingSoonOpen && (
         <ModalOverlay onClick={() => setIsComingSoonOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px' }}>

@@ -114,7 +114,8 @@
     "redirecting": "Redirecting...",
     "required": "Required",
     "removeImage": "Remove image",
-    "requiredFields": "All required fields"
+    "requiredFields": "All required fields",
+    "imageRequired": "An image is required to publish offline"
   },
   "activity": {
     "title": "Activity",
