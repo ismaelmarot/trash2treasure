@@ -1,0 +1,110 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "back": "Volver"
+  },
+  "nav": {
+    "home": "Inicio",
+    "map": "Mapa",
+    "add": "Agregar",
+    "activity": "Actividad",
+    "profile": "Perfil",
+    "points": "Puntos"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?"
+  },
+  "home": {
+    "title": "Trash2Treasure",
+    "welcome": "Bienvenido",
+    "subtitle": "Dale una segunda vida a los residuos"
+  },
+  "map": {
+    "title": "Mapa de Tesoros",
+    "searchPlaceholder": "Buscar por zona...",
+    "noItems": "No hay tesoros cercanos"
+  },
+  "add": {
+    "title": "Publicar Tesoro",
+    "titlePlaceholder": "Título del tesoro",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe el tesoro...",
+    "category": "Categoría",
+    "image": "Imagen",
+    "camera": "Cámara",
+    "gallery": "Galería",
+    "location": "Ubicación",
+    "publish": "Publicar",
+    "publishing": "Publicando...",
+    "success": "¡Tesoro Publicado!",
+    "required": "Obligatorio"
+  },
+  "activity": {
+    "title": "Actividad",
+    "reported": "Reportados",
+    "collected": "Recolectados",
+    "noItems": "No hay items aún",
+    "markCollected": "Marcar como recolectado",
+    "release": "Liberar"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "editProfile": "Editar Perfil",
+    "ecoPoints": "Puntos Eco",
+    "reports": "Reportes",
+    "collected": "Recolectados",
+    "division": "División",
+    "settings": "Configuración",
+    "about": "Acerca de",
+    "logout": "Cerrar Sesión"
+  },
+  "points": {
+    "title": "Tu impacto en la comunidad",
+    "totalPoints": "Total Eco Points",
+    "reports": "Reportes",
+    "collected": "Recolectados",
+    "ptsReports": "Pts Reportes",
+    "ptsCollected": "Pts Recolectados",
+    "summary": "Resumen",
+    "ranking": "Ranking",
+    "achievements": "Logros",
+    "challenges": "Desafíos",
+    "weeklyImpact": "Impacto Semanal",
+    "weekly": "Semana",
+    "daily": "Diario",
+    "monthly": "Mensual"
+  },
+  "achievements": {
+    "title": "Logros",
+    "unlocked": "Desbloqueado",
+    "locked": "Bloqueado"
+  },
+  "challenges": {
+    "title": "Desafíos",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "monthly": "Mensual"
+  },
+  "errors": {
+    "network": "Error de conexión",
+    "server": "Error del servidor",
+    "notFound": "No encontrado",
+    "unauthorized": "No autorizado"
+  }
+}

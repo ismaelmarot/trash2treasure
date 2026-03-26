@@ -4,6 +4,7 @@ import ReactGA from 'react-ga4'
 import * as Sentry from '@sentry/react'
 import App from './App'
 import './styles.css'
+import './i18n' // Idiomas
 
 // Inicializar Sentry
 Sentry.init({

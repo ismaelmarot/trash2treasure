@@ -1,0 +1,110 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "back": "Back"
+  },
+  "nav": {
+    "home": "Home",
+    "map": "Map",
+    "add": "Add",
+    "activity": "Activity",
+    "profile": "Profile",
+    "points": "Points"
+  },
+  "auth": {
+    "login": "Log In",
+    "register": "Sign Up",
+    "logout": "Log Out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "home": {
+    "title": "Trash2Treasure",
+    "welcome": "Welcome",
+    "subtitle": "Give waste a second life"
+  },
+  "map": {
+    "title": "Treasure Map",
+    "searchPlaceholder": "Search by area...",
+    "noItems": "No treasures nearby"
+  },
+  "add": {
+    "title": "Publish Treasure",
+    "titlePlaceholder": "Treasure title",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe the treasure...",
+    "category": "Category",
+    "image": "Image",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "location": "Location",
+    "publish": "Publish",
+    "publishing": "Publishing...",
+    "success": "Treasure Published!",
+    "required": "Required"
+  },
+  "activity": {
+    "title": "Activity",
+    "reported": "Reported",
+    "collected": "Collected",
+    "noItems": "No items yet",
+    "markCollected": "Mark as collected",
+    "release": "Release"
+  },
+  "profile": {
+    "title": "My Profile",
+    "editProfile": "Edit Profile",
+    "ecoPoints": "Eco Points",
+    "reports": "Reports",
+    "collected": "Collected",
+    "division": "Division",
+    "settings": "Settings",
+    "about": "About",
+    "logout": "Log Out"
+  },
+  "points": {
+    "title": "Your community impact",
+    "totalPoints": "Total Eco Points",
+    "reports": "Reports",
+    "collected": "Collected",
+    "ptsReports": "Report Pts",
+    "ptsCollected": "Collected Pts",
+    "summary": "Summary",
+    "ranking": "Ranking",
+    "achievements": "Achievements",
+    "challenges": "Challenges",
+    "weeklyImpact": "Weekly Impact",
+    "weekly": "Week",
+    "daily": "Daily",
+    "monthly": "Monthly"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "unlocked": "Unlocked",
+    "locked": "Locked"
+  },
+  "challenges": {
+    "title": "Challenges",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  },
+  "errors": {
+    "network": "Connection error",
+    "server": "Server error",
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized"
+  }
+}
