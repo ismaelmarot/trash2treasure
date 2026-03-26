@@ -8,15 +8,35 @@ const resources = {
   en: { translation: en }
 }
 
+// Detectar idioma del navegador
+const getBrowserLanguage = () => {
+  const savedLang = localStorage.getItem('language')
+  if (savedLang && ['es', 'en'].includes(savedLang)) {
+    return savedLang
+  }
+  
+  const browserLang = navigator.language.split('-')[0]
+  if (['es', 'en'].includes(browserLang)) {
+    return browserLang
+  }
+  
+  return 'en' // default
+}
+
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // idioma default
-    fallbackLng: 'es',
+    lng: getBrowserLanguage(),
+    fallbackLng: 'en',
     interpolation: {
-      escapeValue: false // React ya hace escaping
+      escapeValue: false
     }
   })
+
+// Guardar idioma cuando cambia
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('language', lng)
+})
 
 export default i18n
