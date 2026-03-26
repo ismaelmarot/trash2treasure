@@ -15,14 +15,31 @@ import {
   AvatarImage,
   Button,
   Card,
+  ConfirmButton,
+  ConfirmButtons,
+  ConfirmIcon,
+  ConfirmModalContent,
+  ConfirmText,
+  ConfirmTitle,
   Container,
   EditProfileButton,
   Email,
+  ExitText,
   IconChevron,
+  InfoContent,
+  InfoDetail,
+  InfoIcon,
+  InfoItem,
+  InfoList,
+  InfoTitle,
   LanguageSelect,
   MenuIconWrapper,
   MenuItem,
   MenuLabel,
+  ModalClose,
+  ModalContent,
+  ModalOverlay,
+  ModalTitle,
   Name,
   PointsCard,
   PointsLabel,
@@ -33,17 +50,6 @@ import {
   StatLabel,
   StatValue,
   StatsRow,
-  ExitText,
-  ModalOverlay,
-  ModalContent,
-  ModalTitle,
-  ModalClose,
-  InfoList,
-  InfoItem,
-  InfoIcon,
-  InfoContent,
-  InfoTitle,
-  InfoDetail,
 } from './ProfileScreen.style'
 
 const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
@@ -78,6 +84,7 @@ export function ProfileScreen() {
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false)
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
   const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
   const [currentLang, setCurrentLang] = useState(i18n.language)
 
@@ -265,13 +272,31 @@ export function ProfileScreen() {
             <option value="es">🇪🇸 Español</option>
           </LanguageSelect>
         </MenuItem>
-        <MenuItem onClick={logout}>
+        <MenuItem onClick={() => setIsLogoutModalOpen(true)}>
             <ExitText>Cerrar Sesión</ExitText>
           <MenuIconWrapper>
             <FiLogOut size={20} />
           </MenuIconWrapper>
           </MenuItem>
       </Section>
+
+      {isLogoutModalOpen && (
+        <ModalOverlay onClick={() => setIsLogoutModalOpen(false)}>
+          <ConfirmModalContent onClick={(e) => e.stopPropagation()}>
+            <ConfirmIcon>👋</ConfirmIcon>
+            <ConfirmTitle>¿Cerrar sesión?</ConfirmTitle>
+            <ConfirmText>¿Estás seguro de que quieres cerrar tu sesión?</ConfirmText>
+            <ConfirmButtons>
+              <ConfirmButton $variant="cancel" onClick={() => setIsLogoutModalOpen(false)}>
+                Cancelar
+              </ConfirmButton>
+              <ConfirmButton $variant="danger" onClick={logout}>
+                Cerrar Sesión
+              </ConfirmButton>
+            </ConfirmButtons>
+          </ConfirmModalContent>
+        </ModalOverlay>
+      )}
 
       {isModalOpen && (
         <ModalOverlay onClick={() => setIsModalOpen(false)}>

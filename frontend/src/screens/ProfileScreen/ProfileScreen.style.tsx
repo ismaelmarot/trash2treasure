@@ -325,3 +325,77 @@ export const ModalClose = styled.button`
     cursor: pointer;
     color: ${COLORS.greyDark};
 `
+
+export const ConfirmModalContent = styled.div`
+    background: ${COLORS.white};
+    padding: 24px;
+    border-radius: 20px;
+    max-width: 320px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+`
+
+export const ConfirmIcon = styled.div`
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 59, 48, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: ${COLORS.danger};
+    font-size: 28px;
+`
+
+export const ConfirmTitle = styled.h3`
+    font-size: 18px;
+    font-weight: 600;
+    color: ${COLORS.black};
+    margin-bottom: 8px;
+`
+
+export const ConfirmText = styled.p`
+    font-size: 14px;
+    color: ${COLORS.greyDark};
+    margin-bottom: 24px;
+    line-height: 1.5;
+`
+
+export const ConfirmButtons = styled.div`
+    display: flex;
+    gap: 12px;
+`
+
+export const ConfirmButton = styled.button<{ $variant?: 'cancel' | 'danger' }>`
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    
+    ${props => props.$variant === 'cancel' ? `
+        background: #f0f0f0;
+        color: ${COLORS.black};
+        
+        &:hover {
+            background: #e0e0e0;
+        }
+    ` : `
+        background: ${COLORS.danger};
+        color: white;
+        
+        &:hover {
+            background: #e63946;
+            transform: translateY(-1px);
+        }
+        
+        &:active {
+            transform: translateY(0);
+        }
+    `}
+`
