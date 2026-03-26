@@ -187,6 +187,38 @@ export function ProfileScreen() {
       </Section>
 
       <Section>
+        <SectionTitle>Aplicación</SectionTitle>
+        <MenuItem onClick={() => setIsEcoModalOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+          </MenuIconWrapper>
+          <MenuLabel>¿Qué son los Eco Points?</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+        <MenuItem onClick={() => setIsModalOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>💡</span>
+          </MenuIconWrapper>
+          <MenuLabel>Cómo obtener puntos</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+        <MenuItem onClick={() => navigate('/app/about')}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>📖</span>
+          </MenuIconWrapper>
+          <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+        <MenuItem onClick={() => setIsComingSoonOpen(true)}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>🚀</span>
+          </MenuIconWrapper>
+          <MenuLabel>Próximamente</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+      </Section>
+
+      <Section>
         <SectionTitle>Compartir app</SectionTitle>
         <MenuItem onClick={() => setIsQrModalOpen(true)}>
           <MenuIconWrapper>
