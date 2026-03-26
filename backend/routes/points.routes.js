@@ -446,7 +446,7 @@ router.post('/add-report', authenticateToken, async (req, res) => {
     
     let points = 1;
     if (CRITICAL_CATEGORIES.includes(category)) {
-      points += 3;
+      points += 2; // Crítico: 1 + 2 = 3 puntos
     }
     
     userPoints.total_points += points;
