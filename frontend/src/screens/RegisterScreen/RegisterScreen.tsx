@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { RegisterForm } from '@/components'
 import {
   Container,
@@ -14,6 +15,7 @@ import {
 import { ICONS } from '@/constants'
 
 export function RegisterScreen() {
+  const { t } = useTranslation();
   const navigate = useNavigate()
 
   return (
@@ -21,17 +23,17 @@ export function RegisterScreen() {
       <Card>
         <Header>
           <BackButton onClick={() => navigate('/welcome')}>
-            <ICONS.arrowLeft /><Span>Volver</Span>
+            <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
           </BackButton>
         </Header>
 
-        <Title>Crear cuenta</Title>
-        <Subtitle>Únete a la comunidad de Trash2Treasure</Subtitle>
+        <Title>{t('auth.createAccount')}</Title>
+        <Subtitle>{t('auth.createAccountSubtitle')}</Subtitle>
 
         <RegisterForm />
 
         <FooterText>
-          ¿Ya tienes cuenta? <StyledLink to='/login'>Inicia sesión</StyledLink>
+          {t('auth.hasAccount')} <StyledLink to='/login'>{t('auth.login')}</StyledLink>
         </FooterText>
       </Card>
     </Container>

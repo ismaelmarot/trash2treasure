@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   Container,
   Content,
@@ -9,18 +10,19 @@ import {
 } from './NotFoundScreen.styles'
 
 export function NotFoundScreen() {
+  const { t } = useTranslation();
   const navigate = useNavigate()
 
   return (
     <Container>
       <Content>
         <Icon>🔍</Icon>
-        <Title>404</Title>
+        <Title>{t('notFound.title')}</Title>
         <Description>
-          Ups... esta página no existe o fue movida
+          {t('notFound.message')}
         </Description>
         <HomeButton onClick={() => navigate('/app')}>
-          Volver al Mapa
+          {t('notFound.backHome')}
         </HomeButton>
       </Content>
     </Container>

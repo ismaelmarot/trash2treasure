@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL, ICONS } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -18,6 +19,7 @@ import {
 } from './ChangePasswordScreen.styles'
 
 export function ChangePasswordScreen() {
+  const { t } = useTranslation();
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -33,12 +35,12 @@ export function ChangePasswordScreen() {
     setError('')
 
     if (newPassword.length < 6) {
-      setError('La nueva contraseña debe tener al menos 6 caracteres')
+      setError(t('changePassword.minLength'))
       return
     }
 
     if (newPassword !== confirmPassword) {
-      setError('Las contraseñas no coinciden')
+      setError(t('changePassword.mustMatch'))
       return
     }
 
@@ -59,10 +61,10 @@ export function ChangePasswordScreen() {
       if (response.ok) {
         navigate('/app')
       } else {
-        setError(data.error || 'Error al cambiar la contraseña')
+        setError(data.error || t('changePassword.error'))
       }
     } catch (err) {
-      setError('Error de conexión')
+      setError(t('errors.network'))
     } finally {
       setLoading(false)
     }
@@ -72,24 +74,24 @@ export function ChangePasswordScreen() {
     <Container>
       <Card>
         <Header />
-        <Title>Cambiar contraseña</Title>
-        <Subtitle>Ingresa tu contraseña temporal y elegí una nueva</Subtitle>
+        <Title>{t('changePassword.title')}</Title>
+        <Subtitle>{t('changePassword.subtitle')}</Subtitle>
 
         <form onSubmit={handleSubmit}>
           <InputGroup>
-            <Label>Contraseña actual</Label>
+            <Label>{t('changePassword.currentPassword')}</Label>
             <PasswordWrapper>
               <Input
                 type={showPassword ? "text" : "password"}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Contraseña temporal"
+                placeholder={t('changePassword.tempPassword')}
                 required
               />
               <ToggleButton
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
               >
                 {showPassword ? <ICONS.eyeOpen /> : <ICONS.eyeClosed />}
               </ToggleButton>
@@ -97,26 +99,26 @@ export function ChangePasswordScreen() {
           </InputGroup>
 
           <InputGroup>
-            <Label>Nueva contraseña</Label>
+            <Label>{t('changePassword.newPassword')}</Label>
             <PasswordWrapper>
               <Input
                 type={showPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
+                placeholder={t('changePassword.minChars')}
                 required
               />
             </PasswordWrapper>
           </InputGroup>
 
           <InputGroup>
-            <Label>Confirmar nueva contraseña</Label>
+            <Label>{t('changePassword.confirmNewPassword')}</Label>
             <PasswordWrapper>
               <Input
                 type={showPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Repetí la nueva contraseña"
+                placeholder={t('changePassword.repeatPassword')}
                 required
               />
             </PasswordWrapper>
@@ -125,7 +127,7 @@ export function ChangePasswordScreen() {
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <SubmitButton type="submit" disabled={loading}>
-            {loading ? 'Guardando...' : 'Guardar nueva contraseña'}
+            {loading ? t('common.save') + '...' : t('changePassword.saveButton')}
           </SubmitButton>
         </form>
       </Card>

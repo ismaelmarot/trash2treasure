@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { appIcon } from '@/assets'
 import {
   AppIcon,
@@ -15,6 +16,7 @@ import {
 } from './WelcomeScreen.styles'
 
 export function WelcomeScreen() {
+  const { t } = useTranslation();
   const navigate = useNavigate()
 
   return (
@@ -22,26 +24,25 @@ export function WelcomeScreen() {
       <Content>
         <LogoContainer>
           <AppIcon src={appIcon} alt="App logo" />
-          <LogoText>Trash2Treasure</LogoText>
+          <LogoText>{t('home.title')}</LogoText>
         </LogoContainer>
         
-        <Title>Redefiniendo el concepto de "desperdicio" en valor compartido.</Title>
+        <Title>{t('about.tagline')}</Title>
         <Subtitle>
-          La comunidad de economía circular más grande de tu zona. 
-          Encuentra, comparte y salva tesoros.
+          {t('welcome.tagline')}
         </Subtitle>
 
         <ButtonGroup>
           <PrimaryButton onClick={() => navigate('/register')}>
-            Empezar ahora
+            {t('welcome.register')}
           </PrimaryButton>
           <SecondaryButton onClick={() => navigate('/login')}>
-            Ya tengo cuenta
+            {t('auth.login')}
           </SecondaryButton>
         </ButtonGroup>
 
         <Footer>
-          Al continuar, aceptas nuestros términos y condiciones.
+          {t('welcome.termsAgree')}
         </Footer>
       </Content>
     </Container>

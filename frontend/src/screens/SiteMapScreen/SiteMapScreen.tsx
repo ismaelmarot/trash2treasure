@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ICONS } from '@/constants'
 import { sitemapColumns } from './SiteMap.data'
 import { SiteMapColumn } from './SiteMapColumn'
@@ -12,6 +13,7 @@ import {
 } from './SiteMapScreen.styles'
 
 export function SiteMapScreen() {
+  const { t } = useTranslation();
   const navigate = useNavigate()
 
   return (
@@ -19,10 +21,10 @@ export function SiteMapScreen() {
       <Header>
         <BackButton onClick={() => navigate(-1)}>
           <ICONS.arrowLeft />
-          <span>Volver</span>
+          <span>{t('common.back')}</span>
         </BackButton>
 
-        <Title>Site Map</Title>
+        <Title>{t('footer.siteMap')}</Title>
       </Header>
 
       <ScrollContent>

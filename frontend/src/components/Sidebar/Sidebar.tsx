@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { SidebarProps } from '../../types'
-import { navigationItems } from '../../navigation'
+import { FaMap, FaSearch, FaPlus, FaBell, FaTrophy, FaUser } from 'react-icons/fa'
 import { ICONS } from '../../constants'
 import { useAuth } from '@/hooks'
 import {
@@ -23,9 +24,19 @@ function getAvatarColor(name: string): string {
 }
 
 export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
+
+  const navigationItems = [
+    { label: t('nav.map'), path: '/app', icon: FaMap },
+    { label: t('nav.search'), path: '/app/search', icon: FaSearch },
+    { label: t('nav.add'), path: '/app/add', icon: FaPlus },
+    { label: t('nav.activity'), path: '/app/activity', icon: FaBell },
+    { label: t('nav.points'), path: '/app/points', icon: FaTrophy },
+    { label: t('nav.profile'), path: '/app/profile', icon: FaUser },
+  ]
 
   return (
     <SidebarContainer $collapsed={collapsed}>
@@ -39,7 +50,7 @@ export const Sidebar = ({ collapsed, toggleSidebar }: SidebarProps) => {
         const Icon = item.icon
         const active = location.pathname === item.path
         const isLast = index === navigationItems.length - 1
-        const isProfileTab = item.path === '/profile'
+        const isProfileTab = item.path === '/app/profile'
 
         return (
           <NavItem

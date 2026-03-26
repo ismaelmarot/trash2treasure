@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   Overlay,
   Modal,
@@ -21,23 +22,25 @@ export function OfflineModal({
   isOpen, 
   onConfirm, 
   onCancel,
-  title = 'Sin conexión a internet',
-  message = 'Tu tesoro se guardará localmente y se publicará automáticamente cuando vuelvas a estar conectado.'
+  title,
+  message,
 }: OfflineModalProps) {
+  const { t } = useTranslation();
+
   if (!isOpen) return null
 
   return (
     <Overlay onClick={onCancel}>
       <Modal onClick={(e) => e.stopPropagation()}>
         <Icon>📡</Icon>
-        <Title>{title}</Title>
-        <Message>{message}</Message>
+        <Title>{title || t('offline.title')}</Title>
+        <Message>{message || t('offline.message')}</Message>
         <ButtonGroup>
           <PrimaryButton onClick={onConfirm}>
-            Guardar offline
+            {t('offline.saveOffline')}
           </PrimaryButton>
           <SecondaryButton onClick={onCancel}>
-            Cancelar
+            {t('common.cancel')}
           </SecondaryButton>
         </ButtonGroup>
       </Modal>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Form } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL, ICONS } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import {
@@ -25,6 +26,7 @@ import {
 } from './LoginScreen.styles'
 
 export function LoginScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -54,10 +56,10 @@ export function LoginScreen() {
           navigate('/app');
         }
       } else {
-        setError(data.error || 'Login failed')
+        setError(data.error || t('auth.loginError'))
       }
     } catch (err) {
-      setError('Connection error');
+      setError(t('auth.connectionError'));
     }
   };
 
@@ -66,39 +68,39 @@ export function LoginScreen() {
       <Card>
         <Header>
           <BackButton onClick={() => navigate('/welcome')}>
-            <ICONS.arrowLeft /><Span>Volver</Span>
+            <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
           </BackButton>
         </Header>
-        <Title>Bienvenido de nuevo</Title>
-        <Subtitle>Ingresa a tu cuenta de Trash2Treasure</Subtitle>
+        <Title>{t('auth.loginTitle')}</Title>
+        <Subtitle>{t('auth.loginSubtitle')}</Subtitle>
 
         
         <Form onSubmit={handleSubmit}>
           <InputGroup>
-            <Label>Email</Label>
+            <Label>{t('auth.email')}</Label>
             <Input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              placeholder="tu@email.com"
+              placeholder={t('auth.emailPlaceholder')}
               required 
             />
           </InputGroup>
           
           <InputGroup>
-            <Label>Contraseña</Label>
+            <Label>{t('auth.password')}</Label>
             <PasswordWrapper>
               <Input 
                 type={showPassword ? "text" : "password"} 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                placeholder="********"
+                placeholder={t('auth.passwordPlaceholder')}
                 required 
               />
               <ToggleButton 
                 type="button" 
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
               >
                 {showPassword ? <ICONS.eyeOpen /> : <ICONS.eyeClosed />}
               </ToggleButton>
@@ -109,16 +111,16 @@ export function LoginScreen() {
             to="/forgot-password" 
             style={{ fontSize: '12px', color: '#666', textAlign: 'right', display: 'block', marginTop: '-8px', marginBottom: '16px' }}
           >
-            ¿Olvidaste tu contraseña?
+            {t('auth.forgotPassword')}
           </StyledLink>
 
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <SubmitButton type="submit">Iniciar Sesión</SubmitButton>
+          <SubmitButton type="submit">{t('auth.login')}</SubmitButton>
         </Form>
 
-        <Divider><span>O continúa con</span></Divider>
+        <Divider><span>{t('auth.continueWith')}</span></Divider>
 
         <SocialButtons>
           <SocialButton $provider="facebook">Facebook</SocialButton>
@@ -126,7 +128,7 @@ export function LoginScreen() {
         </SocialButtons>
 
         <FooterText>
-          ¿No tienes cuenta? <StyledLink to="/register">Regístrate</StyledLink>
+          {t('auth.noAccount')} <StyledLink to="/register">{t('auth.register')}</StyledLink>
         </FooterText>
       </Card>
     </Container>

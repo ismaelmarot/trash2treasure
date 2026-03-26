@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL, ICONS } from '@/constants'
 import {
   BackButton,
@@ -20,6 +21,7 @@ import {
 } from './ForgotPasswordScreen.styles'
 
 export function ForgotPasswordScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -44,10 +46,10 @@ export function ForgotPasswordScreen() {
       if (response.ok) {
         setSuccess(true)
       } else {
-        setError(data.error || 'Error al procesar la solicitud')
+        setError(data.error || t('forgotPassword.error'))
       }
     } catch (err) {
-      setError('Error de conexión')
+      setError(t('errors.network'))
     } finally {
       setLoading(false)
     }
@@ -59,15 +61,15 @@ export function ForgotPasswordScreen() {
         <Card>
           <Header>
             <BackButton onClick={() => navigate('/login')}>
-              <ICONS.arrowLeft /><Span>Volver</Span>
+              <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
             </BackButton>
           </Header>
-          <Title>✓ Email enviado</Title>
+          <Title>✓ {t('forgotPassword.emailSent')}</Title>
           <Subtitle>
-            Si el email existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.
+            {t('forgotPassword.emailSentSubtitle')}
           </Subtitle>
           <FooterText style={{ marginTop: '24px' }}>
-            <StyledLink to="/login">Volver a iniciar sesión</StyledLink>
+            <StyledLink to="/login">{t('forgotPassword.backToLogin')}</StyledLink>
           </FooterText>
         </Card>
       </Container>
@@ -79,20 +81,20 @@ export function ForgotPasswordScreen() {
       <Card>
         <Header>
           <BackButton onClick={() => navigate('/login')}>
-            <ICONS.arrowLeft /><Span>Volver</Span>
+            <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
           </BackButton>
         </Header>
-        <Title>Olvidé mi contraseña</Title>
-        <Subtitle>Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña</Subtitle>
+        <Title>{t('forgotPassword.title')}</Title>
+        <Subtitle>{t('forgotPassword.subtitle')}</Subtitle>
 
         <form onSubmit={handleSubmit}>
           <InputGroup>
-            <Label>Email</Label>
+            <Label>{t('auth.email')}</Label>
             <Input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              placeholder="tu@email.com"
+              placeholder={t('auth.emailPlaceholder')}
               required 
             />
           </InputGroup>
@@ -100,14 +102,14 @@ export function ForgotPasswordScreen() {
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <SubmitButton type="submit" disabled={loading}>
-            {loading ? 'Enviando...' : 'Enviar enlace de recuperación'}
+            {loading ? t('forgotPassword.sending') : t('forgotPassword.sendButton')}
           </SubmitButton>
         </form>
 
         <Divider />
         
         <FooterText>
-          ¿Recordaste tu contraseña? <StyledLink to="/login">Iniciar sesión</StyledLink>
+          {t('forgotPassword.remembered')} <StyledLink to="/login">{t('auth.login')}</StyledLink>
         </FooterText>
       </Card>
     </Container>

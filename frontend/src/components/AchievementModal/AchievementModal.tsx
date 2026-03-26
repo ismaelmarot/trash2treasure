@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { StarRating } from '@/components/StarRating'
 import type { AchievementModalProps } from '@/interface'
 import {
@@ -13,6 +14,8 @@ import {
 } from './AchievementModal.styles'
 
 export function AchievementModal({ isOpen, onClose, achievement }: AchievementModalProps) {
+  const { t } = useTranslation();
+
   if (!isOpen || !achievement) return null
 
   const isChallenge = achievement.type === 'challenge'
@@ -33,24 +36,24 @@ export function AchievementModal({ isOpen, onClose, achievement }: AchievementMo
               size={24}
             />
             <TrophiesText hasTrophies={(achievement.trophies || 0) > 0}>
-              🏆 {achievement.trophies || 0} trofeos
+              🏆 {achievement.trophies || 0} {t('achievements.trophies')}
             </TrophiesText>
           </div>
         ) : (
           <>
             <PointsBadge $unlocked={achievement.unlocked}>
-              {achievement.unlocked ? `+${achievement.points} pts` : `${achievement.points} pts`}
+              {achievement.unlocked ? `+${achievement.points} ${t('points.pointsShort')}` : `${achievement.points} ${t('points.pointsShort')}`}
             </PointsBadge>
             
             <StatusText $unlocked={achievement.unlocked}>
               {achievement.unlocked 
-                ? `Desbloqueado el ${new Date(achievement.unlocked_at!).toLocaleDateString('es-ES')}` 
-                : 'Aún no desbloqueado'}
+                ? `${t('achievements.unlocked')} ${new Date(achievement.unlocked_at!).toLocaleDateString()}` 
+                : t('achievements.locked')}
             </StatusText>
           </>
         )}
         
-        <CloseButton onClick={onClose}>Cerrar</CloseButton>
+        <CloseButton onClick={onClose}>{t('common.close')}</CloseButton>
       </Modal>
     </Overlay>
   )

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useRegister } from '@/hooks'
 import { PasswordValidation } from '@/components'
 import { ICONS } from '@/constants'
@@ -13,6 +14,7 @@ import {
 } from './RegisterForm.styles'
 
 export function RegisterForm() {
+    const { t } = useTranslation();
     const { 
         name,
         setName,
@@ -40,35 +42,35 @@ export function RegisterForm() {
     return (
         <form onSubmit={onSubmit}>
         <InputGroup>
-            <Label>Nombre</Label>
+            <Label>{t('auth.name')}</Label>
             <Input
             type='text'
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Tu nombre completo"
+            placeholder={t('auth.namePlaceholder')}
             required
             />
         </InputGroup>
 
         <InputGroup>
-            <Label>Email</Label>
+            <Label>{t('auth.email')}</Label>
             <Input
             type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
+            placeholder={t('auth.emailPlaceholder')}
             required
             />
         </InputGroup>
 
         <InputGroup>
-            <Label>Contraseña</Label>
+            <Label>{t('auth.password')}</Label>
             <PasswordWrapper>
             <Input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 8 caracteres"
+                placeholder={t('auth.passwordMinLength')}
                 required
             />
             <ToggleButton
@@ -83,13 +85,13 @@ export function RegisterForm() {
         </InputGroup>
 
         <InputGroup>
-            <Label>Confirmar Contraseña</Label>
+            <Label>{t('auth.confirmPassword')}</Label>
             <PasswordWrapper>
             <Input
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Repite tu contraseña"
+                placeholder={t('auth.passwordPlaceholder')}
                 required
             />
             <ToggleButton
@@ -102,7 +104,7 @@ export function RegisterForm() {
         </InputGroup>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <SubmitButton type='submit'>Registrarse</SubmitButton>
+        <SubmitButton type='submit'>{t('auth.register')}</SubmitButton>
         </form>
     )
 }

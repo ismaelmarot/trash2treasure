@@ -1,10 +1,17 @@
 import { useBottomNav } from './useBottomNav'
+import type { IconType } from 'react-icons'
 import {
   BottomNavContainer,
   BottomNavItem,
   UserAvatar,
   AvatarImage,
 } from './BottomNav.styles'
+
+interface NavItem {
+  label: string
+  path: string
+  icon: IconType
+}
 
 export const BottomNav = () => {
   const {
@@ -18,8 +25,8 @@ export const BottomNav = () => {
 
   return (
     <BottomNavContainer>
-      {navigationItems.map(item => {
-        const isProfileTab = item.path === '/profile'
+      {(navigationItems as NavItem[]).map(item => {
+        const isProfileTab = item.path === '/app/profile'
         const Icon = item.icon
 
         return (

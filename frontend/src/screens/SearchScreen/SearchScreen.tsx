@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks'
 import type { ItemProps } from '@/interface'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
@@ -42,6 +43,7 @@ import {
 } from './SearchScreen.styles'
 
 export function SearchScreen() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<ItemProps[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -58,7 +60,7 @@ export function SearchScreen() {
         if (data.latitude && data.longitude) {
           setUserLocation({ lat: data.latitude, lng: data.longitude })
         }
-      } catch {}
+      } catch { /* empty */ }
     }
 
     const saved = localStorage.getItem('manually_set_location')
@@ -66,7 +68,7 @@ export function SearchScreen() {
       try {
         const [lat, lng] = JSON.parse(saved)
         setUserLocation({ lat, lng })
-      } catch {}
+      } catch { /* empty */ }
     }
 
     if (navigator.geolocation) {
@@ -148,13 +150,13 @@ export function SearchScreen() {
   return (
     <Container>
       <Header>
-        <Title>Explorar</Title>
+        <Title>{t('search.title')}</Title>
         <SearchForm onSubmit={handleSearch}>
           <SearchInputWrapper>
             <SearchIcon />
             <SearchInput 
               type="text" 
-              placeholder="Busca tesoros..." 
+              placeholder={t('search.placeholder')} 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -178,7 +180,7 @@ export function SearchScreen() {
       {(loading && items.length === 0) ? (
         <LoadingWrapper>
           <LoadingSpinner />
-          <p>Buscando tesoros...</p>
+          <p>{t('common.loading')}</p>
         </LoadingWrapper>
       ) : (
         <ResultsGrid>
@@ -198,9 +200,9 @@ export function SearchScreen() {
                 )}
                 <TagGroup>
                   <CategoryBadge>{getCategoryIcon(item.category)} {item.category}</CategoryBadge>
-                  {item.user_id === user?.id && <OwnerBadge>Mío</OwnerBadge>}
-                  {item.claimed_by === user?.id && <ClaimStatusBadge>Reclamado por mí</ClaimStatusBadge>}
-                  {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>Ocupado</ClaimStatusBadge>}
+                  {item.user_id === user?.id && <OwnerBadge>{t('activity.mine')}</OwnerBadge>}
+                  {item.claimed_by === user?.id && <ClaimStatusBadge>{t('itemDetail.claimedByMe')}</ClaimStatusBadge>}
+                  {item.claimed_by && item.claimed_by !== user?.id && <ClaimStatusBadge $others>{t('activity.claimedByOthers')}</ClaimStatusBadge>}
                 </TagGroup>
               </ImageWrapper>
 
@@ -209,12 +211,12 @@ export function SearchScreen() {
                   <DistanceBadge>
                     {item.latitude != null && item.longitude != null
                       ? `📍 ${userLocation ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude) : '...'}`
-                      : '📍 Ubicación no disponible'}
+                      : t('activity.locationUnavailable')}
                   </DistanceBadge>
                   <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
                 </ItemHeader>
                 <ItemTitle>{item.title}</ItemTitle>
-                <ItemDescription>{item.description || 'Sin descripción'}</ItemDescription>
+                <ItemDescription>{item.description || t('itemDetail.noDescription')}</ItemDescription>
                 <ClaimButton 
                   disabled={!!item.claimed_by || item.user_id === user?.id}
                   onClick={(e) => {
@@ -225,12 +227,12 @@ export function SearchScreen() {
                   }}
                 >
                   {item.user_id === user?.id 
-                    ? 'Tu reporte' 
+                    ? t('itemDetail.yourReport') 
                     : item.claimed_by === user?.id 
-                      ? 'Ya lo reclamaste' 
+                      ? t('itemDetail.alreadyClaimed') 
                       : item.claimed_by 
-                        ? 'Ya reclamado' 
-                        : '¡Lo quiero!'}
+                        ? t('activity.claimedByOthers') 
+                        : t('itemDetail.wantIt')}
                 </ClaimButton>
               </ItemContent>
             </ResultCard>
@@ -238,7 +240,7 @@ export function SearchScreen() {
           {filteredItems.length === 0 && (
             <EmptyResults>
               <EmptyIcon>🔍</EmptyIcon>
-              <p>No se encontraron resultados para "{searchQuery}"</p>
+              <p>{t('search.noResults')}</p>
             </EmptyResults>
           )}
         </ResultsGrid>

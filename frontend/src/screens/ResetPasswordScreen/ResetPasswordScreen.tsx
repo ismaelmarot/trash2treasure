@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL, ICONS } from '@/constants'
 import {
   BackButton,
@@ -21,6 +22,7 @@ import {
 } from './ResetPasswordScreen.styles'
 
 export function ResetPasswordScreen() {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -37,17 +39,17 @@ export function ResetPasswordScreen() {
     setError('')
 
     if (!token) {
-      setError('Enlace inválido o expirado')
+      setError(t('resetPassword.invalidLink'))
       return
     }
 
     if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres')
+      setError(t('changePassword.minLength'))
       return
     }
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden')
+      setError(t('changePassword.mustMatch'))
       return
     }
 
@@ -65,10 +67,10 @@ export function ResetPasswordScreen() {
       if (response.ok) {
         setSuccess(true)
       } else {
-        setError(data.error || 'Error al restablecer la contraseña')
+        setError(data.error || t('resetPassword.error'))
       }
     } catch (err) {
-      setError('Error de conexión')
+      setError(t('errors.network'))
     } finally {
       setLoading(false)
     }
@@ -80,15 +82,15 @@ export function ResetPasswordScreen() {
         <Card>
           <Header>
             <BackButton onClick={() => navigate('/login')}>
-              <ICONS.arrowLeft /><Span>Volver</Span>
+              <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
             </BackButton>
           </Header>
-          <Title>Enlace inválido</Title>
+          <Title>{t('resetPassword.invalidLinkTitle')}</Title>
           <Subtitle>
-            Este enlace de recuperación no es válido o ha expirado.
+            {t('resetPassword.invalidLinkSubtitle')}
           </Subtitle>
           <FooterText style={{ marginTop: '24px' }}>
-            <StyledLink to="/forgot-password">Solicitar nuevo enlace</StyledLink>
+            <StyledLink to="/forgot-password">{t('resetPassword.requestNew')}</StyledLink>
           </FooterText>
         </Card>
       </Container>
@@ -101,15 +103,15 @@ export function ResetPasswordScreen() {
         <Card>
           <Header>
             <BackButton onClick={() => navigate('/login')}>
-              <ICONS.arrowLeft /><Span>Volver</Span>
+              <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
             </BackButton>
           </Header>
-          <Title>Contraseña actualizada</Title>
+          <Title>{t('resetPassword.successTitle')}</Title>
           <Subtitle>
-            Tu contraseña se ha restablecido correctamente. Ya puedes iniciar sesión.
+            {t('resetPassword.successSubtitle')}
           </Subtitle>
           <FooterText style={{ marginTop: '24px' }}>
-            <StyledLink to="/login">Iniciar sesión</StyledLink>
+            <StyledLink to="/login">{t('auth.login')}</StyledLink>
           </FooterText>
         </Card>
       </Container>
@@ -121,27 +123,27 @@ export function ResetPasswordScreen() {
       <Card>
         <Header>
           <BackButton onClick={() => navigate('/login')}>
-            <ICONS.arrowLeft /><Span>Volver</Span>
+            <ICONS.arrowLeft /><Span>{t('common.back')}</Span>
           </BackButton>
         </Header>
-        <Title>Nueva contraseña</Title>
-        <Subtitle>Ingresa tu nueva contraseña</Subtitle>
+        <Title>{t('resetPassword.newPasswordTitle')}</Title>
+        <Subtitle>{t('resetPassword.newPasswordSubtitle')}</Subtitle>
 
         <form onSubmit={handleSubmit}>
           <InputGroup>
-            <Label>Nueva contraseña</Label>
+            <Label>{t('changePassword.newPassword')}</Label>
             <PasswordWrapper>
               <Input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="********"
+                placeholder={t('auth.passwordPlaceholder')}
                 required
               />
               <ToggleButton
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
               >
                 {showPassword ? <ICONS.eyeOpen /> : <ICONS.eyeClosed />}
               </ToggleButton>
@@ -149,13 +151,13 @@ export function ResetPasswordScreen() {
           </InputGroup>
 
           <InputGroup>
-            <Label>Confirmar contraseña</Label>
+            <Label>{t('changePassword.confirmNewPassword')}</Label>
             <PasswordWrapper>
               <Input
                 type={showPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="********"
+                placeholder={t('auth.passwordPlaceholder')}
                 required
               />
             </PasswordWrapper>
@@ -164,7 +166,7 @@ export function ResetPasswordScreen() {
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <SubmitButton type="submit" disabled={loading}>
-            {loading ? 'Restableciendo...' : 'Restablecer contraseña'}
+            {loading ? t('resetPassword.resetting') : t('resetPassword.resetButton')}
           </SubmitButton>
         </form>
       </Card>

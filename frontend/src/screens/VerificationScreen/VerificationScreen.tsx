@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useLocation, Form } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
 import {
@@ -17,6 +18,7 @@ import {
 } from './VerificationScreen.styles'
 
 export function VerificationScreen() {
+  const { t } = useTranslation();
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -37,7 +39,6 @@ export function VerificationScreen() {
     setError('')
 
     try {
-      // 1. Verificar el código
       const verifyResponse = await fetch(`${API_BASE_URL}/users/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -47,12 +48,11 @@ export function VerificationScreen() {
       const verifyData = await verifyResponse.json()
 
       if (!verifyResponse.ok) {
-        setError(verifyData.error || 'Código inválido')
+        setError(verifyData.error || t('verification.invalidCode'))
         setLoading(false)
         return
       }
 
-      // 2. Si la verificación fue exitosa, hacer login automático
       if (password) {
         const loginResponse = await fetch(`${API_BASE_URL}/users/login`, {
           method: 'POST',
@@ -63,19 +63,16 @@ export function VerificationScreen() {
         const loginData = await loginResponse.json()
 
         if (loginResponse.ok) {
-          // Guardar token y usuario en el contexto
           login(loginData.token, loginData.user)
-          // Redirigir al mapa
           navigate('/app')
         } else {
-          setError('Verificación exitosa, pero hubo un error al hacer login')
+          setError(t('verification.loginError'))
         }
       } else {
-        // Si no hay password, redirigir al login
-        navigate('/login', { state: { message: 'Cuenta verificada. ¡Ya puedes entrar!' } })
+        navigate('/login', { state: { message: t('verification.accountVerified') } })
       }
     } catch (err) {
-      setError('Error de conexión')
+      setError(t('errors.network'))
     } finally {
       setLoading(false)
     }
@@ -85,15 +82,15 @@ export function VerificationScreen() {
     <Container>
       <Card>
         <Icon>📧</Icon>
-        <Title>Verifica tu email</Title>
+        <Title>{t('verification.title')}</Title>
         <Subtitle>
-          Hemos enviado un código de 6 dígitos a <br />
+          {t('verification.subtitle')} <br />
           <strong>{email}</strong>
         </Subtitle>
 
         <Form onSubmit={handleSubmit}>
           <InputGroup>
-            <Label>Código de verificación</Label>
+            <Label>{t('verification.codeLabel')}</Label>
             <CodeInput 
               type='text'
               value={code}
@@ -107,12 +104,12 @@ export function VerificationScreen() {
           {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <SubmitButton type='submit' disabled={loading}>
-            {loading ? "Verificando..." : "Verificar Cuenta"}
+            {loading ? t('verification.verifying') : t('verification.verifyButton')}
           </SubmitButton>
         </Form>
         
         <ResendLinkText>
-          ¿No recibiste nada? <button type='button'>Reenviar código</button>
+          {t('verification.notReceived')} <button type='button'>{t('verification.resendCode')}</button>
         </ResendLinkText>
       </Card>
     </Container>

@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, Circle } from 'react-le
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { ItemProps } from '@/interface'
 import { API_BASE_URL, ICONS, CATEGORIES } from '@/constants'
 import { useAuth } from '@/hooks'
@@ -100,7 +101,6 @@ const userIcon = L.divIcon({
   iconAnchor: [10, 10]
 })
 
-// Component to recenter map only when triggered
 function ChangeView({ center, trigger }: { center: L.LatLngExpression, trigger?: number }) {
   const map = useMap();
   const lastTrigger = useRef(trigger);
@@ -115,6 +115,7 @@ function ChangeView({ center, trigger }: { center: L.LatLngExpression, trigger?:
 
 function ManualModeHandler({ isActive, onConfirm }: { isActive: boolean, onConfirm: (map: L.Map) => void }) {
   const map = useMap();
+  const { t } = useTranslation();
   
   if (!isActive) return null;
 
@@ -124,7 +125,7 @@ function ManualModeHandler({ isActive, onConfirm }: { isActive: boolean, onConfi
         <ICONS.plus size={30} color="#0071e3" />
         <ConfirmFab onClick={() => onConfirm(map)} style={{ pointerEvents: 'auto' }}>
           <ICONS.check size={20} />
-          Confirmar aquí
+          {t('map.confirmHere')}
         </ConfirmFab>
       </CrosshairContainer>
     </div>
@@ -133,6 +134,7 @@ function ManualModeHandler({ isActive, onConfirm }: { isActive: boolean, onConfi
 
 
 export function MapScreen() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<ItemProps[]>([]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(() => {
     const saved = localStorage.getItem('manually_set_location')
@@ -151,10 +153,10 @@ export function MapScreen() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [maxDistance, setMaxDistance] = useState<number>(1000); // Default 1km
+  const [maxDistance, setMaxDistance] = useState<number>(1000);
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371e3; // Earth radius in meters
+    const R = 6371e3;
     const phi1 = (lat1 * Math.PI) / 180
     const phi2 = (lat2 * Math.PI) / 180
     const deltaPhi = ((lat2 - lat1) * Math.PI) / 180
@@ -165,7 +167,7 @@ export function MapScreen() {
       Math.cos(phi1) * Math.cos(phi2) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2)
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
-    return R * c // in meters
+    return R * c
   };
 
   const filteredItems = items
@@ -194,9 +196,8 @@ export function MapScreen() {
         const { lat, lon } = data[0]
         const newPos: [number, number] = [parseFloat(lat), parseFloat(lon)]
         setUserLocation(newPos)
-        setAccuracy(null); // Search location doesn't have GPS accuracy
+        setAccuracy(null);
         setShouldRecenter(prev => prev + 1)
-        // If they search, they probably want to confirm this as their home base
         setIsManualMode(true)
       }
     } catch (err) {
@@ -215,7 +216,6 @@ export function MapScreen() {
     setIsManualMode(false)
   }
 
-  // Fallback to IP location if GPS fails/is slow
   const getIPLocation = async () => {
     try {
       const response = await fetch('https://ipapi.co/json/')
@@ -226,18 +226,16 @@ export function MapScreen() {
     } catch (error) {
       console.error('Error getting IP location:', error)
     }
-    return [-34.6037, -58.3816] as [number, number] // Ultimate fallback
+    return [-34.6037, -58.3816] as [number, number]
   }
 
   useEffect(() => {
     let watchId: number
     
     const startTracking = async () => {
-      // If we have a saved location, don't show loading overlay for too long
       if (userLocation) setLoading(false);
 
       if (navigator.geolocation) {
-        // Get an initial fast location or fallback to IP while waiting for high accuracy
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             setUserLocation([pos.coords.latitude, pos.coords.longitude]);
@@ -254,7 +252,6 @@ export function MapScreen() {
           { timeout: 5000, enableHighAccuracy: false }
         )
 
-        // Start watching for high accuracy fixes
         watchId = navigator.geolocation.watchPosition(
           (pos) => {
             const newPos: [number, number] = [pos.coords.latitude, pos.coords.longitude]
@@ -336,7 +333,13 @@ export function MapScreen() {
           <LocationStatus>
             <StatusDot $active={!!userLocation} $isRefreshing={isRefreshingLocation} />
             <StatusText>
-              {isRefreshingLocation ? 'GPS...' : accuracy ? `${Math.round(accuracy)}m` : userLocation ? 'Activo' : 'Buscando...'}
+              {isRefreshingLocation 
+                ? t('map.gpsSearching') 
+                : accuracy 
+                  ? `${Math.round(accuracy)}m` 
+                  : userLocation 
+                    ? t('map.gpsActive') 
+                    : t('map.gpsLooking')}
             </StatusText>
           </LocationStatus>
           
@@ -345,12 +348,12 @@ export function MapScreen() {
             {!isManualMode ? (
               <SmallIconButton 
                 onClick={() => setIsManualMode(true)} 
-                title="Ajustar ubicación manualmente"
+                title={t('map.adjustLocation')}
               >
                 <ICONS.mapMark size={14} />
               </SmallIconButton>
             ) : (
-              <ConfirmButton onClick={() => setIsManualMode(false)} title="Cancelar">
+              <ConfirmButton onClick={() => setIsManualMode(false)} title={t('map.cancel')}>
                 <ICONS.time size={14} />
               </ConfirmButton>
             )}
@@ -371,7 +374,7 @@ export function MapScreen() {
           $active={isSidebarOpen}
         >
           <ICONS.bars size={14} />
-          <span>Explorar</span>
+          <span>{t('map.explore')}</span>
         </ExploreSegment>
       </TopBar>
 
@@ -390,7 +393,7 @@ export function MapScreen() {
         
         {userLocation && (
           <Marker position={userLocation} icon={userIcon}>
-            <Popup>Tu ubicación actual</Popup>
+            <Popup>{t('map.yourLocation')}</Popup>
           </Marker>
         )}
         
@@ -418,8 +421,6 @@ export function MapScreen() {
               icon={getCategoryIcon(item.category)}
               eventHandlers={{
                 click: () => {
-                  // Centrar suavemente al hacer clic en el marcador
-                  // Leaflet maneja esto en parte, pero podemos forzarlo si queremos
                 }
               }}
             >
@@ -438,16 +439,16 @@ export function MapScreen() {
                     ) : null}
                     <PopupDistance>
                       {item.distance < 1000 
-                        ? `📍 ${Math.round(item.distance)} m` 
-                        : `📍 ${(item.distance / 1000).toFixed(1)} km`}
+                        ? `📍 ${Math.round(item.distance)} ${t('map.metersShort')}` 
+                        : `📍 ${(item.distance / 1000).toFixed(1)} ${t('map.kmShort')}`}
                     </PopupDistance>
                     <CountdownWrapper>
                       <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
                     </CountdownWrapper>
                     <PopupTitle>{item.title}</PopupTitle>
-                    <PopupDescription>{item.description || 'Sin descripción'}</PopupDescription>
+                    <PopupDescription>{item.description || t('map.noDescription')}</PopupDescription>
                     <ViewButton onClick={() => navigate(`/app/item/${item.id}`)}>
-                      Ver detalle
+                      {t('map.viewDetail')}
                     </ViewButton>
                   </PopupContent>
                 </Popup>
@@ -456,7 +457,6 @@ export function MapScreen() {
         }
       </MapContainer>
 
-      {/* Sidebar Section */}
       <SidebarOverlay $isOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(false)} />
       <SidebarContainer $isOpen={isSidebarOpen}>
         <DragHandleContainer onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -465,14 +465,14 @@ export function MapScreen() {
         
         <SidebarHeader>
           <TitleRow>
-            <SidebarTitle>Explorar Tesoros</SidebarTitle>
+            <SidebarTitle>{t('map.exploreTreasures')}</SidebarTitle>
             <ToggleButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
               {isSidebarOpen ? <ICONS.closeIcon /> : <ICONS.bars />}
             </ToggleButton>
           </TitleRow>
 
           <FilterSection>
-            <SectionLabel>Máxima Distancia</SectionLabel>
+            <SectionLabel>{t('map.maxDistance')}</SectionLabel>
             <DistanceGrid>
               {[500, 1000, 2000, 3000, 5000].map(dist => (
                 <FilterChip 
@@ -487,7 +487,7 @@ export function MapScreen() {
           </FilterSection>
 
           <FilterSection>
-            <SectionLabel>Categoría</SectionLabel>
+            <SectionLabel>{t('map.category')}</SectionLabel>
             <CategoryScroll>
               {CATEGORIES.map(cat => (
                 <CategoryChip 
@@ -507,8 +507,8 @@ export function MapScreen() {
           {filteredItems.length === 0 ? (
             <EmptyState>
               <EmptyIcon>🔍</EmptyIcon>
-              <p>No hay tesoros en este rango.</p>
-              <small>Prueba a ampliar la distancia o cambiar de categoría.</small>
+              <p>{t('map.noItems')}</p>
+              <small>{t('map.tryDistance')}</small>
             </EmptyState>
           ) : (
             filteredItems.map(item => (
@@ -528,13 +528,13 @@ export function MapScreen() {
                 />
                 <ItemInfo>
                   <ItemName>{item.title}</ItemName>
-                  {item.claimed_by && <ClaimedBadgeSidebar>Reclamado</ClaimedBadgeSidebar>}
+                  {item.claimed_by && <ClaimedBadgeSidebar>{t('map.claimed')}</ClaimedBadgeSidebar>}
                   <ItemDescription>{item.description}</ItemDescription>
                   <ItemMeta>
                     <span>📍{Math.round(item.distance)}m</span>
                   </ItemMeta>
                   <PublishedTime>
-                    Pub: {new Date(item.created_at).toLocaleDateString('es-ES', { 
+                    {t('map.reportedBy')} {new Date(item.created_at).toLocaleDateString('es-ES', { 
                       day: 'numeric', 
                       month: 'short',
                       hour: '2-digit',
@@ -550,9 +550,9 @@ export function MapScreen() {
                     e.stopPropagation();
                     navigate(`/app/item/${item.id}`);
                   }}
-                  title="Ver detalles"
+                  title={t('map.viewDetails')}
                 >
-                  Ver
+                  {t('map.viewDetails')}
                 </ViewDetailButton>
               </ItemCard>
             ))
@@ -562,7 +562,7 @@ export function MapScreen() {
         <SidebarFooter>
           <SearchForm onSubmit={handleSearch}>
             <SearchInput 
-              placeholder="Busca calle o ciudad..." 
+              placeholder={t('map.searchPlaceholder')} 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -576,7 +576,7 @@ export function MapScreen() {
       {loading && (
         <Overlay>
           <Spinner />
-          <p>Cargando tesoros...</p>
+          <p>{t('map.loadingTreasures')}</p>
         </Overlay>
       )}
     </Container>

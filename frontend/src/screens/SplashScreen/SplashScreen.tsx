@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { appIcon } from '@/assets'
 import { API_BASE_URL } from '@/constants'
 import { useAuth } from '@/hooks'
@@ -17,19 +18,23 @@ import {
   AnimatedLetter
 } from './SplashScreen.styles'
 
-const USP_TEXT = 'Redefiniendo el concepto de "desperdicio" en valor compartido.'
+const USP_TEXT_ES = 'Redifiniendo el concepto de "desperdicio" en valor compartido.'
+const USP_TEXT_EN = 'Redefining the concept of "waste" into shared value.'
 
 export function SplashScreen() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate()
   const { token, isAuthenticated } = useAuth()
   const [totalPoints, setTotalPoints] = useState(0)
   const [visibleLetters, setVisibleLetters] = useState(0)
   const animationComplete = useRef(false)
 
+  const uspText = i18n.language === 'es' ? USP_TEXT_ES : USP_TEXT_EN;
+
   useEffect(() => {
     const letterInterval = setInterval(() => {
       setVisibleLetters(prev => {
-        if (prev >= USP_TEXT.length) {
+        if (prev >= uspText.length) {
           clearInterval(letterInterval)
           animationComplete.current = true
           return prev
@@ -39,7 +44,7 @@ export function SplashScreen() {
     }, 50)
 
     return () => clearInterval(letterInterval)
-  }, [])
+  }, [uspText])
 
   useEffect(() => {
     const loadData = async () => {
@@ -55,7 +60,6 @@ export function SplashScreen() {
         }
       }
 
-      // Esperar a que la animación termine + 1 segundo extra
       const checkAnimation = setInterval(() => {
         if (animationComplete.current) {
           clearInterval(checkAnimation)
@@ -84,9 +88,9 @@ export function SplashScreen() {
   return (
     <Container onClick={skipSplash}>
       <AppIcon src={appIcon} alt="App logo" />
-      <AppName>Trash2Treasure</AppName>
+      <AppName>{t('home.title')}</AppName>
       <USP>
-        {USP_TEXT.split('').map((letter, index) => (
+        {uspText.split('').map((letter, index) => (
           <AnimatedLetter 
             key={index} 
             $visible={index < visibleLetters}
@@ -98,7 +102,7 @@ export function SplashScreen() {
 
       {isAuthenticated && (
         <EcoPointsBadge>
-          🌿 <PointsValue>{totalPoints.toLocaleString()}</PointsValue> Eco Points
+          🌿 <PointsValue>{totalPoints.toLocaleString()}</PointsValue> {t('profile.ecoPoints')}
         </EcoPointsBadge>
       )}
 
@@ -108,8 +112,8 @@ export function SplashScreen() {
         <Dot $delay={0.4} />
       </LoadingDots>
 
-      <AppVersion>Versión 1.0.3 Stable</AppVersion>
-      <Developer>Developed by Ismael Marot</Developer>
+      <AppVersion>{t('about.version')} 1.0.3 Stable</AppVersion>
+      <Developer>{t('splash.developedBy')}</Developer>
     </Container>
   )
 }

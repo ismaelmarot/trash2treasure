@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -36,7 +37,6 @@ import {
   UnclaimButton
 } from './ItemDetailScreen.styles'
 
-// Leaflet icon fix
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -60,6 +60,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 export function ItemDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useParams()
   const [item, setItem] = useState<ItemProps | null>(null)
   const [loading, setLoading] = useState(true)
@@ -133,30 +134,28 @@ export function ItemDetailScreen() {
         }
       })
 
-      if (!response.ok) throw new Error('Error al liberar el item')
+      if (!response.ok) throw new Error(t('itemDetail.releaseError'))
       
-      // Refresh item details
       const updatedResponse = await fetch(`${API_BASE_URL}/items/${id}`)
       const updatedData = await updatedResponse.json()
       setItem(normalizeItem(updatedData))
     } catch (error) {
       console.error('Error unclaiming item:', error);
-      alert('No se pudo liberar el item. Inténtalo de nuevo.')
+      alert(t('itemDetail.releaseError'))
     }
   }
 
-  if (loading) return <Loading>Cargando detalles...</Loading>;
+  if (loading) return <Loading>{t('itemDetail.loadingDetails')}</Loading>;
 
-  if (!item) return <ErrorState>Tesoro no encontrado.</ErrorState>;
+  if (!item) return <ErrorState>{t('itemDetail.notFound')}</ErrorState>;
 
   const distance = userLocation && item.latitude != null && item.longitude != null
     ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude)
     : null
 
-  // Calcular distancia en metros para verificar si está a menos de 50m
   const distanceInMeters = userLocation && item.latitude != null && item.longitude != null
     ? (() => {
-        const R = 6371000 // Radio de la Tierra en metros
+        const R = 6371000
         const deg2rad = (deg: number) => deg * (Math.PI / 180)
         const dLat = deg2rad(item.latitude - userLocation.lat)
         const dLon = deg2rad(item.longitude - userLocation.lng)
@@ -175,7 +174,7 @@ export function ItemDetailScreen() {
 
   return (
     <Container>
-      <BackButton onClick={() => navigate(-1)}>← Volver</BackButton>
+      <BackButton onClick={() => navigate(-1)}>← {t('common.back')}</BackButton>
       
       <ImageSection>
         {item.photos && item.photos.length > 0 ? (
@@ -200,7 +199,7 @@ export function ItemDetailScreen() {
               fontWeight: 600,
               marginLeft: '8px'
             }}>
-              EXPIRADO
+              {t('itemDetail.expired').toUpperCase()}
             </span>
           )}
           <div style={{ marginLeft: 'auto' }}>
@@ -210,7 +209,7 @@ export function ItemDetailScreen() {
 
         {item.user_id === user?.id && (
           <div style={{ fontSize: '14px', fontWeight: '600', color: '#34c759', marginTop: '8px' }}>
-            MI REPORTE
+            {t('itemDetail.myReport')}
           </div>
         )}
 
@@ -225,15 +224,15 @@ export function ItemDetailScreen() {
                 : null;
               
               if (claimedById === user?.id) {
-                return 'Reclamado por mí';
+                return t('itemDetail.claimedByMe');
               }
-              return `Reclamado por: ${claimedByName || 'Otro usuario'}`;
+              return `${t('itemDetail.claimedBy')} ${claimedByName || t('itemDetail.otherUser')}`;
             })()}
           </div>
         )}
 
         <span style={{ fontSize: '13px', color: '#888' }}>
-          Publicado: {new Date(item.created_at).toLocaleDateString('es-ES', { 
+          {t('itemDetail.published')}: {new Date(item.created_at).toLocaleDateString('es-ES', { 
             day: 'numeric', 
             month: 'short',
             hour: '2-digit',
@@ -245,7 +244,7 @@ export function ItemDetailScreen() {
           <Title>{item.title}</Title>
         </Header>
 
-        <Description>{item.description || 'Sin descripción adicional.'}</Description>
+        <Description>{item.description || t('itemDetail.noDescription')}</Description>
 
         <MetaRow>
           <ItemCountdown createdAt={item.created_at} align="flex-start" />
@@ -266,7 +265,7 @@ export function ItemDetailScreen() {
             </MapContainer>
           ) : (
             <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
-              Ubicación no disponible
+              {t('itemDetail.locationUnavailable')}
             </div>
           )}
         </MapWrapper>
@@ -280,13 +279,13 @@ export function ItemDetailScreen() {
               )
             }}
           >
-            📍 Cómo llegar
+            📍 {t('itemDetail.howToGet')}
           </NavigateButton>
         )}
 
         {item.user_id !== user?.id && item.claimed_by === user?.id && (
           <UnclaimButton onClick={handleUnclaimClick}>
-            Dejar de reclamar
+            {t('itemDetail.stopClaiming')}
           </UnclaimButton>
         )}
 
@@ -296,37 +295,37 @@ export function ItemDetailScreen() {
           onClick={() => navigate(`/app/claimed/${item.id}`)}
         >
           {item.user_id === user?.id 
-            ? 'Tu reporte' 
+            ? t('itemDetail.yourReport') 
             : isExpired
-              ? 'Expirado'
+              ? t('itemDetail.expired')
               : item.claimed_by === user?.id 
-                ? 'Ya lo reclamaste' 
+                ? t('itemDetail.alreadyClaimed') 
                 : item.claimed_by 
-                  ? 'Ya reclaman' 
+                  ? t('itemDetail.alreadyClaimedBy') 
                   : !isWithinRange && distanceInMeters !== null
-                    ? `Acércate (${Math.round(distanceInMeters)}m)`
-                    : '¡Lo quiero!'}
+                    ? `${t('itemDetail.getCloser')} (${Math.round(distanceInMeters)}m)`
+                    : t('itemDetail.wantIt')}
         </ClaimButton>
 
         {isExpired && (
           <ProximityHint>
-            Este reporte ya expiró. Los puntos ya fueron acreditados.
+            {t('itemDetail.expiredHint')}
           </ProximityHint>
         )}
 
         {!item.claimed_by && item.user_id !== user?.id && !isWithinRange && distanceInMeters !== null && (
           <ProximityHint>
-            Está a más de la distancia permitida ({Math.round(distanceInMeters)}m). Debes estar a menos de 50m.
+            {t('itemDetail.distanceHint', { distance: Math.round(distanceInMeters) })}
           </ProximityHint>
         )}
       </ContentCard>
 
       <ConfirmationModal 
         isOpen={isModalOpen}
-        title="¿Dejar de reclamar?"
-        message="¿Estás seguro de que quieres liberar este tesoro? Ya no figurará en tu lista de reclamados y otros podrán verlo."
-        confirmLabel="Liberar tesoro"
-        cancelLabel="Mantener reserva"
+        title={t('itemDetail.unclaimTitle')}
+        message={t('itemDetail.unclaimMessage')}
+        confirmLabel={t('itemDetail.release')}
+        cancelLabel={t('itemDetail.keepReservation')}
         isDanger={true}
         onConfirm={handleConfirmUnclaim}
         onCancel={() => setIsModalOpen(false)}

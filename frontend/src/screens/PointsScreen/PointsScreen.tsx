@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 import { useAuth } from '@/hooks'
 import { AchievementModal } from '@/components/AchievementModal'
@@ -56,6 +57,7 @@ function getAvatarColor(name: string): string {
 }
 
 export function PointsScreen() {
+  const { t } = useTranslation();
   const { token, user } = useAuth()
   
   const [loading, setLoading] = useState(true)
@@ -93,7 +95,6 @@ export function PointsScreen() {
       setPointsData(data)
       setLoading(false)
       
-      // Cargar logros, desafíos y ranking en paralelo (no bloquean la UI)
       const [achRes, rankRes] = await Promise.all([
         fetch(`${API_BASE_URL}/points/achievements-challenges`, { headers: { 'Authorization': `Bearer ${token}` } }),
         fetch(`${API_BASE_URL}/points/ranking`, { headers: { 'Authorization': `Bearer ${token}` } })
@@ -121,31 +122,30 @@ export function PointsScreen() {
     fetchData()
   }, [fetchData])
 
-  if (loading) return <Loading>Cargando...</Loading>
-  if (!pointsData || !pointsData.points) return <Loading>Error al cargar datos</Loading>
+  if (loading) return <Loading>{t('points.loading')}</Loading>
+  if (!pointsData || !pointsData.points) return <Loading>{t('points.loadingError')}</Loading>
 
   const { points, division, ecoScore } = pointsData
 
   return (
     <Container>
       <Header>
-        <Title>🍃 Tu impacto en la comunidad</Title>
+        <Title>🍃 {t('points.title')}</Title>
       </Header>
 
       <TabContainer>
-        <Tab $active={activeTab === 'summary'} onClick={() => setActiveTab('summary')}>Resumen</Tab>
-        <Tab $active={activeTab === 'ranking'} onClick={() => setActiveTab('ranking')}>Ranking</Tab>
-        <Tab $active={activeTab === 'achievements'} onClick={() => setActiveTab('achievements')}>Logros</Tab>
-        <Tab $active={activeTab === 'challenges'} onClick={() => setActiveTab('challenges')}>Desafíos</Tab>
+        <Tab $active={activeTab === 'summary'} onClick={() => setActiveTab('summary')}>{t('points.summary')}</Tab>
+        <Tab $active={activeTab === 'ranking'} onClick={() => setActiveTab('ranking')}>{t('points.ranking')}</Tab>
+        <Tab $active={activeTab === 'achievements'} onClick={() => setActiveTab('achievements')}>{t('points.achievements')}</Tab>
+        <Tab $active={activeTab === 'challenges'} onClick={() => setActiveTab('challenges')}>{t('points.challenges')}</Tab>
       </TabContainer>
 
-      {/* Resumen */}
       {activeTab === 'summary' && (
         <>
           <PointsCard>
             <PointsHeader>
               <div>
-                <PointsLabel>Total Eco Points</PointsLabel>
+                <PointsLabel>{t('points.totalPoints')}</PointsLabel>
                 <PointsValue>{points.total_points}</PointsValue>
               </div>
               <DivisionBadge>{division}</DivisionBadge>
@@ -153,19 +153,19 @@ export function PointsScreen() {
             <StatsRow>
               <StatItem>
                 <StatValue>{points.total_reports || 0}</StatValue>
-                <StatLabel>Reportes</StatLabel>
+                <StatLabel>{t('points.reports')}</StatLabel>
               </StatItem>
               <StatItem>
                 <StatValue>{points.total_collected || 0}</StatValue>
-                <StatLabel>Recolectados</StatLabel>
+                <StatLabel>{t('points.collected')}</StatLabel>
               </StatItem>
               <StatItem>
                 <StatValue>{points.report_points || 0}</StatValue>
-                <StatLabel>Pts Reportes</StatLabel>
+                <StatLabel>{t('points.ptsReports')}</StatLabel>
               </StatItem>
               <StatItem>
                 <StatValue>{points.collect_points || 0}</StatValue>
-                <StatLabel>Pts Recolectados</StatLabel>
+                <StatLabel>{t('points.ptsCollected')}</StatLabel>
               </StatItem>
             </StatsRow>
           </PointsCard>
@@ -174,23 +174,22 @@ export function PointsScreen() {
             <EcoScoreCard $bgColor={ecoScore.gradeColor}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <EcoScoreTitle style={{ color: '#fff', marginBottom: '4px' }}>Eco Impacto semanal</EcoScoreTitle>
+                  <EcoScoreTitle style={{ color: '#fff', marginBottom: '4px' }}>{t('points.weeklyImpact')}</EcoScoreTitle>
                   <EcoScoreLetter style={{ color: '#fff', fontSize: '48px', fontWeight: '700', margin: '4px 0' }}>{ecoScore.grade}</EcoScoreLetter>
                   <EcoScoreSubtitle style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>{ecoScore.message}</EcoScoreSubtitle>
                 </div>
                 <div style={{ textAlign: 'right', color: '#fff' }}>
-                  <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '2px' }}>Semana anterior: {ecoScore.prevWeeklyScore || 0} pts</div>
-                  <div style={{ fontSize: '14px', fontWeight: '600' }}>actual: {ecoScore.weeklyScore || 0} pts</div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '2px' }}>{t('points.previousWeek')} {ecoScore.prevWeeklyScore || 0} {t('points.pointsShort')}</div>
+                  <div style={{ fontSize: '14px', fontWeight: '600' }}>{t('points.actual')} {ecoScore.weeklyScore || 0} {t('points.pointsShort')}</div>
                   <div style={{ fontSize: '14px', fontWeight: '700', marginTop: '8px' }}>
                     {ecoScore.trend === 'up' ? '↑' : ecoScore.trend === 'down' ? '↓' : '→'}
-                    {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} pts
+                    {ecoScore.scoreChange > 0 ? `+${ecoScore.scoreChange}` : ecoScore.scoreChange} {t('points.pointsShort')}
                   </div>
                 </div>
               </div>
             </EcoScoreCard>
           )}
 
-          {/* Gráficas de historial */}
           <div style={{ background: '#42a59f', borderRadius: '34px', padding: '16px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: '16px' }}>
           <div style={{ display: 'flex', gap: '4px', marginBottom: '16px', background: 'rgba(255,255,255,0.2)', borderRadius: '25px', padding: '4px' }}>
             {['daily', 'weekly', 'monthly'].map((tab) => (
@@ -211,7 +210,7 @@ export function PointsScreen() {
                   transition: 'all 0.2s ease'
                 }}
               >
-                {tab === 'daily' ? 'Últimos 7 días' : tab === 'weekly' ? 'Semanas' : 'Meses'}
+                {tab === 'daily' ? t('points.last7Days') : tab === 'weekly' ? t('points.weeks') : t('points.months')}
               </button>
             ))}
           </div>
@@ -219,7 +218,6 @@ export function PointsScreen() {
           {activeChartTab === 'daily' && (() => {
                 const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
                 const history = pointsData?.history?.daily || []
-                // Generar los últimos 7 días
                 const days = []
                 for (let i = 6; i >= 0; i--) {
                   const d = new Date()
@@ -243,11 +241,11 @@ export function PointsScreen() {
                         return (
                           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
-                              <div style={{ width: '14px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '8px 8px 0 0' }} title={`Reportes: ${d.reports}`} />
-                              <div style={{ width: '14px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '8px 8px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                              <div style={{ width: '14px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '8px 8px 0 0' }} title={`${t('points.reportsLabel')}: ${d.reports}`} />
+                              <div style={{ width: '14px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '8px 8px 0 0' }} title={`${t('points.claimsLabel')}: ${d.collected}`} />
                             </div>
                             <div style={{ fontSize: '11px', color: '#666' }}>{d.label}</div>
-                            <div style={{ fontSize: '10px', color: '#999' }}>{d.points} pts</div>
+                            <div style={{ fontSize: '10px', color: '#999' }}>{d.points} {t('points.pointsShort')}</div>
                           </div>
                         )
                       })}
@@ -260,7 +258,6 @@ export function PointsScreen() {
                 const history = pointsData?.history?.weekly || []
                 const now = new Date()
                 const year = now.getFullYear()
-                // Generar todas las semanas del año
                 const weeks = []
                 for (let w = 1; w <= 52; w++) {
                   const key = `${year}-W${String(w).padStart(2, '0')}`
@@ -318,11 +315,11 @@ export function PointsScreen() {
                         return (
                           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '120px' }}>
-                              <div style={{ width: '10px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '8px 8px 0 0' }} title={`Reportes: ${d.reports}`} />
-                              <div style={{ width: '10px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '8px 8px 0 0' }} title={`Reclamos: ${d.collected}`} />
+                              <div style={{ width: '10px', height: `${Math.max(reportH, 2)}%`, background: '#3498db', borderRadius: '8px 8px 0 0' }} title={`${t('points.reportsLabel')}: ${d.reports}`} />
+                              <div style={{ width: '10px', height: `${Math.max(collectH, 2)}%`, background: '#27ae60', borderRadius: '8px 8px 0 0' }} title={`${t('points.claimsLabel')}: ${d.collected}`} />
                             </div>
                             <div style={{ fontSize: '10px', color: '#666' }}>{d.label}</div>
-                            <div style={{ fontSize: '9px', color: '#999' }}>{d.points} pts</div>
+                            <div style={{ fontSize: '9px', color: '#999' }}>{d.points} {t('points.pointsShort')}</div>
                           </div>
                         )
                       })}
@@ -352,7 +349,7 @@ export function PointsScreen() {
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  {tab === 'categories' ? 'Categorías' : tab === 'families' ? 'Familias' : 'Nivel'}
+                  {tab === 'categories' ? t('points.categories') : tab === 'families' ? t('points.families') : t('points.level')}
                 </button>
               ))}
             </div>
@@ -373,7 +370,7 @@ export function PointsScreen() {
                         <span>{cat.icon}</span>
                         <span>{cat.label}</span>
                       </BarLabel>
-                      <BarValue>{pts} pts</BarValue>
+                      <BarValue>{pts} {t('points.pointsShort')}</BarValue>
                     </BarHeader>
                     <BarContainer>
                       <BarFill $color={catColor} $width={percentage} />
@@ -400,7 +397,7 @@ export function PointsScreen() {
                         <span>{familyIcon}</span>
                         <span style={{ textTransform: 'capitalize' }}>{family}</span>
                       </BarLabel>
-                      <BarValue>{String(count)} items</BarValue>
+                      <BarValue>{String(count)} {t('points.items')}</BarValue>
                     </BarHeader>
                     <BarContainer>
                       <BarFill $color={familyColor} $width={percentage} />
@@ -416,37 +413,37 @@ export function PointsScreen() {
             <div style={{ background: '#fff', borderRadius: '25px', padding: '16px' }}>
             <TabContent style={{ gridTemplateColumns: '1fr', gap: '12px', padding: '0 8px' }}>
               {[
-                { id: 'bajo', icon: '🌱', name: 'Nivel bajo', levels: [
+                { id: 'bajo', icon: '🌱', name: t('points.lowLevel'), levels: [
                   { name: 'Curioso Verde', min: 0, max: 100 },
                   { name: 'Recolector Novato', min: 0, max: 200 },
                   { name: 'Semilla', min: 0, max: 150 },
                   { name: 'Despertando', min: 0, max: 200 },
                 ]},
-                { id: 'mediobajo', icon: '♻️', name: 'Nivel medio bajo', levels: [
+                { id: 'mediobajo', icon: '♻️', name: t('points.mediumLowLevel'), levels: [
                   { name: 'Eco Aprendiz', min: 200, max: 400 },
                   { name: 'Separador Serial', min: 300, max: 600 },
                   { name: 'Clasificador Ninja', min: 400, max: 700 },
                   { name: 'Anti Basura', min: 300, max: 600 },
                 ]},
-                { id: 'medio', icon: '🌿', name: 'Nivel medio', levels: [
+                { id: 'medio', icon: '🌿', name: t('points.mediumLevel'), levels: [
                   { name: 'Recuperador Urbano', min: 500, max: 900 },
                   { name: 'Guardián del Bosque', min: 600, max: 1000 },
                   { name: 'Reutilizador Pro', min: 700, max: 1200 },
                   { name: 'Eco Hacker', min: 800, max: 1200 },
                 ]},
-                { id: 'medioalto', icon: '🌳', name: 'Nivel medio alto', levels: [
+                { id: 'medioalto', icon: '🌳', name: t('points.mediumHighLevel'), levels: [
                   { name: 'Maestro del Reciclaje', min: 1000, max: 1500 },
                   { name: 'Alquimista de Residuos', min: 1200, max: 1700 },
                   { name: 'Ingeniero Verde', min: 1300, max: 1800 },
                   { name: 'Transformador', min: 1200, max: 1600 },
                 ]},
-                { id: 'alto', icon: '🌎', name: 'Nivel alto', levels: [
+                { id: 'alto', icon: '🌎', name: t('points.highLevel'), levels: [
                   { name: 'Defensor del Planeta', min: 1500, max: 2000 },
                   { name: 'Titán Verde', min: 1800, max: 2500 },
                   { name: 'Eco Estratega', min: 1700, max: 2300 },
                   { name: 'Señor del Compost', min: 1800, max: 2500 },
                 ]},
-                { id: 'epico', icon: '🚀', name: 'Nivel épico', levels: [
+                { id: 'epico', icon: '🚀', name: t('points.epicLevel'), levels: [
                   { name: 'Gaia Ascendido', min: 2000, max: Infinity },
                   { name: 'Leyenda Sustentable', min: 2500, max: Infinity },
                   { name: 'Arquitecto del Futuro', min: 3000, max: Infinity },
@@ -456,9 +453,8 @@ export function PointsScreen() {
                 const isExpanded = expandedLevels.includes(tier.id)
                 const isCurrentTier = tier.levels.some(l => l.name === division)
                 return (
-                  <>
+                  <div key={tier.id}>
                     <div 
-                      key={`header-${tier.id}`}
                       onClick={() => {
                         if (isExpanded) {
                           setExpandedLevels(expandedLevels.filter(e => e !== tier.id))
@@ -510,16 +506,16 @@ export function PointsScreen() {
                                   {level.name}
                                 </span>
                                 <span style={{ fontSize: '12px', color: '#999' }}>
-                                  {level.max === Infinity ? `${level.min}+ pts` : `${level.min}–${level.max} pts`}
+                                  {level.max === Infinity ? `${level.min}+ ${t('points.pointsShort')}` : `${level.min}–${level.max} ${t('points.pointsShort')}`}
                                 </span>
                               </div>
                               <div style={{ height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden', marginBottom: '4px' }}>
                                 <div style={{ height: '100%', width: `${percentage}%`, background: '#27ae60', borderRadius: '3px', transition: 'width 0.3s' }} />
                               </div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#999' }}>
-                                <span>{pointsInLevel} pts</span>
+                                <span>{pointsInLevel} {t('points.pointsShort')}</span>
                                 <span style={{ color: '#27ae60' }}>
-                                  {isPast ? 'Completado' : `Faltan ${pointsRemaining}`}
+                                  {isPast ? t('points.completed') : `${t('points.remaining')} ${pointsRemaining}`}
                                 </span>
                               </div>
                             </div>
@@ -527,7 +523,7 @@ export function PointsScreen() {
                         })}
                       </div>
                     )}
-                  </>
+                  </div>
                 )
               })}
             </TabContent>
@@ -537,7 +533,6 @@ export function PointsScreen() {
         </>
       )}
 
-      {/* Ranking */}
       {activeTab === 'ranking' && (
         <TabContent style={{ gridTemplateColumns: '1fr' }}>
           {ranking.map((item, index) => (
@@ -562,13 +557,12 @@ export function PointsScreen() {
                 <UserName>{item.name}</UserName>
                 <UserDivision>{item.division}</UserDivision>
               </UserInfo>
-              <UserPoints>{item.total_points} pts</UserPoints>
+              <UserPoints>{item.total_points} {t('points.pointsShort')}</UserPoints>
             </RankingItem>
           ))}
         </TabContent>
       )}
 
-      {/* Logros */}
       {activeTab === 'achievements' && (
         <AchievementsSection>
           <AchievementsGrid>
@@ -582,7 +576,7 @@ export function PointsScreen() {
                 <AchievementName $unlocked={achievement.unlocked}>{achievement.name}</AchievementName>
                 <AchievementDesc $unlocked={achievement.unlocked}>{achievement.description}</AchievementDesc>
                 <div style={{ fontSize: '12px', color: achievement.unlocked ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
-                  +{achievement.points} pts
+                  +{achievement.points} {t('points.pointsShort')}
                 </div>
               </AchievementCard>
             ))}
@@ -590,14 +584,13 @@ export function PointsScreen() {
         </AchievementsSection>
       )}
 
-      {/* Desafíos */}
       {activeTab === 'challenges' && (
         <>
           <TabContainer>
-            <Tab $active={activeChallengePeriod === 'daily'} onClick={() => setActiveChallengePeriod('daily')}>Diario</Tab>
-            <Tab $active={activeChallengePeriod === 'weekly'} onClick={() => setActiveChallengePeriod('weekly')}>Semanal</Tab>
-            <Tab $active={activeChallengePeriod === 'monthly'} onClick={() => setActiveChallengePeriod('monthly')}>Mensual</Tab>
-            <Tab $active={activeChallengePeriod === 'annual'} onClick={() => setActiveChallengePeriod('annual')}>Anual</Tab>
+            <Tab $active={activeChallengePeriod === 'daily'} onClick={() => setActiveChallengePeriod('daily')}>{t('challenges.daily')}</Tab>
+            <Tab $active={activeChallengePeriod === 'weekly'} onClick={() => setActiveChallengePeriod('weekly')}>{t('challenges.weekly')}</Tab>
+            <Tab $active={activeChallengePeriod === 'monthly'} onClick={() => setActiveChallengePeriod('monthly')}>{t('challenges.monthly')}</Tab>
+            <Tab $active={activeChallengePeriod === 'annual'} onClick={() => setActiveChallengePeriod('annual')}>{t('challenges.annual')}</Tab>
           </TabContainer>
           <TabContent>
             {challenges.filter((c: any) => c.type === activeChallengePeriod).map((challenge: any) => {
@@ -626,7 +619,7 @@ export function PointsScreen() {
                   <AchievementName $unlocked={isActive}>{challenge.name}</AchievementName>
                   <AchievementDesc $unlocked={isActive}>{challenge.description}</AchievementDesc>
                   <div style={{ fontSize: '12px', color: isActive ? '#34c759' : '#ccc', marginTop: '4px', fontWeight: '600' }}>
-                    +{challenge.reward} pts
+                    +{challenge.reward} {t('points.pointsShort')}
                   </div>
                 </AchievementCard>
               )

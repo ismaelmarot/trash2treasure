@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { FaClock } from 'react-icons/fa'
 import type { ItemCountdownProps } from '@/interface'
 import { useItemCountdown } from './useItemCountdown'
@@ -14,6 +15,7 @@ export function ItemCountdown({
   align = 'flex-start',
   direction = 'row'
 }: ItemCountdownProps) {
+  const { t } = useTranslation();
 
   const { timeLeft, isUrgent, isExpired } = useItemCountdown({
     createdAt,
@@ -23,7 +25,7 @@ export function ItemCountdown({
   return (
     <Wrapper $align={align} $direction={direction}>
       {isExpired ? (
-        <ExpiredBadge>Expirado</ExpiredBadge>
+        <ExpiredBadge>{t('itemCountdown.expired')}</ExpiredBadge>
       ) : (
         <Container $isUrgent={isUrgent}>
           {showIcon && <FaClock size={10} />}

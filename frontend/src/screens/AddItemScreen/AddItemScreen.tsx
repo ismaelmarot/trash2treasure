@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import type { Map as LeafletMap } from 'leaflet'
 import L from 'leaflet'
@@ -40,7 +41,6 @@ import {
   Title,
 } from './AddItemScreen.styles'
 
-// Fix íconos leaflet
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -50,6 +50,7 @@ L.Icon.Default.mergeOptions({
 })
 
 export function AddItemScreen() {
+  const { t } = useTranslation();
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category] = useState('otros')
@@ -88,7 +89,6 @@ export function AddItemScreen() {
     return { lat: -34.6037, lng: -58.3816 }
   }
 
-  // 📍 Obtener ubicación real
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -106,7 +106,6 @@ export function AddItemScreen() {
     }
   }, [])
 
-  // 🔥 Forzar resize mapa
   useEffect(() => {
     if (!isCameraOpen && mapRef.current) {
       setTimeout(() => {
@@ -227,7 +226,6 @@ export function AddItemScreen() {
     }
   }
 
-  // 🔥 CONTROLADOR DE MAPA (CLAVE)
   function MapController({ center }: { center: { lat: number; lng: number } }) {
     const map = useMapEvents({})
 
@@ -264,26 +262,26 @@ export function AddItemScreen() {
         {success ? (
           <SuccessView>
             <SuccessIcon>🎉</SuccessIcon>
-            <Title>¡Tesoro Publicado!</Title>
-            <SuccessText>Redirigiendo...</SuccessText>
+            <Title>{t('add.success')}</Title>
+            <SuccessText>{t('add.redirecting')}</SuccessText>
           </SuccessView>
         ) : (
           <form onSubmit={handleSubmit}>
 
-            <Title>Publicar Tesoro</Title>
-            <Subtitle>Dale una segunda vida</Subtitle>
+            <Title>{t('add.title')}</Title>
+            <Subtitle>{t('add.subtitle')}</Subtitle>
             <InputGroup>
-              <Label required>Título</Label>
+              <Label required>{t('add.titleLabel')}</Label>
               <Input value={title} onChange={e => setTitle(e.target.value)} />
             </InputGroup>
 
             <InputGroup>
-              <Label required>Descripción</Label>
+              <Label required>{t('add.descriptionLabel')}</Label>
               <TextArea value={description} onChange={e => setDescription(e.target.value)} />
             </InputGroup>
 
             <InputGroup>
-              <Label>Imagen</Label>
+              <Label>{t('add.imageLabel')}</Label>
 
               <ImageContainer>
                 {imagePreview ? (
@@ -297,13 +295,13 @@ export function AddItemScreen() {
                 ) : (
                   <OptionsContainer>
                     <OptionButton onClick={() => setIsCameraOpen(true)}>
-                      📸 Cámara
+                      📸 {t('add.camera')}
                     </OptionButton>
 
                     <DividerVertical />
 
                     <OptionButton onClick={() => galleryInputRef.current?.click()}>
-                      📁 Galería
+                      📁 {t('add.gallery')}
                     </OptionButton>
                   </OptionsContainer>
                 )}
@@ -317,7 +315,7 @@ export function AddItemScreen() {
             </InputGroup>
 
             <InputGroup>
-              <Label>Ubicación</Label>
+              <Label>{t('add.locationLabel')}</Label>
 
               <MapWrapper>
                 <MapContainer
@@ -347,11 +345,11 @@ export function AddItemScreen() {
 
             <ButtonContainer>
               <PublishButton disabled={!isFormValid || loading}>
-                {loading ? 'Publicando...' : 'Publicar'}
+                {loading ? t('add.publishing') : t('add.publish')}
               </PublishButton>
 
               <CancelButton onClick={() => navigate('/app/activity')}>
-                Cancelar
+                {t('common.cancel')}
               </CancelButton>
             </ButtonContainer>
 

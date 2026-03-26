@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -37,6 +38,7 @@ import {
 } from './EditItemScreen.styles'
 
 export function EditItemScreen() {
+  const { t } = useTranslation();
   const { id } = useParams()
   const navigate = useNavigate()
   const { token } = useAuth()
@@ -65,14 +67,14 @@ export function EditItemScreen() {
         }
       } catch (err) {
         console.error('Error fetching item:', err)
-        setError('Error al cargar el tesoro')
+        setError(t('common.error'))
       } finally {
         setLoading(false)
       }
     }
 
     fetchItem()
-  }, [id])
+  }, [id, t])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,7 +82,7 @@ export function EditItemScreen() {
     setError('')
 
     if (!title.trim()) {
-      setError('El título es obligatorio')
+      setError(t('editItem.titleRequired'))
       setSaving(false)
       return
     }
@@ -96,7 +98,7 @@ export function EditItemScreen() {
       })
 
       const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Error al actualizar')
+      if (!response.ok) throw new Error(data.error || t('editItem.error'))
 
       setSuccess(true)
       setTimeout(() => {
@@ -109,47 +111,47 @@ export function EditItemScreen() {
     }
   }
 
-  if (loading) return <Loading>Cargando...</Loading>
+  if (loading) return <Loading>{t('common.loading')}</Loading>
 
   return (
     <Container>
       <Card>
-        <BackButton onClick={() => navigate(-1)}>← Volver</BackButton>
+        <BackButton onClick={() => navigate(-1)}>← {t('common.back')}</BackButton>
 
         {success ? (
           <SuccessView>
             <SuccessIcon>✅</SuccessIcon>
-            <Title>¡Tesoro Actualizado!</Title>
-            <SuccessText>Redirigiendo a la Actividad...</SuccessText>
+            <Title>{t('editItem.success')}</Title>
+            <SuccessText>{t('editItem.redirecting')}</SuccessText>
           </SuccessView>
         ) : (
           <>
-            <Title>Editar Tesoro</Title>
-            <Subtitle>Modifica los datos de tu publicación</Subtitle>
+            <Title>{t('editItem.title')}</Title>
+            <Subtitle>{t('editItem.subtitle')}</Subtitle>
 
             <form onSubmit={handleSubmit}>
               <InputGroup>
-                <Label>Título</Label>
+                <Label>{t('add.titleLabel')}</Label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Ej: Silla de madera vintage"
+                  placeholder={t('add.titlePlaceholder')}
                   required
                 />
               </InputGroup>
 
               <InputGroup>
-                <Label>Descripción</Label>
+                <Label>{t('add.descriptionLabel')}</Label>
                 <TextArea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe el estado y detalles..."
+                  placeholder={t('add.descriptionPlaceholder')}
                   rows={3}
                 />
               </InputGroup>
 
               <InputGroup>
-                <Label>Categoría</Label>
+                <Label>{t('add.category')}</Label>
                 <Select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -163,7 +165,7 @@ export function EditItemScreen() {
               </InputGroup>
 
               <InputGroup>
-                <Label>Ubicación (Toca el mapa para mover el pin)</Label>
+                <Label>{t('editItem.locationHint')}</Label>
                 <MapWrapper>
                   <MapContainer 
                     center={[location.lat, location.lng]} 
@@ -193,7 +195,7 @@ export function EditItemScreen() {
               {error && <ErrorMessage>{error}</ErrorMessage>}
 
               <SubmitButton type="submit" disabled={saving}>
-                {saving ? 'Guardando...' : 'Guardar Cambios'}
+                {saving ? t('common.save') + '...' : t('common.save')}
               </SubmitButton>
             </form>
           </>

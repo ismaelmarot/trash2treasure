@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { ItemProps } from '@/interface'
 import { API_BASE_URL, CATEGORIES } from '@/constants'
 
@@ -61,6 +62,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 export function ActivityScreen() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<ItemProps[]>([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -198,15 +200,15 @@ export function ActivityScreen() {
   return (
     <Container>
       <Header>
-        <Title>Actividad</Title>
-        <Subtitle>Gestiona tus reportes y explora la comunidad</Subtitle>
+        <Title>{t('activity.title')}</Title>
+        <Subtitle>{t('activity.subtitle')}</Subtitle>
       </Header>
 
       {pendingCount > 0 && (
         <OfflineBanner>
-          <span>⏳ {pendingCount} {pendingCount === 1 ? 'item pendiente' : 'items pendientes'} de sincronizar</span>
+          <span>⏳ {pendingCount} {pendingCount === 1 ? t('activity.syncPending') : t('activity.syncPendingPlural')}</span>
           <SyncButton onClick={syncAll} disabled={isSyncing || !navigator.onLine}>
-            {isSyncing ? 'Sincronizando...' : 'Sincronizar ahora'}
+            {isSyncing ? t('activity.syncing') : t('activity.syncNow')}
           </SyncButton>
         </OfflineBanner>
       )}
@@ -216,31 +218,31 @@ export function ActivityScreen() {
           $active={activeTab === 'mine'} 
           onClick={() => setActiveTab('mine')}
         >
-          Reportados
+          {t('activity.reported')}
         </Tab>
         <Tab 
           $active={activeTab === 'claimed'} 
           onClick={() => setActiveTab('claimed')}
         >
-          Reclamados
+          {t('activity.claimed')}
         </Tab>
       </TabGroup>
 
       {loading ? (
         <LoadingWrapper>
           <LoadingSpinner />
-          <p>Sincronizando tesoros...</p>
+          <p>{t('activity.loadingTreasures')}</p>
         </LoadingWrapper>
       ) : items.length === 0 ? (
         <EmptyState>
           <EmptyIcon>{activeTab === 'mine' ? '📝' : '💎'}</EmptyIcon>
           <p>
             {activeTab === 'mine' 
-              ? 'Aún no has reportado ningún tesoro.' 
-              : 'Aún no has reclamado ningún tesoro.'}
+              ? t('activity.noItemsYet')
+              : t('activity.noClaimedYet')}
           </p>
           <ActionButton onClick={() => navigate(activeTab === 'mine' ? '/app/add' : '/app/search')}>
-            {activeTab === 'mine' ? 'Reportar mi primer tesoro' : 'Ir a explorar tesoros'}
+            {activeTab === 'mine' ? t('activity.reportFirst') : t('activity.exploreTreasures')}
           </ActionButton>
         </EmptyState>
       ) : (
@@ -261,9 +263,9 @@ export function ActivityScreen() {
                 )}
                 <TagGroup>
                   <CategoryBadge>{getCategoryIcon(item.category)} {item.category}</CategoryBadge>
-                  {item.user_id === user?.id && <OwnerBadge>Mío</OwnerBadge>}
-                  {item.claimed_by === user?.id && <ClaimedBadge>Reclamado por mí</ClaimedBadge>}
-                  {item.claimed_by && item.claimed_by !== user?.id && <ClaimedBadge $others>RECLAMADO</ClaimedBadge>}
+                  {item.user_id === user?.id && <OwnerBadge>{t('activity.mine')}</OwnerBadge>}
+                  {item.claimed_by === user?.id && <ClaimedBadge>{t('activity.claimedByMe')}</ClaimedBadge>}
+                  {item.claimed_by && item.claimed_by !== user?.id && <ClaimedBadge $others>{t('activity.claimedByOthers')}</ClaimedBadge>}
                 </TagGroup>
               </ImageWrapper>
 
@@ -272,12 +274,12 @@ export function ActivityScreen() {
                   <DistanceBadge>
                     {item.latitude != null && item.longitude != null
                       ? `📍 ${userLocation ? calculateDistance(userLocation.lat, userLocation.lng, item.latitude, item.longitude) : '...'}`
-                      : '📍 Ubicación no disponible'}
+                      : t('activity.locationUnavailable')}
                   </DistanceBadge>
                   <ItemCountdown createdAt={item.created_at} direction="column" align="flex-start" />
                 </ItemHeader>
                 <ItemTitle>{item.title}</ItemTitle>
-                <ItemDescription>{item.description || 'Sin descripción'}</ItemDescription>
+                <ItemDescription>{item.description || t('activity.noDescription')}</ItemDescription>
                 <CardFooter>
                   <div />
                   <ButtonGroup>
@@ -287,16 +289,16 @@ export function ActivityScreen() {
                           e.stopPropagation()
                           navigate(`/app/edit/${item.id}`)
                         }}>
-                          Editar
+                          {t('activity.edit')}
                         </EditButton>
                         <DeleteButton onClick={(e) => handleDeleteClick(e, item.id)}>
-                          Eliminar
+                          {t('activity.delete')}
                         </DeleteButton>
                       </>
                     )}
                     {activeTab === 'claimed' && item.claimed_by === user?.id && (
                       <UnclaimButton onClick={(e) => handleUnclaimClick(e, item.id)}>
-                        Liberar
+                        {t('activity.release')}
                       </UnclaimButton>
                     )}
                   </ButtonGroup>
@@ -309,10 +311,10 @@ export function ActivityScreen() {
 
       <ConfirmationModal 
         isOpen={isModalOpen}
-        title="¿Liberar Tesoro?"
-        message="Si dejas de reclamar este tesoro, volverá a estar disponible para que otros usuarios puedan encontrarlo. ¿Estás seguro?"
-        confirmLabel="Sí, liberar"
-        cancelLabel="Mantener"
+        title={t('activity.unclaimTitle')}
+        message={t('activity.unclaimMessage')}
+        confirmLabel={t('common.yesRelease')}
+        cancelLabel={t('common.keep')}
         isDanger={true}
         onConfirm={handleConfirmUnclaim}
         onCancel={() => setIsModalOpen(false)}
@@ -320,10 +322,10 @@ export function ActivityScreen() {
 
       <ConfirmationModal 
         isOpen={isDeleteModalOpen}
-        title="¿Eliminar Tesoro?"
-        message="Esta acción es permanente. El reporte desaparecerá de la plataforma y nadie más podrá encontrarlo. ¿Estás seguro?"
-        confirmLabel="Sí, eliminar"
-        cancelLabel="Cancelar"
+        title={t('activity.deleteTitle')}
+        message={t('activity.deleteMessage')}
+        confirmLabel={t('common.yesDelete')}
+        cancelLabel={t('common.cancel')}
         isDanger={true}
         onConfirm={handleConfirmDelete}
         onCancel={() => setIsDeleteModalOpen(false)}
