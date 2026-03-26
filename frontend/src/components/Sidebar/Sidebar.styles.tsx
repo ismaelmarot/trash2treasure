@@ -65,24 +65,16 @@ export const CollapseButton = styled.button<{ $collapsed: boolean }>`
   justify-content: ${({ $collapsed }) => ($collapsed ? 'center' : 'flex-end')};
 `
 
-export const StyledIcon = styled.span<{ $collapsed: boolean; $isLast?: boolean }>`
+export const StyledIcon = styled.span<{ $collapsed: boolean; $isLast?: boolean; $isAvatar?: boolean }>`
   ${flex('column','center','center')}
   flex-shrink: 0;
 
-  svg, .avatar-wrapper {
+  svg {
     ${size('24px','24px')}
-  }
-
-  .avatar-wrapper {
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 `
 
-export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>`
+export const UserAvatar = styled.div<{ $bgColor?: string }>`
   width: 32px;
   height: 32px;
   min-width: 32px;
@@ -92,7 +84,7 @@ export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${props => props.$hasImage ? 'transparent' : props.$bgColor || '#0071e3'};
+  background: ${props => props.$bgColor || '#0071e3'};
   font-size: 14px;
   font-weight: 700;
   color: white;
@@ -100,8 +92,8 @@ export const UserAvatar = styled.div<{ $hasImage?: boolean; $bgColor?: string }>
 `
 
 export const AvatarImage = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
 `
