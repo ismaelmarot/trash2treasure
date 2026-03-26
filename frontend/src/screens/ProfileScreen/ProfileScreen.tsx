@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
+import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
 import achievement01 from '@/assets/achievements-img/achievement-01.png'
@@ -69,6 +71,7 @@ function getAvatarColor(name: string): string {
 export function ProfileScreen() {
   const { user, token, logout: authLogout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [pointsData, setPointsData] = useState<any>(null)
   const [profileData, setProfileData] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -78,6 +81,12 @@ export function ProfileScreen() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
   const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
+  const [currentLang, setCurrentLang] = useState(i18n.language)
+
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang)
+    setCurrentLang(lang)
+  }
 
   const handleSendInvite = async () => {
     if (!inviteEmail) return
@@ -180,33 +189,28 @@ export function ProfileScreen() {
       </Section>
 
       <Section>
-        <SectionTitle>Aplicación</SectionTitle>
+        <SectionTitle>Settings</SectionTitle>
+        <MenuItem onClick={() => changeLanguage(currentLang === 'en' ? 'es' : 'en')}>
+          <MenuIconWrapper>
+            <span style={{ fontSize: '1.2rem' }}>🌐</span>
+          </MenuIconWrapper>
+          <MenuLabel>Language</MenuLabel>
+          <MenuLabel style={{ marginLeft: 'auto', marginRight: '10px', color: '#666' }}>
+            {currentLang === 'en' ? '🇬🇧 English' : '🇪🇸 Español'}
+          </MenuLabel>
+        </MenuItem>
         <MenuItem onClick={() => setIsEcoModalOpen(true)}>
           <MenuIconWrapper>
             <IconCircle />
           </MenuIconWrapper>
-          <MenuLabel>¿Qué son los Eco Points?</MenuLabel>
-          <IconChevron />
-        </MenuItem>
-        <MenuItem onClick={() => setIsModalOpen(true)}>
-          <MenuIconWrapper>
-            <IconCircle />
-          </MenuIconWrapper>
-          <MenuLabel>Cómo obtener puntos</MenuLabel>
+          <MenuLabel>What are Eco Points?</MenuLabel>
           <IconChevron />
         </MenuItem>
         <MenuItem onClick={() => navigate('/app/about')}>
           <MenuIconWrapper>
             <IconCircle />
           </MenuIconWrapper>
-          <MenuLabel>Acerca de Trash2Treasure</MenuLabel>
-          <IconChevron />
-        </MenuItem>
-        <MenuItem onClick={() => setIsComingSoonOpen(true)}>
-          <MenuIconWrapper>
-            <IconCircle />
-          </MenuIconWrapper>
-          <MenuLabel>Próximamente</MenuLabel>
+          <MenuLabel>About Trash2Treasure</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
