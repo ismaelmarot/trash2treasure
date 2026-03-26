@@ -1,9 +1,9 @@
 import { COLORS } from '@/constants'
-import { flex, size } from '@/mixins'
 import styled from 'styled-components'
 
 export const CameraModal = styled.div`
-    ${flex('column','center','center')}
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: 0;
     left: 0;
@@ -11,66 +11,64 @@ export const CameraModal = styled.div`
     bottom: 0;
     background: ${COLORS.black};
     z-index: 3000;
-
-    touch-action: none; /* 🔥 bloquea zoom del navegador */
-    overscroll-behavior: contain;
 `
 
 export const CameraViewWrapper = styled.div`
-    ${flex('column','center','center')}
     position: relative;
+    flex: 1;
     width: 100%;
-    max-width: 500px;
-    height: 80vh;
-    /* margin-bottom: 20px; */
-    touch-action: manipulation;
+    overflow: hidden;
 `
 
 export const VideoFeed = styled.video`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    touch-action: pan-x pan-y; /* permite interacción controlada */
+    transform-origin: center center;
+    transition: transform 0.15s ease-out;
 `
 
 export const CameraControls = styled.div`
-    ${flex('row','center','space-between')}
-    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    max-width: 500px;
-    padding: 0 40px 20px 40px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
-    touch-action: none;
+    padding: 30px 50px 60px 50px;
+    background: ${COLORS.black};
 `
 
 export const CaptureButton = styled.button`
-    ${flex('column','center','center')}
-    ${size('70px','70px')}
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
-    border: 4px solid white;
-    background: none;
-    padding: 4px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.15);
+    padding: 3px;
     cursor: pointer;
-    touch-action: none;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     
     &:active {
         transform: scale(0.92);
+        background: rgba(255, 255, 255, 0.25);
     }
 `
 
 export const CaptureInner = styled.div`
-    ${size('100%','100%')}
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    background: ${COLORS.allWhite};
+    background: white;
 `
 
 export const CancelCapture = styled.button`
-    background: none;
+    background: transparent;
     border: none;
-    color: ${COLORS.allWhite};
+    color: white;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    touch-action: none;
+    min-width: 60px;
+    text-align: left;
 `

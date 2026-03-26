@@ -45,3 +45,4 @@ coverage/
 *.private
 credentials.json
 service-account.json
+.vercel

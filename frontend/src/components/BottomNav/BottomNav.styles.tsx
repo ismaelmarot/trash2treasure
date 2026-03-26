@@ -9,9 +9,9 @@ export const BottomNavContainer = styled.nav`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding-bottom: env(safe-area-inset-bottom, 12px); /* Adaptación iPhone Notch */
-  padding-top: 8px;
-  height: calc(56px + env(safe-area-inset-bottom, 12px));
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+  padding-top: 6px;
+  height: calc(48px + env(safe-area-inset-bottom, 8px));
   position: relative;
   z-index: 2000;
   width: 100%;

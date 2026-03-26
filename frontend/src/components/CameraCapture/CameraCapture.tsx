@@ -25,12 +25,62 @@ export function CameraCapture({ isOpen, onClose, onCapture }: CameraCaptureProps
         capturePhoto
     } = useCamera(onCapture)
 
-    // Encender cámara cuando se abre
+    useEffect(() => {
+        if (!isOpen) return
+
+        const video = videoRef.current
+        if (!video) return
+
+        let initialDistance = 0
+        let currentScale = 1
+
+        const getDistance = (t1: Touch, t2: Touch) => {
+            const dx = t1.clientX - t2.clientX
+            const dy = t1.clientY - t2.clientY
+            return Math.sqrt(dx * dx + dy * dy)
+        }
+
+        const onTouchStart = (e: TouchEvent) => {
+            if (e.touches.length === 2) {
+                e.preventDefault()
+                initialDistance = getDistance(e.touches[0], e.touches[1])
+            }
+        }
+
+        const onTouchMove = (e: TouchEvent) => {
+            if (e.touches.length === 2) {
+                e.preventDefault()
+                const newDistance = getDistance(e.touches[0], e.touches[1])
+                if (initialDistance > 0) {
+                    const newScale = (newDistance / initialDistance) * currentScale
+                    currentScale = Math.min(Math.max(newScale, 1), 5)
+                    video.style.transform = `scale(${currentScale}) translateZ(0)`
+                }
+            }
+        }
+
+        const onTouchEnd = (e: TouchEvent) => {
+            if (e.touches.length < 2) {
+                initialDistance = 0
+            }
+        }
+
+        video.addEventListener('touchstart', onTouchStart, { passive: false })
+        video.addEventListener('touchmove', onTouchMove, { passive: false })
+        video.addEventListener('touchend', onTouchEnd)
+
+        return () => {
+            video.removeEventListener('touchstart', onTouchStart)
+            video.removeEventListener('touchmove', onTouchMove)
+            video.removeEventListener('touchend', onTouchEnd)
+        }
+    }, [isOpen, videoRef])
+
     useEffect(() => {
         if (isOpen) {
-        startCamera()
+            startCamera()
         } else {
-        stopCamera()
+            stopCamera()
         }
 
         return () => stopCamera()
@@ -46,11 +96,11 @@ export function CameraCapture({ isOpen, onClose, onCapture }: CameraCaptureProps
             </CameraViewWrapper>
 
             <CameraControls>
-                <CancelCapture onClick={onClose}>
+                <CancelCapture type="button" onClick={onClose}>
                     Cancelar
                 </CancelCapture>
 
-                <CaptureButton onClick={capturePhoto}>
+                <CaptureButton type="button" onClick={capturePhoto}>
                     <CaptureInner />
                 </CaptureButton>
 

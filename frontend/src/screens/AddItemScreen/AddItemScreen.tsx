@@ -181,6 +181,23 @@ export function AddItemScreen() {
         })
       }
 
+      const pointsRes = await fetch(`${API_BASE_URL}/points/add-report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ category, itemId: data.id })
+      })
+      
+      if (!pointsRes.ok) {
+        const err = await pointsRes.json()
+        console.error('Error adding points:', err)
+      } else {
+        const pointsData = await pointsRes.json()
+        console.log('Points added:', pointsData)
+      }
+
       setSuccess(true)
       setTimeout(() => navigate('/app/activity'), 2000)
     } catch (err: any) {
@@ -248,18 +265,18 @@ export function AddItemScreen() {
                 {imagePreview ? (
                   <PreviewWrapper>
                     <PreviewImage src={imagePreview} />
-                    <RemoveImage onClick={() => {
+                    <RemoveImage type="button" onClick={() => {
                       setImage(null)
                       setImagePreview(null)
                     }}>×</RemoveImage>
                   </PreviewWrapper>
                 ) : (
                   <OptionsContainer>
-                    <OptionButton onClick={() => setIsCameraOpen(true)}>
+                    <OptionButton type="button" onClick={() => setIsCameraOpen(true)}>
                       📸 Cámara
                     </OptionButton>
                     <DividerVertical />
-                    <OptionButton onClick={() => galleryInputRef.current?.click()}>
+                    <OptionButton type="button" onClick={() => galleryInputRef.current?.click()}>
                       📁 Galería
                     </OptionButton>
                   </OptionsContainer>
@@ -287,7 +304,7 @@ export function AddItemScreen() {
 
             {error && <ErrorMessage>{error}</ErrorMessage>}
 
-            <SubmitButton disabled={!isFormValid}>
+            <SubmitButton type="submit" disabled={!isFormValid}>
               {loading ? 'Publicando...' : 'Publicar'}
             </SubmitButton>
           </form>
