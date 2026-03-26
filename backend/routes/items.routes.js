@@ -255,6 +255,26 @@ router.post('/:id/unclaim', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
+    // Restar puntos de recolectado
+    const CRITICAL_CATEGORIES = ['batteries', 'electronics', 'construction', 'furniture'];
+    let points = 3;
+    if (CRITICAL_CATEGORIES.includes(item.category)) {
+      points += 3;
+    }
+    
+    const userPoints = await UserPoints.findOne({ user_id: req.user.id });
+    if (userPoints) {
+      userPoints.total_points = Math.max(0, (userPoints.total_points || 0) - points);
+      userPoints.collect_points = Math.max(0, (userPoints.collect_points || 0) - points);
+      userPoints.weekly_collect_points = Math.max(0, (userPoints.weekly_collect_points || 0) - points);
+      userPoints.daily_collected = Math.max(0, (userPoints.daily_collected || 0) - 1);
+      userPoints.weekly_collected = Math.max(0, (userPoints.weekly_collected || 0) - 1);
+      userPoints.monthly_collected = Math.max(0, (userPoints.monthly_collected || 0) - 1);
+      userPoints.total_collected = Math.max(0, (userPoints.total_collected || 0) - 1);
+      userPoints.markModified('weekly_collect_points');
+      await userPoints.save();
+    }
+
     item.claimed_by = null;
     await item.save();
 
@@ -307,8 +327,13 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     if (userPoints) {
       userPoints.total_points = Math.max(0, (userPoints.total_points || 0) - points);
       userPoints.report_points = Math.max(0, (userPoints.report_points || 0) - points);
+      userPoints.weekly_report_points = Math.max(0, (userPoints.weekly_report_points || 0) - points);
+      userPoints.daily_reports = Math.max(0, (userPoints.daily_reports || 0) - 1);
+      userPoints.weekly_reports = Math.max(0, (userPoints.weekly_reports || 0) - 1);
+      userPoints.monthly_reports = Math.max(0, (userPoints.monthly_reports || 0) - 1);
       userPoints.total_reports = Math.max(0, (userPoints.total_reports || 0) - 1);
       userPoints.markModified('category_points');
+      userPoints.markModified('weekly_report_points');
       await userPoints.save();
     }
 

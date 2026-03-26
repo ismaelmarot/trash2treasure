@@ -626,29 +626,11 @@ router.post('/sync', authenticateToken, async (req, res) => {
 // Agregar puntos por recolectar
 router.post('/add-collect', authenticateToken, async (req, res) => {
   try {
-    const { category, itemId, createdAt } = req.body;
+    const { category, itemId } = req.body;
     const userPoints = await getOrCreateUserPoints(req.user.id);
     
-    // Puntos base
-    let points = 3;
-    
-    // Bonus por categoría crítica
-    if (CRITICAL_CATEGORIES.includes(category)) {
-      points += 3;
-    }
-    
-    // Bonus por tiempo
-    if (createdAt) {
-      const itemDate = new Date(createdAt);
-      const now = new Date();
-      const hoursDiff = (now - itemDate) / (1000 * 60 * 60);
-      
-      if (hoursDiff < 1) {
-        points += 3;
-      } else if (hoursDiff < 3) {
-        points += 1;
-      }
-    }
+    // Puntos base: 3 para normal, 6 para críticos
+    let points = CRITICAL_CATEGORIES.includes(category) ? 6 : 3;
     
     // Actualizar contadores
     userPoints.total_points += points;
