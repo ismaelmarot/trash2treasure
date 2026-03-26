@@ -626,10 +626,10 @@ export const PublishButton = styled.button`
     width: 100%;
     max-width: 320px;
     padding: 16px;
-    background: #007aff;
-    color: #fff;
+    background: ${COLORS.info};
+    color: ${COLORS.allWhite};
     border: none;
-    border-radius: 12px;
+    border-radius: 35px;
     font-size: 17px;
     font-weight: 600;
 `
@@ -639,7 +639,7 @@ export const CancelButton = styled.button`
     max-width: 320px;
     padding: 12px;
     background: transparent;
-    color: #666;
+    color: ${COLORS.greyDark};
     border: none;
     font-size: 15px;
 `
