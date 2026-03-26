@@ -272,11 +272,6 @@ export function AddItemScreen() {
 
             <Title>Publicar Tesoro</Title>
             <Subtitle>Dale una segunda vida</Subtitle>
-
-            <OptionButton onClick={() => navigate('/app/activity')}>
-              ❌ Cancelar publicación
-            </OptionButton>
-
             <InputGroup>
               <Label required>Título</Label>
               <Input value={title} onChange={e => setTitle(e.target.value)} />
