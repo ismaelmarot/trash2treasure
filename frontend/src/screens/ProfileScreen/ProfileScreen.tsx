@@ -20,6 +20,7 @@ import {
   GoOut,
   IconChevron,
   IconCircle,
+  LanguageSelect,
   MenuIconWrapper,
   MenuItem,
   MenuLabel,
@@ -188,14 +189,18 @@ export function ProfileScreen() {
 
       <Section>
         <SectionTitle>Settings</SectionTitle>
-        <MenuItem onClick={() => changeLanguage(currentLang === 'en' ? 'es' : 'en')}>
+        <MenuItem>
           <MenuIconWrapper>
             <span style={{ fontSize: '1.2rem' }}>🌐</span>
           </MenuIconWrapper>
           <MenuLabel>Language</MenuLabel>
-          <MenuLabel style={{ marginLeft: 'auto', marginRight: '10px', color: '#666' }}>
-            {currentLang === 'en' ? '🇬🇧 English' : '🇪🇸 Español'}
-          </MenuLabel>
+          <LanguageSelect 
+            value={currentLang} 
+            onChange={(e) => changeLanguage(e.target.value)}
+          >
+            <option value="en">🇬🇧 English</option>
+            <option value="es">🇪🇸 Español</option>
+          </LanguageSelect>
         </MenuItem>
         <MenuItem onClick={() => setIsEcoModalOpen(true)}>
           <MenuIconWrapper>

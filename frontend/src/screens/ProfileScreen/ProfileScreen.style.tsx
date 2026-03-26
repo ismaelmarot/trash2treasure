@@ -113,6 +113,20 @@ export const MenuItem = styled.div`
     cursor: pointer;
 `
 
+export const LanguageSelect = styled.select`
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    
+    &:focus {
+        border-color: ${COLORS.info};
+    }
+`
+
 export const MenuIconWrapper = styled.div`
     ${flex('row','center','center')}
     ${size('2rem','2rem')}
