@@ -306,8 +306,7 @@ itemSchema.index({ latitude: 1, longitude: 1 });
 itemSchema.index({ created_at: -1 });
 itemSchema.index({ user_id: 1, created_at: -1 }); // Compound index para stats por período
 
-// Índices para UserPoints
-userPointsSchema.index({ total_points: -1 }); // Para ranking
+// Índices para UserPoints (ya definidos arriba en línea 255)
 
 ratingSchema.index({ item_id: 1, user_id: 1 }, { unique: true });
 
@@ -391,33 +390,22 @@ const initializeChallengeDefinitions = async () => {
 const createIndexes = async () => {
   try {
     // User indexes
-    await User.createIndex({ email: 1 }, { unique: true });
+    await User.createIndexes();
     
     // Item indexes - most queried fields
-    await Item.createIndex({ user_id: 1 });
-    await Item.createIndex({ claimed_by: 1 });
-    await Item.createIndex({ category: 1 });
-    await Item.createIndex({ status: 1 });
-    await Item.createIndex({ created_at: -1 });
-    await Item.createIndex({ expires_at: 1 }, { sparse: true });
-    await Item.createIndex({ location: '2dsphere' });
-    await Item.createIndex({ user_id: 1, created_at: -1 });
-    await Item.createIndex({ claimed_by: 1, status: 1 });
+    await Item.createIndexes();
     
     // UserPoints indexes
-    await UserPoints.createIndex({ user_id: 1 }, { unique: true });
-    await UserPoints.createIndex({ total_points: -1 }); // For ranking
+    await UserPoints.createIndexes();
     
     // Achievement indexes
-    await Achievement.createIndex({ user_id: 1 });
-    await Achievement.createIndex({ user_id: 1, achievement_id: 1 }, { unique: true });
+    await Achievement.createIndexes();
     
     // Rating indexes
-    await Rating.createIndex({ item_id: 1 });
-    await Rating.createIndex({ user_id: 1 });
+    await Rating.createIndexes();
     
     // ItemPhoto indexes
-    await ItemPhoto.createIndex({ item_id: 1 });
+    await ItemPhoto.createIndexes();
     
     console.log('✅ MongoDB indexes created successfully');
   } catch (error) {
