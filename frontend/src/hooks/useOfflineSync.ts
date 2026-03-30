@@ -157,8 +157,8 @@ export function useOfflineSync() {
 
       if (failCount > 0) {
         await sendNotification(
-          '❌ Error al publicar',
-          `${failCount} ${failCount === 1 ? 'tesoro no se pudo publicar' : 'tesoros no se pudieron publicar'}.`
+          '⚠️ Error al publicar',
+          `${failCount} ${failCount === 1 ? 'tesoro no se pudo publicar. Verificá tu conexión e intentá de nuevo.' : 'tesoros no se pudieron publicar. Verificá tu conexión e intentá de nuevo.'}`
         )
       }
     } catch (error) {
