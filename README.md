@@ -33,7 +33,7 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 <p  align="center">
   <a href="https://ismaelmarot.github.io/Trash2Treasure/" target="_blank">
-    <img src="https://img.shields.io/badge/Go-Live Demo-blue?style=for-the-badge" alt="Demo Trash2Treasure" />
+    <img src="https://img.shields.io/badge/Go-Live App-blue?style=for-the-badge" alt="Demo Trash2Treasure" />
   </a>
 </p>
 
