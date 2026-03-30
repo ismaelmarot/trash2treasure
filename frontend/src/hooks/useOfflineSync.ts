@@ -7,9 +7,13 @@ import {
   getPendingCount,
   isOnline,
   base64ToFile,
+  incrementRetryCount,
+  removeFailedItem,
   type PendingItem
 } from '@/services/offlineDB'
 import { useAuth } from '@/hooks/useAuth'
+
+const MAX_RETRIES = 3
 
 // Solicitar permiso para notificaciones
 const requestNotificationPermission = async (): Promise<boolean> => {
@@ -69,7 +73,14 @@ export function useOfflineSync() {
         })
       })
 
-      if (!itemResponse.ok) return false
+      if (!itemResponse.ok) {
+        const retryCount = await incrementRetryCount(item.id)
+        if (retryCount >= MAX_RETRIES) {
+          console.error(`Item ${item.id} failed after ${MAX_RETRIES} attempts, removing`)
+          await removeFailedItem(item.id)
+        }
+        return false
+      }
 
       const itemData = await itemResponse.json()
       const itemId = itemData._id || itemData.id
@@ -88,7 +99,14 @@ export function useOfflineSync() {
           body: formData
         })
 
-        if (!photoResponse.ok) return false
+        if (!photoResponse.ok) {
+          const retryCount = await incrementRetryCount(item.id)
+          if (retryCount >= MAX_RETRIES) {
+            console.error(`Item ${item.id} failed after ${MAX_RETRIES} attempts, removing`)
+            await removeFailedItem(item.id)
+          }
+          return false
+        }
       }
 
       // 3. Marcar como sincronizado
@@ -99,6 +117,11 @@ export function useOfflineSync() {
       return true
     } catch (error) {
       console.error('Error syncing item:', error)
+      const retryCount = await incrementRetryCount(item.id)
+      if (retryCount >= MAX_RETRIES) {
+        console.error(`Item ${item.id} failed after ${MAX_RETRIES} attempts, removing`)
+        await removeFailedItem(item.id)
+      }
       return false
     }
   }, [token])
