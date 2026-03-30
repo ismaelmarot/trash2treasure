@@ -381,7 +381,7 @@ const initializeChallengeDefinitions = async () => {
     await ChallengeDefinition.findOneAndUpdate(
       { id: def.id },
       def,
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
   }
 };
