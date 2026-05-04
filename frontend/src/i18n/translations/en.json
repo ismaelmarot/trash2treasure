@@ -18,7 +18,16 @@
     "yesDelete": "Yes, delete",
     "yesRelease": "Yes, release",
     "keep": "Keep",
-    "retry": "Retry"
+    "retry": "Retry",
+    "later": "Later"
+  },
+  "pwa": {
+    "installTitle": "Install Trash2Treasure",
+    "installDesc": "Install the app for a better experience",
+    "benefitOffline": "Offline access",
+    "benefitQuick": "Quick access",
+    "benefitBetter": "Better experience",
+    "install": "Install"
   },
   "nav": {
     "home": "Home",

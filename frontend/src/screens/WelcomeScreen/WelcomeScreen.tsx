@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { appIcon } from '@/assets'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt/PWAInstallPrompt'
 import {
   AppIcon,
   ButtonGroup,
@@ -26,7 +27,7 @@ export function WelcomeScreen() {
           <AppIcon src={appIcon} alt="App logo" />
           <LogoText>{t('home.title')}</LogoText>
         </LogoContainer>
-        
+
         <Title>{t('about.tagline')}</Title>
         <Subtitle>
           {t('welcome.tagline')}
@@ -45,6 +46,7 @@ export function WelcomeScreen() {
           {t('welcome.termsAgree')}
         </Footer>
       </Content>
+      <PWAInstallPrompt />
     </Container>
   )
 }
