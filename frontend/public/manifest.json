@@ -29,5 +29,28 @@
   ],
   "categories": ["utilities", "lifestyle"],
   "lang": "es",
-  "dir": "ltr"
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "/screenshots/01-mobile-map-mockup.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mapa de tesoros cercanos"
+    },
+    {
+      "src": "/screenshots/03-mobile-item-detail-mockup.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Detalle del tesoro"
+    },
+    {
+      "src": "/screenshots/06-mobile-add-item-mockup.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Publicar un tesoro"
+    }
+  ]
 }

@@ -20,27 +20,57 @@ export default defineConfig({
         orientation: 'portrait',
         scope: '/',
         start_url: '/',
+        lang: 'es',
+        dir: 'ltr',
+        categories: ['utilities', 'lifestyle'],
         icons: [
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-maskable-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        screenshots: [
+          {
+            src: 'screenshots/01-mobile-map-mockup.png',
+            sizes: '1080x1920',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Mapa de tesoros cercanos'
+          },
+          {
+            src: 'screenshots/03-mobile-item-detail-mockup.png',
+            sizes: '1080x1920',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Detalle del tesoro'
+          },
+          {
+            src: 'screenshots/06-mobile-add-item-mockup.png',
+            sizes: '1080x1920',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Publicar un tesoro'
           }
         ]
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/\/api\//],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/trash2treasure-3sw4\.onrender\.com\/api\//,
