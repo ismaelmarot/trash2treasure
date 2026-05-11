@@ -17,7 +17,9 @@ export default defineConfig({
         theme_color: '#0071e3',
         background_color: '#ffffff',
         display: 'standalone',
+        display_override: ['window-controls-overlay', 'standalone'],
         orientation: 'portrait',
+        prefer_related_applications: false,
         scope: '/',
         start_url: '/',
         lang: 'es',
@@ -46,21 +48,21 @@ export default defineConfig({
         screenshots: [
           {
             src: 'screenshots/01-mobile-map-mockup.png',
-            sizes: '1080x1920',
+            sizes: '428x865',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Mapa de tesoros cercanos'
           },
           {
             src: 'screenshots/03-mobile-item-detail-mockup.png',
-            sizes: '1080x1920',
+            sizes: '434x909',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Detalle del tesoro'
           },
           {
             src: 'screenshots/06-mobile-add-item-mockup.png',
-            sizes: '1080x1920',
+            sizes: '419x866',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Publicar un tesoro'
