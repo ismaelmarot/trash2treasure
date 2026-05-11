@@ -29,6 +29,7 @@ export default defineConfig({
           client_mode: 'focus-existing'
         },
         handle_links: 'preferred',
+        edge_side_panel: {},
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -99,6 +100,20 @@ export default defineConfig({
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Publicar un tesoro'
+          },
+          {
+            src: 'screenshots/01-desktop-map-mockup.png',
+            sizes: '1539x905',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Mapa en escritorio'
+          },
+          {
+            src: 'screenshots/05-desktop-add-item-mockup.png',
+            sizes: '1541x904',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Publicar en escritorio'
           }
         ]
       },
