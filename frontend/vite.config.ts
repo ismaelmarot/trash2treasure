@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -19,12 +18,17 @@ export default defineConfig({
         display: 'standalone',
         display_override: ['window-controls-overlay', 'standalone'],
         orientation: 'portrait',
-        prefer_related_applications: false,
         scope: '/',
         start_url: '/',
         lang: 'es',
         dir: 'ltr',
         categories: ['utilities', 'lifestyle'],
+        prefer_related_applications: false,
+        related_applications: [],
+        launch_handler: {
+          client_mode: 'focus-existing'
+        },
+        handle_links: 'preferred',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -43,6 +47,35 @@ export default defineConfig({
             sizes: '192x192',
             type: 'image/png',
             purpose: 'maskable'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        shortcuts: [
+          {
+            name: 'Mapa',
+            short_name: 'Mapa',
+            description: 'Ver tesoros en el mapa',
+            url: '/',
+            icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
+          },
+          {
+            name: 'Publicar',
+            short_name: 'Publicar',
+            description: 'Publicar un tesoro nuevo',
+            url: '/add-item',
+            icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
+          },
+          {
+            name: 'Perfil',
+            short_name: 'Perfil',
+            description: 'Ver mi perfil y puntos',
+            url: '/profile',
+            icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
           }
         ],
         screenshots: [
@@ -81,7 +114,7 @@ export default defineConfig({
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 // 24 horas
+                maxAgeSeconds: 60 * 60 * 24
               }
             }
           }
