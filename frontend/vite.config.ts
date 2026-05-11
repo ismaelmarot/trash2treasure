@@ -82,21 +82,21 @@ export default defineConfig({
         screenshots: [
           {
             src: 'screenshots/01-mobile-map-mockup.png',
-            sizes: '428x865',
+            sizes: '950x1920',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Mapa de tesoros cercanos'
           },
           {
             src: 'screenshots/03-mobile-item-detail-mockup.png',
-            sizes: '434x909',
+            sizes: '916x1920',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Detalle del tesoro'
           },
           {
             src: 'screenshots/06-mobile-add-item-mockup.png',
-            sizes: '419x866',
+            sizes: '929x1920',
             type: 'image/png',
             form_factor: 'narrow',
             label: 'Publicar un tesoro'
