@@ -6,6 +6,11 @@ import App from './App'
 import './styles.css'
 import './i18n' // Idiomas
 
+window.addEventListener('unhandledrejection', (event) => {
+  console.warn('Unhandled rejection caught globally:', event.reason?.message || event.reason)
+  event.preventDefault()
+})
+
 // Inicializar Sentry
 Sentry.init({
   dsn: 'https://94d8daaf09f58514337bedaee2b6ebfc@o4511101677600768.ingest.us.sentry.io/4511101683433472',

@@ -137,12 +137,12 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/trash2treasure-3sw4\.onrender\.com\/api\//,
-            handler: 'NetworkFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24
+                maxAgeSeconds: 60 * 60 * 24 * 7
               }
             }
           }
