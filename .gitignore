@@ -46,3 +46,8 @@ coverage/
 credentials.json
 service-account.json
 .vercel
+
+# database files
+*.db
+*.sqlite
+*.sqlite3
