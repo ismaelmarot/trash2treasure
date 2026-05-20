@@ -71,6 +71,7 @@ export function AddItemScreen() {
   })
 
   const mapRef = useRef<LeafletMap | null>(null)
+  const submittingRef = useRef(false)
 
   const { token } = useAuth()
   const navigate = useNavigate()
@@ -152,28 +153,33 @@ export function AddItemScreen() {
     e.preventDefault()
     e.stopPropagation()
 
-    if (loading) return
+    if (loading || submittingRef.current) return
+    submittingRef.current = true
 
     setLoading(true)
     setError('')
 
     if (!isOnline()) {
       setLoading(false)
+      submittingRef.current = false
       setShowOfflineModal(true)
       return
     }
 
     await saveToServer()
+    submittingRef.current = false
   }
 
   const saveOffline = async () => {
+    if (submittingRef.current) return
+    submittingRef.current = true
+
     setShowOfflineModal(false)
     setLoading(true)
 
     try {
       if (!image) {
         setError(t('add.imageRequired'))
-        setLoading(false)
         return
       }
       const imageBase64 = await fileToBase64(image)
@@ -192,6 +198,7 @@ export function AddItemScreen() {
       setError(err.message)
     } finally {
       setLoading(false)
+      submittingRef.current = false
     }
   }
 
@@ -215,19 +222,31 @@ export function AddItemScreen() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
 
+      let imageError = false
+
       if (image) {
         const formData = new FormData()
         formData.append('image', image)
 
-        await fetch(`${API_BASE_URL}/items/${data.id}/photos`, {
+        const photoRes = await fetch(`${API_BASE_URL}/items/${data.id}/photos`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
           body: formData
         })
+
+        if (!photoRes.ok) {
+          console.error('Image upload failed, item created without image:', data.id)
+          imageError = true
+        }
       }
 
       setSuccess(true)
-      setTimeout(() => navigate('/app/activity'), 2000)
+      if (imageError) {
+        const { t } = await import('react-i18next')
+        setTimeout(() => navigate('/app/activity'), 2500)
+      } else {
+        setTimeout(() => navigate('/app/activity'), 2000)
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {

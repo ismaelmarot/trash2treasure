@@ -85,33 +85,34 @@ export function useOfflineSync() {
       const itemData = await itemResponse.json()
       const itemId = itemData._id || itemData.id
 
-      // 2. Subir la foto si existe
+      // 2. Subir la foto si existe (fallo blando - item queda sin imagen)
+      let imageUploaded = false
       if (item.imageBase64) {
-        const imageFile = base64ToFile(item.imageBase64, `photo-${Date.now()}.jpg`)
-        const formData = new FormData()
-        formData.append('image', imageFile)
+        try {
+          const imageFile = base64ToFile(item.imageBase64, `photo-${Date.now()}.jpg`)
+          const formData = new FormData()
+          formData.append('image', imageFile)
 
-        const photoResponse = await fetch(`${API_BASE_URL}/items/${itemId}/photos`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: formData
-        })
+          const photoResponse = await fetch(`${API_BASE_URL}/items/${itemId}/photos`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            body: formData
+          })
 
-        if (!photoResponse.ok) {
-          const retryCount = await incrementRetryCount(item.id)
-          if (retryCount >= MAX_RETRIES) {
-            console.error(`Item ${item.id} failed after ${MAX_RETRIES} attempts, removing`)
-            await removeFailedItem(item.id)
+          if (photoResponse.ok) {
+            imageUploaded = true
+          } else {
+            console.warn(`Image upload failed for item ${itemId}, item created without image`)
           }
-          return false
+        } catch (photoError) {
+          console.warn(`Image upload error for item ${itemId}:`, photoError)
         }
       }
 
-      // 3. Marcar como sincronizado
+      // 3. Marcar como sincronizado (item creado, imagen es opcional)
       await markItemAsSynced(item.id)
-      // 4. Eliminar de pendientes
       await removePendingItem(item.id)
 
       return true
