@@ -86,7 +86,6 @@ export function useOfflineSync() {
       const itemId = itemData._id || itemData.id
 
       // 2. Subir la foto si existe (fallo blando - item queda sin imagen)
-      let imageUploaded = false
       if (item.imageBase64) {
         try {
           const imageFile = base64ToFile(item.imageBase64, `photo-${Date.now()}.jpg`)
@@ -102,7 +101,6 @@ export function useOfflineSync() {
           })
 
           if (photoResponse.ok) {
-            imageUploaded = true
           } else {
             console.warn(`Image upload failed for item ${itemId}, item created without image`)
           }

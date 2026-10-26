@@ -242,7 +242,6 @@ export function AddItemScreen() {
 
       setSuccess(true)
       if (imageError) {
-        const { t } = await import('react-i18next')
         setTimeout(() => navigate('/app/activity'), 2500)
       } else {
         setTimeout(() => navigate('/app/activity'), 2000)
