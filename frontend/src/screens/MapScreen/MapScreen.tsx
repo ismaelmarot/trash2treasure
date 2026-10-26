@@ -391,8 +391,8 @@ export function MapScreen() {
         <ChangeView center={userLocation || [-34.6037, -58.3816]} trigger={shouldRecenter} />
         <ManualModeHandler onConfirm={handleConfirmManualLocation} isActive={isManualMode} />
         <TileLayer
-          url={`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?apikey=${import.meta.env.VITE_CARTO_API_KEY}`}
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         
         {userLocation && (
