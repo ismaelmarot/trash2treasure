@@ -382,10 +382,10 @@ export function MapScreen() {
         </ExploreSegment>
       </TopBar>
 
-      <MapContainer 
+        <MapContainer 
         center={userLocation || [-34.6037, -58.3816]} 
         zoom={15} 
-        style={{ height: '100%', width: '100%', flex: 1, minHeight: 0 }}
+        style={{ height: '100%', width: '100%' }}
         zoomControl={false}
       >
         <ChangeView center={userLocation || [-34.6037, -58.3816]} trigger={shouldRecenter} />
