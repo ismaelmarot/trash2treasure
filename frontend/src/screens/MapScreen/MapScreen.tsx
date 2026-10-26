@@ -381,7 +381,7 @@ export function MapScreen() {
       <MapContainer 
         center={userLocation || [-34.6037, -58.3816]} 
         zoom={15} 
-        style={{ height: '100%', width: '100%' }}
+        style={{ height: '100%', width: '100%', flex: 1, minHeight: 0 }}
         zoomControl={false}
       >
         <ChangeView center={userLocation || [-34.6037, -58.3816]} trigger={shouldRecenter} />
@@ -389,6 +389,9 @@ export function MapScreen() {
         <TileLayer
           url={`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?apikey=${import.meta.env.VITE_CARTO_API_KEY}`}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          onTileError={(err, tile) => {
+            console.error('Tile error:', err, tile.src)
+          }}
         />
         
         {userLocation && (
