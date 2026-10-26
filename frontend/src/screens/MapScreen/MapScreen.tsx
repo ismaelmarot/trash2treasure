@@ -231,6 +231,7 @@ export function MapScreen() {
 
   useEffect(() => {
     let watchId: number
+    let loadingTimer: NodeJS.Timeout
     
     const startTracking = async () => {
       if (userLocation) setLoading(false);
@@ -261,6 +262,7 @@ export function MapScreen() {
           },
           (err) => {
             console.error('Error watching location:', err)
+            setLoading(false)
           },
           {
             enableHighAccuracy: true,
@@ -276,9 +278,11 @@ export function MapScreen() {
     }
 
     startTracking()
-    fetchItems()
+
+    loadingTimer = setTimeout(() => setLoading(false), 10000)
 
     return () => {
+      clearTimeout(loadingTimer)
       if (watchId) navigator.geolocation.clearWatch(watchId)
     }
   }, [])
