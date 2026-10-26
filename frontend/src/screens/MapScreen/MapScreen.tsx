@@ -231,7 +231,7 @@ export function MapScreen() {
 
   useEffect(() => {
     let watchId: number
-    let loadingTimer: NodeJS.Timeout
+    let loadingTimer: ReturnType<typeof setTimeout>
     
     const startTracking = async () => {
       if (userLocation) setLoading(false);
@@ -279,6 +279,20 @@ export function MapScreen() {
 
     startTracking()
 
+    ;(async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/items`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await response.json()
+        setItems(normalizeItems(data));
+      } catch (error) {
+        console.error('Error fetching items for map:', error)
+      } finally {
+        setLoading(false)
+      }
+    })()
+
     loadingTimer = setTimeout(() => setLoading(false), 10000)
 
     return () => {
@@ -313,20 +327,6 @@ export function MapScreen() {
     } else {
       setIsRefreshingLocation(false)
       setShouldRecenter(prev => prev + 1)
-    }
-  }
-
-  const fetchItems = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/items`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      const data = await response.json()
-      setItems(normalizeItems(data));
-    } catch (error) {
-      console.error('Error fetching items for map:', error)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -393,9 +393,6 @@ export function MapScreen() {
         <TileLayer
           url={`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?apikey=${import.meta.env.VITE_CARTO_API_KEY}`}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          onTileError={(err, tile) => {
-            console.error('Tile error:', err, tile.src)
-          }}
         />
         
         {userLocation && (
