@@ -141,7 +141,7 @@ export function MapScreen() {
     return saved ? JSON.parse(saved) : null
   })
   const [accuracy, setAccuracy] = useState<number | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const { token } = useAuth()
   const navigate = useNavigate()
 
