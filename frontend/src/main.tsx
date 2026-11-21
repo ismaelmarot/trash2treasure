@@ -1,7 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import ReactGA from 'react-ga4'
-import * as Sentry from '@sentry/react'
 import App from './App'
 import './styles.css'
 import './i18n' // Idiomas
@@ -12,6 +10,7 @@ window.addEventListener('unhandledrejection', (event) => {
 })
 
 // Inicializar Sentry
+import * as Sentry from '@sentry/react'
 Sentry.init({
   dsn: 'https://94d8daaf09f58514337bedaee2b6ebfc@o4511101677600768.ingest.us.sentry.io/4511101683433472',
   integrations: [
@@ -28,10 +27,24 @@ Sentry.init({
 })
 
 // Inicializar Google Analytics
+import ReactGA from 'react-ga4'
 ReactGA.initialize('G-FHM9Y93V4D')
+
+import { createClient } from '@/lib/supabase'
+import { useAppStatus } from '@/hooks/useAppStatus'
+import { MaintenanceScreen } from '@/components/MaintenanceScreen'
+
+const supabase = createClient()
+const { enabled, loading } = useAppStatus('trash2tre', supabase)
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    {loading ? (
+      <div>Cargando estado...</div>
+    ) : !enabled ? (
+      <MaintenanceScreen slug="trash2tre" />
+    ) : (
+      <App />
+    )}
   </React.StrictMode>
 )

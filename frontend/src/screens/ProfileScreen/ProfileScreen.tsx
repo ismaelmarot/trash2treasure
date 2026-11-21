@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { QRCodeSVG } from 'qrcode.react'
+// import { QRCodeSVG } from 'qrcode.react'
 import { FiInfo, FiHelpCircle, FiBookOpen, FiClock, FiGlobe, FiLogOut, FiSmartphone, FiMail, FiUserPlus, FiMessageCircle, FiHeart } from 'react-icons/fi'
 import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
+import DonationsModal from '@/screens/ProfileScreen/DonationsModal'
+import PromoModal from '@/screens/ProfileScreen/PromoModal'
+import InviteModal from '@/screens/ProfileScreen/InviteModal'
+import InviteSentModal from '@/screens/ProfileScreen/InviteSentModal'
+import QrModal from '@/screens/ProfileScreen/QrModal'
 import achievement01 from '@/assets/achievements-img/achievement-01.png'
 import achievement02 from '@/assets/achievements-img/achievement-02.png'
 import achievement03 from '@/assets/achievements-img/achievement-03.png'
@@ -97,25 +102,6 @@ export function ProfileScreen() {
     setCurrentLang(lang)
   }
 
-  const handleSendInvite = async () => {
-    if (!inviteEmail) return
-    try {
-      await fetch(`${API_BASE_URL}/users/invite`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ email: inviteEmail })
-      })
-      setInviteEmail('')
-      setIsInviteModalOpen(false)
-      setIsInviteSentOpen(true)
-    } catch (err) {
-      console.error('Error sending invite:', err)
-    }
-  }
-
   useEffect(() => {
     if (isAuthenticated && token) {
       fetch(`${API_BASE_URL}/points/my-points`, {
@@ -163,19 +149,6 @@ export function ProfileScreen() {
     authLogout();
     navigate('/welcome')
   };
-
-  const copyAlias = () => {
-    try {
-      navigator.clipboard.writeText('marot.ismael')
-      setCopyFeedback(true)
-      setTimeout(() => setCopyFeedback(false), 2000)
-    } catch (err) {
-      console.error('Error copying alias:', err)
-      setCopyFeedback(false)
-    }
-  }
-
-  const [copyFeedback, setCopyFeedback] = useState(false)
 
   if (!isAuthenticated) {
     return (
@@ -404,32 +377,7 @@ export function ProfileScreen() {
         </ModalOverlay>
       )}
 
-      {isQrModalOpen && (
-        <ModalOverlay onClick={() => setIsQrModalOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
-            <ModalTitle>📱 {t('profile.qrCode')}</ModalTitle>
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <QRCodeSVG
-                  value="https://trash2treasure-app.vercel.app"
-                  size={220}
-                  bgColor="#ffffff"
-                  fgColor="#1d1d0f"
-                  level="H"
-                  imageSettings={{
-                    src: '/icon-192.png',
-                    height: 56,
-                    width: 56,
-                    excavate: true
-                  }}
-                />
-              </div>
-            </div>
-            <p style={{ fontSize: '14px', color: '#666', margin: '0' }}>{t('profile.qrScan')}</p>
-            <ModalClose onClick={() => setIsQrModalOpen(false)}>×</ModalClose>
-          </ModalContent>
-        </ModalOverlay>
-      )}
+      <QrModal isOpen={isQrModalOpen} onClose={() => setIsQrModalOpen(false)} />
 
       {isComingSoonOpen && (
         <ModalOverlay onClick={() => setIsComingSoonOpen(false)}>
@@ -455,244 +403,13 @@ export function ProfileScreen() {
         </ModalOverlay>
       )}
 
-      {isInviteModalOpen && (
-        <ModalOverlay onClick={() => setIsInviteModalOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px', textAlign: 'center' }}>
-            <ModalTitle>📨 Invitar amigo</ModalTitle>
-            <p style={{ color: '#86868b', fontSize: '14px', marginBottom: '20px' }}>
-              El recibirá un email con el diseño de Trash2Treasure
-            </p>
-            <input
-              type="email"
-              placeholder="email@ejemplo.com"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: '12px',
-                border: '1px solid #e5e5ea',
-                fontSize: '16px',
-                marginBottom: '16px',
-                boxSizing: 'border-box'
-              }}
-            />
-            <Button 
-              onClick={handleSendInvite}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: '12px',
-                border: 'none',
-                background: '#42a59f',
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              Enviar invitación
-            </Button>
-            <ModalClose onClick={() => setIsInviteModalOpen(false)}>×</ModalClose>
-          </ModalContent>
-        </ModalOverlay>
-      )}
+      <InviteModal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} setIsInviteSentOpen={setIsInviteSentOpen} />
 
-      {isInviteSentOpen && (
-        <ModalOverlay onClick={() => setIsInviteSentOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '40px 24px', textAlign: 'center' }}>
-            <div style={{ fontSize: '60px', marginBottom: '16px' }}>🎉</div>
-            <ModalTitle style={{ marginBottom: '12px' }}>¡Invitación enviada!</ModalTitle>
-            <p style={{ color: '#86868b', fontSize: '15px', lineHeight: 1.5 }}>
-              Tu amigo recibirá un email con la invitación a Trash2Treasure
-            </p>
-            <Button 
-              onClick={() => setIsInviteSentOpen(false)}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: '12px',
-                border: 'none',
-                background: '#42a59f',
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                marginTop: '24px'
-              }}
-            >
-              Cerrar
-            </Button>
-          </ModalContent>
-        </ModalOverlay>
-      )}
+<InviteSentModal isOpen={isInviteSentOpen} onClose={() => setIsInviteSentOpen(false)} />
 
-      {isDonationsOpen && (
-        <ModalOverlay onClick={() => setIsDonationsOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ModalTitle>Pequeñas acciones, grandes cambios. 🌱</ModalTitle>
-<p style={{ fontSize: '16px', color: '#666', marginBottom: '24px', textAlign: 'center' }}>
-              Ayudame a que Trash2Treasure siga creciendo.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              Trash2Treasure es un proyecto personal que desarrollo y mantengo por mi cuenta. Mi objetivo es conectar personas, recuperar objetos y darles una segunda oportunidad.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              Pero hay algo más detrás de esta iniciativa: ayudar a quienes viven de recolectar y recuperar residuos, facilitándoles el trabajo, ahorrándoles tiempo y haciendo que sus búsquedas sean más eficientes.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              La idea es que puedan encontrar más fácilmente aquello que otras personas ya no necesitan, pero que todavía tiene valor.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              Detrás de esta aplicación hay muchas horas de trabajo, aprendizaje y dedicación. Cada nueva funcionalidad, mejora y actualización forma parte de un esfuerzo independiente para hacer crecer este proyecto.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              Si te gusta lo que hago y querés ayudarme a seguir adelante, podés colaborar con una pequeña donación.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              Tu aporte me ayuda a cubrir los costos de mantenimiento, infraestructura y desarrollo, y me permite seguir dedicándole tiempo a esta iniciativa.
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              No importa cuánto puedas aportar. Cada contribución, por pequeña que sea, significa mucho y es una gran motivación para continuar.
-            </p>
-            <p style={{ fontSize: '16px', color: '#666', marginBottom: '24px', textAlign: 'center', fontWeight: '700' }}>
-              ¡Gracias por acompañarme y ser parte de Trash2Treasure!
-            </p>
-            <p style={{ fontSize: '18px', color: '#333', marginBottom: '8px', textAlign: 'center', fontWeight: '700' }}>
-              Cada objeto recuperado es una oportunidad para alguien y una pequeña victoria para el planeta. 🌎
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '32px', lineHeight: 1.6, textAlign: 'center' }}>
-              <strong>Alias:</strong> <code style={{ textAlign: 'center', display: 'block' }}>marot.ismael</code>
-              <br />
-              <button
-                onClick={copyAlias}
-                style={{
-                  width: 'auto',
-                  maxWidth: '120px',
-                  padding: '8px 12px',
-                  borderRadius: '20px',
-                  border: '1px solid #42a59f',
-                  background: 'transparent',
-                  color: '#42a59f',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  alignSelf: 'center',
-                  margin: '0 auto'
-                }}
-                aria-label="Copiar alias"
-              >
-                Copiar
-              </button>
-              <span style={{ color: '#4CAF50', fontSize: '12px', marginTop: '4px', display: copyFeedback ? 'block' : 'none', textAlign: 'center' }}>¡Alias copiado!</span>
-              <p style={{ fontSize: '13px', color: '#666', marginTop: '8px', textAlign: 'center' }}>
-                Transferencia directa a Mercado Pago
-              </p>
-              <button
-                onClick={() => window.open('https://www.mercadopago.com.ar/', '_blank')}
-                style={{
-                  width: 'auto',
-                  maxWidth: '120px',
-                  padding: '8px 12px',
-                  borderRadius: '20px',
-                  border: 'none',
-                  background: '#42a59f',
-                  color: '#ffffff',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  alignSelf: 'center',
-                  margin: '16px auto 0'
-                }}
-              >
-                Donar
-              </button>
-            </p>
-            <ModalClose onClick={() => setIsDonationsOpen(false)}>×</ModalClose>
-          </ModalContent>
-        </ModalOverlay>
-      )}
+      <DonationsModal isOpen={isDonationsOpen} onClose={() => setIsDonationsOpen(false)} />
 
-      {isPromoOpen && (
-        <ModalOverlay onClick={() => setIsPromoOpen(false)} style={{ zIndex: 1001 }}>
-          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px' }}>
-            <ModalTitle>¿Me ayudás a seguir creciendo? 🌱</ModalTitle>
-            <p style={{ color: '#86868b', fontSize: '15px', marginBottom: '24px', lineHeight: 1.5 }}>
-              {t('promo_text1')}
-            </p>
-            <p style={{ color: '#333', fontSize: '15px', marginBottom: '24px', lineHeight: 1.6 }}>
-              {t('promo_text2')}
-            </p>
-            <p style={{ color: '#333', fontSize: '15px', marginBottom: '8px', lineHeight: 1.6 }}>
-              {t('promo_text3')}
-            </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6, textAlign: 'center' }}>
-              <code style={{ textAlign: 'center', display: 'block', margin: '0 auto' }}>marot.ismael</code>
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-              <button
-                onClick={copyAlias}
-                style={{
-                  width: 'auto',
-                  maxWidth: '120px',
-                  padding: '8px 12px',
-                  borderRadius: '20px',
-                  border: '1px solid #42a59f',
-                  background: 'transparent',
-                  color: '#42a59f',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  alignSelf: 'center'
-                }}
-                aria-label="Copiar alias"
-              >
-                Copiar
-              </button>
-            </div>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              {t('transfer_mercado_pago')}
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-              <button
-                onClick={() => setIsDonationsOpen(true)}
-                style={{
-                  width: 'auto',
-                  maxWidth: '120px',
-                  padding: '8px 12px',
-                  borderRadius: '20px',
-                  border: 'none',
-                  background: '#42a59f',
-                  color: '#ffffff',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                {t('promo_donate')}
-              </button>
-              <button
-                onClick={() => setIsPromoOpen(false)}
-                style={{
-                  width: 'auto',
-                  maxWidth: '120px',
-                  padding: '8px 12px',
-                  borderRadius: '20px',
-                  border: '1px solid #aaa',
-                  background: 'transparent',
-                  color: '#333',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  cursor: 'pointer'
-                }}
-              >
-                {t('promo_now_no')}
-              </button>
-            </div>
-            <ModalClose onClick={() => setIsPromoOpen(false)}>×</ModalClose>
-          </ModalContent>
-        </ModalOverlay>
-      )}
+      <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} />
 
     </Container>
   )
