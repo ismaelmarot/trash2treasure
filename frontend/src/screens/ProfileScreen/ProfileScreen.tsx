@@ -305,7 +305,7 @@ export function ProfileScreen() {
           <MenuIconWrapper>
             <FiHeart size={20} />
           </MenuIconWrapper>
-          <MenuLabel>{t('profile_donations_text')}</MenuLabel>
+          <MenuLabel>{t('profile.donations')}</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
@@ -533,13 +533,32 @@ export function ProfileScreen() {
 <p style={{ fontSize: '16px', color: '#666', marginBottom: '24px', textAlign: 'center' }}>
               Ayudame a que Trash2Treasure siga creciendo.
             </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6, textAlign: 'center' }}>
-              Trash2Treasure es un proyecto personal que desarrollo y mantengo por mi cuenta, con una idea simple: conectar personas, recuperar objetos y darles una segunda oportunidad.
-But there is more behind this initiative: helping those who live collecting and recovering waste, making their work easier, saving them time and making their searches more efficient. They can find more easily what other people no longer need and that still has value.
-Behind this application there are many hours of work, learning and dedication. Each new functionality, improvement and update is part of an independent effort to grow this initiative.
-If you like the project and want to help me move forward, you can collaborate with a small donation.
-Your contribution helps me cover maintenance, infrastructure and development costs, and allows me to keep dedicating time to this idea.
-No matter how much you can contribute. Every contribution, no matter how small, means a lot and is a great motivation to continue.
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              Trash2Treasure es un proyecto personal que desarrollo y mantengo por mi cuenta. Mi objetivo es conectar personas, recuperar objetos y darles una segunda oportunidad.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              Pero hay algo más detrás de esta iniciativa: ayudar a quienes viven de recolectar y recuperar residuos, facilitándoles el trabajo, ahorrándoles tiempo y haciendo que sus búsquedas sean más eficientes.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              La idea es que puedan encontrar más fácilmente aquello que otras personas ya no necesitan, pero que todavía tiene valor.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              Detrás de esta aplicación hay muchas horas de trabajo, aprendizaje y dedicación. Cada nueva funcionalidad, mejora y actualización forma parte de un esfuerzo independiente para hacer crecer este proyecto.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              Si te gusta lo que hago y querés ayudarme a seguir adelante, podés colaborar con una pequeña donación.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              Tu aporte me ayuda a cubrir los costos de mantenimiento, infraestructura y desarrollo, y me permite seguir dedicándole tiempo a esta iniciativa.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              No importa cuánto puedas aportar. Cada contribución, por pequeña que sea, significa mucho y es una gran motivación para continuar.
+            </p>
+            <p style={{ fontSize: '16px', color: '#666', marginBottom: '24px', textAlign: 'center', fontWeight: '700' }}>
+              ¡Gracias por acompañarme y ser parte de Trash2Treasure!
+            </p>
+            <p style={{ fontSize: '18px', color: '#333', marginBottom: '8px', textAlign: 'center', fontWeight: '700' }}>
+              Cada objeto recuperado es una oportunidad para alguien y una pequeña victoria para el planeta. 🌎
             </p>
             <p style={{ fontSize: '15px', color: '#333', marginBottom: '32px', lineHeight: 1.6, textAlign: 'center' }}>
               <strong>Alias:</strong> <code style={{ textAlign: 'center', display: 'block' }}>marot.ismael</code>
