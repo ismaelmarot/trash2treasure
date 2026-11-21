@@ -182,7 +182,16 @@
     "rankingDetail": "Compete with other users in the weekly ranking and unlock exclusive achievements and challenges while helping your community.",
     "qrScan": "Scan to download Trash2Treasure",
     "loginRequired": "Log in to see your activity and manage your posts.",
-    "donations": "Donations"
+    "donations": "Donations",
+    "promo_donate": "Donate",
+    "promo_now_no": "Not now",
+    "profile_donations_text": "Help me with your contribution",
+    "promo_text1": "Trash2Treasure es un proyecto personal que desarrollo y mantengo yo solo.",
+    "promo_text2": "Quiero ayudar a reducir los residuos, darles una segunda oportunidad a los objetos y, especialmente, facilitar el trabajo de quienes viven de recolectarlos, ahorrándoles tiempo y haciendo sus búsquedas más eficientes.",
+    "promo_text3": "Si te gusta esta iniciativa, ayudame a mantenerla y seguir mejorándola con una pequeña donación.",
+    "promo_donate": "Donate",
+    "promo_now_no": "Not now",
+    "transfer_mercado_pago": "Transfer direct to Mercado Pago"
   },
   "points": {
     "title": "Your community impact",

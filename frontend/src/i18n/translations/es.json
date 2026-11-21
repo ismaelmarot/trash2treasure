@@ -182,7 +182,16 @@
     "rankingDetail": "Competí con otros usuarios en el ranking semanal y desbloqueá logros y desafíos exclusivos mientras ayudás a tu comunidad.",
     "qrScan": "Escaneá para descargar Trash2Treasure",
     "loginRequired": "Inicia sesión para ver tu actividad y gestionar tus publicaciones.",
-    "donations": "Donaciones"
+    "donations": "Donaciones",
+    "promo_donate": "Ayudame con tu aporte",
+    "promo_now_no": "Ahora no",
+    "profile_donations_text": "Ayudame con tu aporte",
+    "promo_text1": "Trash2Treasure es un proyecto personal que desarrollo y mantengo yo solo.",
+    "promo_text2": "Quiero ayudar a reducir los residuos, darles una segunda oportunidad a los objetos y, especialmente, facilitar el trabajo de quienes viven de recolectarlos, ahorrándoles tiempo y haciendo sus búsquedas más eficientes.",
+    "promo_text3": "Si te gusta esta iniciativa, ayudame a mantenerla y seguir mejorándola con una pequeña donación.",
+    "promo_donate": "Ayudame con tu aporte",
+    "promo_now_no": "Ahora no",
+    "transfer_mercado_pago": "Transferencia directa a Mercado Pago"
   },
   "points": {
     "title": "Tu impacto en la comunidad",

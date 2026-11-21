@@ -305,7 +305,7 @@ export function ProfileScreen() {
           <MenuIconWrapper>
             <FiHeart size={20} />
           </MenuIconWrapper>
-          <MenuLabel>{t('profile.donations')}</MenuLabel>
+          <MenuLabel>{t('profile_donations_text')}</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
@@ -585,7 +585,7 @@ No matter how much you can contribute. Every contribution, no matter how small, 
                   margin: '16px auto 0'
                 }}
               >
-                Ayudame con tu aporte
+                Donar
               </button>
             </p>
             <ModalClose onClick={() => setIsDonationsOpen(false)}>×</ModalClose>
@@ -598,13 +598,13 @@ No matter how much you can contribute. Every contribution, no matter how small, 
           <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px' }}>
             <ModalTitle>¿Me ayudás a seguir creciendo? 🌱</ModalTitle>
             <p style={{ color: '#86868b', fontSize: '15px', marginBottom: '24px', lineHeight: 1.5 }}>
-              Trash2Treasure es un proyecto personal que desarrollo y mantengo yo solo.
+              {t('promo_text1')}
             </p>
             <p style={{ color: '#333', fontSize: '15px', marginBottom: '24px', lineHeight: 1.6 }}>
-              Quiero ayudar a reducir los residuos, darles una segunda oportunidad a los objetos y, especialmente, facilitar el trabajo de quienes viven de recolectarlos, ahorrándoles tiempo y haciendo sus búsquedas más eficientes.
+              {t('promo_text2')}
             </p>
             <p style={{ color: '#333', fontSize: '15px', marginBottom: '8px', lineHeight: 1.6 }}>
-              Si te gusta esta iniciativa, podés ayudarme a mantenerla y seguir mejorándola con una pequeña donación.
+              {t('promo_text3')}
             </p>
             <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6, textAlign: 'center' }}>
               <code style={{ textAlign: 'center', display: 'block', margin: '0 auto' }}>marot.ismael</code>
@@ -631,7 +631,7 @@ No matter how much you can contribute. Every contribution, no matter how small, 
               </button>
             </div>
             <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              Transferencia directa a Mercado Pago
+              {t('transfer_mercado_pago')}
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
               <button
@@ -649,7 +649,7 @@ No matter how much you can contribute. Every contribution, no matter how small, 
                   cursor: 'pointer'
                 }}
               >
-                Ayudame con tu aporte
+                {t('promo_donate')}
               </button>
               <button
                 onClick={() => setIsPromoOpen(false)}
@@ -666,7 +666,7 @@ No matter how much you can contribute. Every contribution, no matter how small, 
                   cursor: 'pointer'
                 }}
               >
-                Ahora no
+                {t('promo_now_no')}
               </button>
             </div>
             <ModalClose onClick={() => setIsPromoOpen(false)}>×</ModalClose>
