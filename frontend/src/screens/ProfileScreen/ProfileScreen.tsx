@@ -301,7 +301,7 @@ export function ProfileScreen() {
 
       <Section>
         <SectionTitle>{t('profile.donations')}</SectionTitle>
-        <MenuLabel>{t('profile.donations_subtitle')}</MenuLabel>
+        {/* <MenuLabel>{t('profile.donations_subtitle')}</MenuLabel> */}
         <MenuItem onClick={() => setIsDonationsOpen(true)}>
           <MenuIconWrapper>
             <FiHeart size={20} />
