@@ -189,7 +189,8 @@
     "promo_donate": "Donate",
     "promo_now_no": "Not now",
     "transfer_mercado_pago": "Transfer direct to Mercado Pago",
-    "donations_subtitle": "Help me with your contribution"
+    "donations_subtitle": "Help me with your contribution",
+    "donations_button": "Help me with your contribution"
   },
   "points": {
     "title": "Your community impact",

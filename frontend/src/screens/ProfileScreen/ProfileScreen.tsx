@@ -306,7 +306,7 @@ export function ProfileScreen() {
           <MenuIconWrapper>
             <FiHeart size={20} />
           </MenuIconWrapper>
-          <MenuLabel>{t('profile.donations')}</MenuLabel>
+          <MenuLabel>{t('profile.donations_button')}</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
