@@ -93,7 +93,7 @@ export function ProfileScreen() {
   const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [isDonationsOpen, setIsDonationsOpen] = useState(false)
-  const [inviteEmail, setInviteEmail] = useState('')
+  // const [inviteEmail, setInviteEmail] = useState('')
   const [isPromoOpen, setIsPromoOpen] = useState(false)
   const [currentLang, setCurrentLang] = useState(i18n.language)
 
