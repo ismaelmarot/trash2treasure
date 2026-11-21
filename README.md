@@ -14,6 +14,8 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 &nbsp;&nbsp;&nbsp;&nbsp;
 ![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/trash2treasure?style=for-the-badge)
 &nbsp;&nbsp;&nbsp;&nbsp;
+[![PWABuilder](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ismaelmarot/trash2treasure/main/.badges/pwabuilder.json&style=for-the-badge&logo=pwa)](https://pwabuilder.com/reportcard?site=https://trash2treasure-app.vercel.app/)
+&nbsp;&nbsp;&nbsp;&nbsp;
 
 ### Frontend Stack
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white)
@@ -77,20 +79,96 @@ The app promotes recycling and reuse, allowing users to earn points, complete ch
 
 ------------------------------------------------------------------------------------
 
+<a id="pwa-scorecard"></a>
+## 📊 [PWA SCORECARD](#-table-of-content)
+
+> **Progressive Web App** — Trash2Treasure es una PWA completamente funcional, instalable en dispositivos móviles y de escritorio. El badge superior muestra en vivo la puntuación de [PWABuilder](https://pwabuilder.com), actualizada automáticamente cada semana vía GitHub Actions.
+
+| Categoría | Estado | Detalle |
+|-----------|--------|---------|
+| 🌐 **Manifest** | ✅ 40/53 | name, description, icons (192+512 any & maskable), screenshots (narrow + wide), shortcuts, share_target, categories, launch_handler, display_override, edge_side_panel |
+| ⚡ **Service Worker** | ✅ | Workbox v7 con precaching de assets, navegación offline, caché runtime para API, actualización automática |
+| 🔒 **HTTPS** | ✅ | SSL automático vía Vercel CDN global |
+| 📱 **Instalable** | ✅ | Cumple criterios de instalabilidad (manifest + SW + HTTPS) |
+| 🖼️ **App Capabilities** | ✅ | Shortcuts, Launch Handler, Share Target, Edge Side Panel, Window Controls Overlay |
+
+<details>
+<summary><strong>🔍 Ver detalle de checks</strong></summary>
+
+| Check | Estado | Nivel |
+|-------|--------|-------|
+| **Web App Manifest** |||
+| HasManifest | ✅ | Required |
+| Name | ✅ | Required |
+| ShortName | ✅ | Required |
+| Description | ✅ | Recommended |
+| StartUrl | ✅ | Required |
+| Display | ✅ | Recommended |
+| Scope | ✅ | Optional |
+| Icons | ✅ | Required |
+| HasSquare192x192PngAnyPurposeIcon | ✅ | Required |
+| HasSquare512x512PngAnyPurposeIcon | ✅ | Recommended |
+| IconsAreFetchable | ✅ | Required |
+| IconTypesAreValid | ✅ | Required |
+| IconTypesAreNotIcos | ✅ | Required |
+| IconSizesAreValid | ⚠️ | Recommended |
+| Screenshots | ✅ | Recommended |
+| ScreenshotsAreFetchable | ✅ | Recommended |
+| HasWideScreenshot | ✅ | Optional |
+| HasNarrowScreenshot | ✅ | Optional |
+| Shortcuts | ✅ | Feature |
+| ShortcutIconsAreFetchable | ✅ | Required |
+| Categories | ✅ | Optional |
+| ThemeColor | ✅ | Recommended |
+| BackgroundColor | ✅ | Recommended |
+| Id | ✅ | Recommended |
+| Language | ✅ | Optional |
+| Direction | ✅ | Optional |
+| DisplayOverride | ✅ | Optional |
+| WindowControlsOverlay | ✅ | Feature |
+| LaunchHandler | ✅ | Feature |
+| ShareTarget | ✅ | Feature |
+| EdgeSidePanel | ✅ | Feature |
+| PreferRelatedApplication | ✅ | Optional |
+| **Service Worker** |||
+| HasServiceWorker | ✅ | Recommended |
+| ServiceWorkerIsNotEmpty | ✅ | Recommended |
+| OfflineSupport | ❌ | Recommended |
+| **App Capabilities (faltantes)** |||
+| FileHandlers | ❌ | Feature |
+| PeriodicSync | ❌ | Feature |
+| BackgroundSync | ❌ | Feature |
+| PushNotifications | ❌ | Feature |
+| ProtocolHandlers | ❌ | Feature |
+| Widgets | ❌ | Feature |
+| TabbedDisplay | ❌ | Feature |
+| NoteTaking | ❌ | Feature |
+
+</details>
+
+<br>
+
+[![Ver reporte completo en PWABuilder](https://img.shields.io/badge/Ver_reporte_completo-PWABuilder-0071e3?style=for-the-badge&logo=pwa)](https://pwabuilder.com/reportcard?site=https://trash2treasure-app.vercel.app/)
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
+
 ## 📑 [TABLE OF CONTENT](#-table-of-content)
 
-1. [Highlights](#highlights)
-2. [Core Features](#core-features)
-3. [Technologies Stack](#technologies-stack)
-4. [Codebase Layer Map](#codebase-layer-map)
-5. [Installation](#installation)
-6. [Usage](#usage)
-7. [Project Structure](#project-structure)
-8. [API Endpoints](#api-endpoints)
-9. [Database Models](#database-models)
-10. [Screenshots](#screenshots)
-11. [Live Demo](#live-demo)
-12. [Versions](#versions)
+1. [PWA Scorecard](#pwa-scorecard)
+2. [Highlights](#highlights)
+3. [Core Features](#core-features)
+4. [Technologies Stack](#technologies-stack)
+5. [Codebase Layer Map](#codebase-layer-map)
+6. [Installation](#installation)
+7. [Usage](#usage)
+8. [Project Structure](#project-structure)
+9. [API Endpoints](#api-endpoints)
+10. [Database Models](#database-models)
+11. [Screenshots](#screenshots)
+12. [Live Demo](#live-demo)
+13. [Versions](#versions)
 
 &nbsp;&nbsp;&nbsp;&nbsp;
 

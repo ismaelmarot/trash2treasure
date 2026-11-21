@@ -391,8 +391,8 @@ router.get('/achievements-challenges', authenticateToken, async (req, res) => {
 // Obtener ranking de usuarios
 router.get('/ranking', authenticateToken, async (req, res) => {
   try {
-    // Obtener todos los usuarios verificados
-    const allUsers = await User.find({ is_verified: true }, 'name profile_image');
+    // Obtener todos los usuarios registrados (incluyendo no verificados)
+    const allUsers = await User.find({}, 'name profile_image');
     
     // Obtener sus UserPoints
     const allPoints = await UserPoints.find({ 

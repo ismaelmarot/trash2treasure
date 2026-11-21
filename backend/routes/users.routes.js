@@ -1,7 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const sgMail = require('@sendgrid/mail');
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
@@ -10,8 +11,8 @@ const { User, UserPoints } = require('../db/models');
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'your-default-secret-key';
 
-// Configurar SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// Configurar Resend (API key configurada arriba)
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Configurar Cloudinary
 cloudinary.config({
@@ -67,7 +68,7 @@ router.post('/register', async (req, res) => {
       email,
       password_hash: hash,
       verification_code: verificationCode,
-      is_verified: false
+      is_verified: true
     });
 
     await newUser.save();
@@ -79,7 +80,7 @@ router.post('/register', async (req, res) => {
     const msg = {
       to: email,
       from: {
-        email: 'trash2tresure.app@gmail.com',
+        email: 'trash2treasure.app@gmail.com',
         name: 'Trash2Treasure'
       },
       subject: 'Código de verificación - Trash2Treasure',
@@ -98,19 +99,40 @@ router.post('/register', async (req, res) => {
       `
     };
 
+    let emailSent = false;
     try {
-      await sgMail.send(msg);
+      await resend.emails.send({
+        from: 'Trash2Treasure <onboarding@resend.dev>',
+        to: email,
+        subject: 'Código de verificación - Trash2Treasure',
+        text: `Hola ${name},\n\nTu código de verificación es: ${verificationCode}\n\nEste código expira en 10 minutos.\n\nSaludos,\nEquipo Trash2Treasure`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1d1d1f;">¡Bienvenido a Trash2Treasure!</h2>
+            <p>Hola ${name},</p>
+            <p>Tu código de verificación es:</p>
+            <div style="background-color: #f5f5f7; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+              <h1 style="font-size: 32px; letter-spacing: 8px; color: #1d1d1f; margin: 0;">${verificationCode}</h1>
+            </div>
+            <p>Este código expira en 10 minutos.</p>
+            <p>Saludos,<br>Equipo Trash2Treasure</p>
+          </div>
+        `,
+      });
+      emailSent = true;
       console.log(`✅ Email de verificación enviado a ${email}`);
     } catch (emailError) {
       console.error('Error enviando email:', emailError);
-      // No fallamos el registro solo porque falló el email
     }
     
     res.json({ 
       id: newUser._id, 
       name: newUser.name, 
       email: newUser.email, 
-      message: 'Usuario registrado. Por favor verifica tu email.' 
+      message: emailSent 
+        ? 'Usuario registrado. Por favor verifica tu email.' 
+        : 'Usuario registrado, pero no se pudo enviar el email de verificación. Por contacto soporte.',
+      emailSent
     });
 
   } catch (error) {
@@ -127,7 +149,8 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    if (!user.is_verified) {
+    // Verificación de email deshabilitada temporalmente (pendiente de SendGrid)
+    if (false && !user.is_verified) {
       return res.status(403).json({ error: 'Account not verified', needsVerification: true });
     }
 
@@ -174,7 +197,7 @@ router.post('/forgot-password', async (req, res) => {
     const msg = {
       to: user.email,
       from: {
-        email: 'trash2tresure.app@gmail.com',
+        email: 'trash2treasure.app@gmail.com',
         name: 'Trash2Treasure'
       },
       subject: 'Recuperación de cuenta - Trash2Treasure',
@@ -195,7 +218,25 @@ router.post('/forgot-password', async (req, res) => {
     };
 
     try {
-      await sgMail.send(msg);
+      await resend.emails.send({
+        from: 'Trash2Treasure <onboarding@resend.dev>',
+        to: user.email,
+        subject: 'Recuperación de cuenta - Trash2Treasure',
+        text: `Hola ${user.name},\n\nAquí están tus datos de acceso:\n\nUsuario: ${user.email}\nContraseña temporal: ${newPassword}\n\nTe recomendamos cambiar tu contraseña una vez que ingreses.\n\nSaludos,\nEquipo Trash2Treasure`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1d1d1f;">Recuperación de cuenta</h2>
+            <p>Hola ${user.name},</p>
+            <p>Tus datos de acceso son:</p>
+            <div style="background-color: #f5f5f7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 0 0 10px 0;"><strong>Usuario:</strong> ${user.email}</p>
+              <p style="margin: 0;"><strong>Contraseña temporal:</strong> <span style="font-family: monospace; font-size: 18px; letter-spacing: 2px; color: #1d1d1f;">${newPassword}</span></p>
+            </div>
+            <p style="color: #666; font-size: 13px;">Te recomendamos cambiar tu contraseña una vez que ingreses.</p>
+            <p>Saludos,<br>Equipo Trash2Treasure</p>
+          </div>
+        `,
+      });
       console.log(`✅ Email de recuperación enviado a ${user.email}`);
     } catch (emailError) {
       console.error('Error enviando email de recuperación:', emailError);
@@ -474,9 +515,9 @@ router.post('/invite', authenticateToken, async (req, res) => {
     
     console.log('Sending email to:', email);
     
-    await sgMail.send({
+    await resend.emails.send({
+      from: process.env.APP_EMAIL ? `Trash2Treasure <${process.env.APP_EMAIL}>` : 'Trash2Treasure <onboarding@resend.dev>',
       to: email,
-      from: process.env.APP_EMAIL || 'noreply@trash2treasure-app.vercel.app',
       subject: '¡Te invito a usar Trash2Treasure! 🌍',
       html: html,
     });

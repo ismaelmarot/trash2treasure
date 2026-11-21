@@ -20,6 +20,7 @@ export default defineConfig({
         orientation: 'portrait',
         scope: '/',
         start_url: '/',
+        id: '/',
         lang: 'es',
         dir: 'ltr',
         categories: ['utilities', 'lifestyle'],
@@ -29,7 +30,19 @@ export default defineConfig({
           client_mode: 'focus-existing'
         },
         handle_links: 'preferred',
-        edge_side_panel: {},
+        edge_side_panel: {
+          preferred_width: 400
+        },
+        share_target: {
+          action: '/add-item',
+          method: 'GET',
+          enctype: 'application/x-www-form-urlencoded',
+          params: {
+            title: 'title',
+            text: 'text',
+            url: 'url'
+          }
+        },
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -124,12 +137,12 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/trash2treasure-3sw4\.onrender\.com\/api\//,
-            handler: 'NetworkFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24
+                maxAgeSeconds: 60 * 60 * 24 * 7
               }
             }
           }
