@@ -547,12 +547,14 @@ No matter how much you can contribute. Every contribution, no matter how small, 
               <button
                 onClick={copyAlias}
                 style={{
-                  background: 'none',
+                  flex: 1,
+                  padding: '12px',
+                  borderRadius: '12px',
                   border: '1px solid #42a59f',
+                  background: 'transparent',
                   color: '#42a59f',
-                  padding: '8px 16px',
-                  borderRadius: '20px',
                   fontSize: '14px',
+                  fontWeight: 500,
                   cursor: 'pointer',
                   marginRight: '12px',
                   marginBottom: '12px'
@@ -576,11 +578,10 @@ No matter how much you can contribute. Every contribution, no matter how small, 
                   color: '#ffffff',
                   fontSize: '16px',
                   fontWeight: 600,
-                  cursor: 'pointer',
-                  marginTop: '16px'
+                  cursor: 'pointer'
                 }}
               >
-                Donar con Mercado Pago
+                Donar
               </button>
             </p>
             <ModalClose onClick={() => setIsDonationsOpen(false)}>×</ModalClose>
@@ -598,8 +599,33 @@ No matter how much you can contribute. Every contribution, no matter how small, 
             <p style={{ color: '#333', fontSize: '15px', marginBottom: '24px', lineHeight: 1.6 }}>
               Quiero ayudar a reducir los residuos, darles una segunda oportunidad a los objetos y, especialmente, facilitar el trabajo de quienes viven de recolectarlos, ahorrándoles tiempo y haciendo sus búsquedas más eficientes.
             </p>
-            <p style={{ color: '#333', fontSize: '15px', marginBottom: '32px', lineHeight: 1.6 }}>
+            <p style={{ color: '#333', fontSize: '15px', marginBottom: '8px', lineHeight: 1.6 }}>
               Si te gusta esta iniciativa, podés ayudarme a mantenerla y seguir mejorándola con una pequeña donación.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              <strong>Alias:</strong> <code>marot.ismael</code>
+            </p>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+              <button
+                onClick={copyAlias}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  borderRadius: '12px',
+                  border: '1px solid #42a59f',
+                  background: 'transparent',
+                  color: '#42a59f',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  cursor: 'pointer'
+                }}
+                aria-label="Copiar alias"
+              >
+                Copiar
+              </button>
+            </div>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
+              Transferencia directa a Mercado Pago
             </p>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button
@@ -616,7 +642,7 @@ No matter how much you can contribute. Every contribution, no matter how small, 
                   cursor: 'pointer'
                 }}
               >
-                Apoyar el proyecto
+                Donar
               </button>
               <button
                 onClick={() => setIsPromoOpen(false)}
