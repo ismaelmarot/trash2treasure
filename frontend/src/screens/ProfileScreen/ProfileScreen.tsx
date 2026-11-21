@@ -542,46 +542,50 @@ Your contribution helps me cover maintenance, infrastructure and development cos
 No matter how much you can contribute. Every contribution, no matter how small, means a lot and is a great motivation to continue.
             </p>
             <p style={{ fontSize: '15px', color: '#333', marginBottom: '32px', lineHeight: 1.6, textAlign: 'center' }}>
-              <strong>Alias:</strong> <code>marot.ismael</code>
+              <strong>Alias:</strong> <code style={{ textAlign: 'center', display: 'block' }}>marot.ismael</code>
               <br />
               <button
                 onClick={copyAlias}
                 style={{
-                  flex: 1,
-                  padding: '12px',
-                  borderRadius: '12px',
+                  width: 'auto',
+                  maxWidth: '120px',
+                  padding: '8px 12px',
+                  borderRadius: '20px',
                   border: '1px solid #42a59f',
                   background: 'transparent',
                   color: '#42a59f',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: 500,
                   cursor: 'pointer',
-                  marginRight: '12px',
-                  marginBottom: '12px'
+                  alignSelf: 'center',
+                  margin: '0 auto'
                 }}
                 aria-label="Copiar alias"
               >
                 Copiar
               </button>
-              <span style={{ color: '#4CAF50', fontSize: '14px', display: copyFeedback ? 'block' : 'none' }}>¡Alias copiado!</span>
-              <p style={{ fontSize: '14px', color: '#666', marginTop: '8px', textAlign: 'center' }}>
+              <span style={{ color: '#4CAF50', fontSize: '12px', marginTop: '4px', display: copyFeedback ? 'block' : 'none', textAlign: 'center' }}>¡Alias copiado!</span>
+              <p style={{ fontSize: '13px', color: '#666', marginTop: '8px', textAlign: 'center' }}>
                 Transferencia directa a Mercado Pago
               </p>
               <button
                 onClick={() => window.open('https://www.mercadopago.com.ar/', '_blank')}
                 style={{
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: '12px',
+                  width: 'auto',
+                  maxWidth: '120px',
+                  padding: '8px 12px',
+                  borderRadius: '20px',
                   border: 'none',
                   background: '#42a59f',
                   color: '#ffffff',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   fontWeight: 600,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  alignSelf: 'center',
+                  margin: '16px auto 0'
                 }}
               >
-                Donar
+                Ayudame con tu aporte
               </button>
             </p>
             <ModalClose onClick={() => setIsDonationsOpen(false)}>×</ModalClose>
@@ -602,22 +606,24 @@ No matter how much you can contribute. Every contribution, no matter how small, 
             <p style={{ color: '#333', fontSize: '15px', marginBottom: '8px', lineHeight: 1.6 }}>
               Si te gusta esta iniciativa, podés ayudarme a mantenerla y seguir mejorándola con una pequeña donación.
             </p>
-            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
-              <strong>Alias:</strong> <code>marot.ismael</code>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6, textAlign: 'center' }}>
+              <code style={{ textAlign: 'center', display: 'block', margin: '0 auto' }}>marot.ismael</code>
             </p>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
               <button
                 onClick={copyAlias}
                 style={{
-                  flex: 1,
-                  padding: '12px',
-                  borderRadius: '12px',
+                  width: 'auto',
+                  maxWidth: '120px',
+                  padding: '8px 12px',
+                  borderRadius: '20px',
                   border: '1px solid #42a59f',
                   background: 'transparent',
                   color: '#42a59f',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: 500,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  alignSelf: 'center'
                 }}
                 aria-label="Copiar alias"
               >
@@ -627,33 +633,35 @@ No matter how much you can contribute. Every contribution, no matter how small, 
             <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6 }}>
               Transferencia directa a Mercado Pago
             </p>
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
               <button
                 onClick={() => setIsDonationsOpen(true)}
                 style={{
-                  flex: 1,
-                  padding: '12px',
-                  borderRadius: '12px',
+                  width: 'auto',
+                  maxWidth: '120px',
+                  padding: '8px 12px',
+                  borderRadius: '20px',
                   border: 'none',
                   background: '#42a59f',
                   color: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer'
                 }}
               >
-                Donar
+                Ayudame con tu aporte
               </button>
               <button
                 onClick={() => setIsPromoOpen(false)}
                 style={{
-                  flex: 1,
-                  padding: '12px',
-                  borderRadius: '12px',
+                  width: 'auto',
+                  maxWidth: '120px',
+                  padding: '8px 12px',
+                  borderRadius: '20px',
                   border: '1px solid #aaa',
                   background: 'transparent',
                   color: '#333',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontWeight: 500,
                   cursor: 'pointer'
                 }}
