@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { FiInfo, FiHelpCircle, FiBookOpen, FiClock, FiGlobe, FiLogOut, FiSmartphone, FiMail, FiUserPlus, FiMessageCircle } from 'react-icons/fi'
+import { FiInfo, FiHelpCircle, FiBookOpen, FiClock, FiGlobe, FiLogOut, FiSmartphone, FiMail, FiUserPlus, FiMessageCircle, FiHeart } from 'react-icons/fi'
 import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
@@ -87,7 +87,9 @@ export function ProfileScreen() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
   const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const [isDonationsOpen, setIsDonationsOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
+  const [isPromoOpen, setIsPromoOpen] = useState(false)
   const [currentLang, setCurrentLang] = useState(i18n.language)
 
   const changeLanguage = (lang: string) => {
@@ -132,10 +134,48 @@ export function ProfileScreen() {
     }
   }, [isAuthenticated, token])
 
+  useEffect(() => {
+    const sixtySeconds = 60 * 1000
+    const sevenDays = 7 * 24 * 60 * 60 * 1000
+
+    const showPromo = () => {
+      const lastShow = localStorage.getItem('trash2treasure_promo_last_show')
+      const now = Date.now()
+
+      if (lastShow) {
+        const lastTime = parseInt(lastShow, 10)
+        if (now - lastTime < sevenDays) return
+        if (now - lastTime < sixtySeconds) return
+      }
+
+      if (Math.random() > 0.2) return
+
+      setIsPromoOpen(true)
+
+      localStorage.setItem('trash2treasure_promo_last_show', now.toString())
+    }
+
+    const timeoutId = setTimeout(showPromo, sixtySeconds)
+    return () => clearTimeout(timeoutId)
+  }, [isAuthenticated])
+
   const logout = () => {
     authLogout();
     navigate('/welcome')
   };
+
+  const copyAlias = () => {
+    try {
+      navigator.clipboard.writeText('marot.ismael')
+      setCopyFeedback(true)
+      setTimeout(() => setCopyFeedback(false), 2000)
+    } catch (err) {
+      console.error('Error copying alias:', err)
+      setCopyFeedback(false)
+    }
+  }
+
+  const [copyFeedback, setCopyFeedback] = useState(false)
 
   if (!isAuthenticated) {
     return (
@@ -255,6 +295,17 @@ export function ProfileScreen() {
             <FiMessageCircle size={20} />
           </MenuIconWrapper>
           <MenuLabel>WhatsApp</MenuLabel>
+          <IconChevron />
+        </MenuItem>
+      </Section>
+
+      <Section>
+        <SectionTitle>{t('profile.donations')}</SectionTitle>
+        <MenuItem onClick={() => setIsDonationsOpen(true)}>
+          <MenuIconWrapper>
+            <FiHeart size={20} />
+          </MenuIconWrapper>
+          <MenuLabel>{t('profile.donations')}</MenuLabel>
           <IconChevron />
         </MenuItem>
       </Section>
@@ -474,6 +525,121 @@ export function ProfileScreen() {
           </ModalContent>
         </ModalOverlay>
       )}
+
+      {isDonationsOpen && (
+        <ModalOverlay onClick={() => setIsDonationsOpen(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>Pequeñas acciones, grandes cambios. 🌱</ModalTitle>
+<p style={{ fontSize: '16px', color: '#666', marginBottom: '24px', textAlign: 'center' }}>
+              Ayudame a que Trash2Treasure siga creciendo.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '24px', lineHeight: 1.6, textAlign: 'center' }}>
+              Trash2Treasure es un proyecto personal que desarrollo y mantengo por mi cuenta, con una idea simple: conectar personas, recuperar objetos y darles una segunda oportunidad.
+But there is more behind this initiative: helping those who live collecting and recovering waste, making their work easier, saving them time and making their searches more efficient. They can find more easily what other people no longer need and that still has value.
+Behind this application there are many hours of work, learning and dedication. Each new functionality, improvement and update is part of an independent effort to grow this initiative.
+If you like the project and want to help me move forward, you can collaborate with a small donation.
+Your contribution helps me cover maintenance, infrastructure and development costs, and allows me to keep dedicating time to this idea.
+No matter how much you can contribute. Every contribution, no matter how small, means a lot and is a great motivation to continue.
+            </p>
+            <p style={{ fontSize: '15px', color: '#333', marginBottom: '32px', lineHeight: 1.6, textAlign: 'center' }}>
+              <strong>Alias:</strong> <code>marot.ismael</code>
+              <br />
+              <button
+                onClick={copyAlias}
+                style={{
+                  background: 'none',
+                  border: '1px solid #42a59f',
+                  color: '#42a59f',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  marginRight: '12px',
+                  marginBottom: '12px'
+                }}
+                aria-label="Copiar alias"
+              >
+                Copiar
+              </button>
+              <span style={{ color: '#4CAF50', fontSize: '14px', display: copyFeedback ? 'block' : 'none' }}>¡Alias copiado!</span>
+              <p style={{ fontSize: '14px', color: '#666', marginTop: '8px', textAlign: 'center' }}>
+                Transferencia directa a Mercado Pago
+              </p>
+              <button
+                onClick={() => window.open('https://www.mercadopago.com.ar/', '_blank')}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  background: '#42a59f',
+                  color: '#ffffff',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  marginTop: '16px'
+                }}
+              >
+                Donar con Mercado Pago
+              </button>
+            </p>
+            <ModalClose onClick={() => setIsDonationsOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {isPromoOpen && (
+        <ModalOverlay onClick={() => setIsPromoOpen(false)} style={{ zIndex: 1001 }}>
+          <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '24px 16px' }}>
+            <ModalTitle>¿Me ayudás a seguir creciendo? 🌱</ModalTitle>
+            <p style={{ color: '#86868b', fontSize: '15px', marginBottom: '24px', lineHeight: 1.5 }}>
+              Trash2Treasure es un proyecto personal que desarrollo y mantengo yo solo.
+            </p>
+            <p style={{ color: '#333', fontSize: '15px', marginBottom: '24px', lineHeight: 1.6 }}>
+              Quiero ayudar a reducir los residuos, darles una segunda oportunidad a los objetos y, especialmente, facilitar el trabajo de quienes viven de recolectarlos, ahorrándoles tiempo y haciendo sus búsquedas más eficientes.
+            </p>
+            <p style={{ color: '#333', fontSize: '15px', marginBottom: '32px', lineHeight: 1.6 }}>
+              Si te gusta esta iniciativa, podés ayudarme a mantenerla y seguir mejorándola con una pequeña donación.
+            </p>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                onClick={() => setIsDonationsOpen(true)}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  background: '#42a59f',
+                  color: '#ffffff',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Apoyar el proyecto
+              </button>
+              <button
+                onClick={() => setIsPromoOpen(false)}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  borderRadius: '12px',
+                  border: '1px solid #aaa',
+                  background: 'transparent',
+                  color: '#333',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  cursor: 'pointer'
+                }}
+              >
+                Ahora no
+              </button>
+            </div>
+            <ModalClose onClick={() => setIsPromoOpen(false)}>×</ModalClose>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
     </Container>
   )
 }
