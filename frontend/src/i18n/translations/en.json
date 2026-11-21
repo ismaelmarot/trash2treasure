@@ -181,7 +181,8 @@
     "rankingTitle": "Ranking and achievements",
     "rankingDetail": "Compete with other users in the weekly ranking and unlock exclusive achievements and challenges while helping your community.",
     "qrScan": "Scan to download Trash2Treasure",
-    "loginRequired": "Log in to see your activity and manage your posts."
+    "loginRequired": "Log in to see your activity and manage your posts.",
+    "donations": "Donations"
   },
   "points": {
     "title": "Your community impact",
