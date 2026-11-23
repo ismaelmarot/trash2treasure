@@ -392,11 +392,11 @@ export function ProfileScreen() {
               gap: '12px',
               padding: '8px 0'
             }}>
-              <img src={achievement01} alt="Achievement 1" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
-              <img src={achievement02} alt="Achievement 2" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
-              <img src={achievement03} alt="Achievement 3" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
-              <img src={achievement04} alt="Achievement 4" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
-              <img src={achievement05} alt="Achievement 5" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement01} alt="Achievement 1" style={{ width: '100%', maxWidth: '280px', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
+              <img src={achievement02} alt="Achievement 2" style={{ width: '100%', maxWidth: '280px', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
+              <img src={achievement03} alt="Achievement 3" style={{ width: '100%', maxWidth: '280px', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
+              <img src={achievement04} alt="Achievement 4" style={{ width: '100%', maxWidth: '280px', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
+              <img src={achievement05} alt="Achievement 5" style={{ width: '100%', maxWidth: '280px', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
             </div>
             <ModalClose onClick={() => setIsComingSoonOpen(false)}>×</ModalClose>
           </ModalContent>
