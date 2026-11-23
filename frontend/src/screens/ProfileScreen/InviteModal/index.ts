@@ -1,1 +1,3 @@
-export default InviteModal
+import { InviteModal } from './InviteModal'
+
+export { InviteModal }

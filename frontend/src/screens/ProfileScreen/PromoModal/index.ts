@@ -1,1 +1,3 @@
-export default PromoModal
+import { PromoModal } from './PromoModal'
+
+export { PromoModal }

@@ -2,6 +2,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function QrModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+  if (!isOpen) return null
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>

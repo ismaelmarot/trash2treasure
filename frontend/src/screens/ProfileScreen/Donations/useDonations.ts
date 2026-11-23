@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 export function useDonations() {
   const [isDonationsOpen, setIsDonationsOpen] = useState(false)

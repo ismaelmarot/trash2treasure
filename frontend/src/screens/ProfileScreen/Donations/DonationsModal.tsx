@@ -32,6 +32,7 @@ export function DonationsModal({ onClose }: { onClose: () => void }) {
               marginRight: '12px',
               marginBottom: '12px'
             }}
+            onClick={() => setCopyFeedback(true)}
             aria-label="Copiar alias"
           >
             Copiar

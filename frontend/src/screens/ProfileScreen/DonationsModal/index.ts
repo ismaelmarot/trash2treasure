@@ -1,1 +1,3 @@
-export default DonationsModal
+import { DonationsModal } from './DonationsModal'
+
+export { DonationsModal }

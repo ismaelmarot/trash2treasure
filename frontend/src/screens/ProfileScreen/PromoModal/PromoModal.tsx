@@ -1,6 +1,7 @@
 import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function PromoModal({ isOpen, onClose, setIsDonationsOpen }: { isOpen: boolean, onClose: () => void, setIsDonationsOpen: () => void }) {
+  if (!isOpen) return null
   const copyAlias = () => {
     try {
       navigator.clipboard.writeText('marot.ismael')

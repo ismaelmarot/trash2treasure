@@ -158,6 +158,7 @@ export const IconChevron = styled(ICONS.chevronRight)`
 export const GoOut = styled(ICONS.goOut)`
     font-size: 1.5rem;
     color: ${COLORS.danger};
+<<<<<<< Updated upstream
 `
 
 export const PointsCard = styled.div`
@@ -398,4 +399,6 @@ export const ConfirmButton = styled.button<{ $variant?: 'cancel' | 'danger' }>`
             transform: translateY(0);
         }
     `}
+=======
+>>>>>>> Stashed changes
 `
