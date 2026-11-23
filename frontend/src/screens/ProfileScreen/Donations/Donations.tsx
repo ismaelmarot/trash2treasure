@@ -1,6 +1,5 @@
-import React from 'react'
 import { useDonations } from './useDonations'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function Donations() {
   const {

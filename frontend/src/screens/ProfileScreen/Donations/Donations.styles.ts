@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { COLORS } from '@/constants'
 
 export const ModalOverlay = styled.div`
     position: fixed;

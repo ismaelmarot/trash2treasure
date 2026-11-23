@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function PromoModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const copyAlias = () => {

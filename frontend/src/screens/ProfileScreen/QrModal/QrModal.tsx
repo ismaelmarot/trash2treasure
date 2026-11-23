@@ -1,6 +1,6 @@
 import React from 'react'
 import { QRCodeSVG } from 'qrcode.react'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function QrModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   return (

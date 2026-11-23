@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function InviteModal({ isOpen, onClose, setIsInviteSentOpen }: { isOpen: boolean, onClose: () => void, setIsInviteSentOpen: (value: boolean) => void }) {
   const [inviteEmail, setInviteEmail] = useState('')
