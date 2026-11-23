@@ -1,4 +1,3 @@
-import React from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 

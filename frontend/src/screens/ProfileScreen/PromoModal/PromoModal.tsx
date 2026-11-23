@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
 import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
-export function PromoModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+export function PromoModal({ isOpen, onClose, setIsDonationsOpen }: { isOpen: boolean, onClose: () => void, setIsDonationsOpen: () => void }) {
   const copyAlias = () => {
     try {
       navigator.clipboard.writeText('marot.ismael')
@@ -52,7 +51,7 @@ export function PromoModal({ isOpen, onClose }: { isOpen: boolean, onClose: () =
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
           <button
-            onClick={() => setIsDonationsOpen(true)}
+            onClick={setIsDonationsOpen}
             style={{
               width: 'auto',
               maxWidth: '120px',
@@ -69,7 +68,7 @@ export function PromoModal({ isOpen, onClose }: { isOpen: boolean, onClose: () =
             {/* promo_donate would be inserted here via i18n */}
           </button>
           <button
-            onClick={() => setIsPromoOpen(false)}
+            onClick={onClose}
             style={{
               width: 'auto',
               maxWidth: '120px',

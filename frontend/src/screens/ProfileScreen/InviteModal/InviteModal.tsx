@@ -16,7 +16,7 @@ export function InviteModal({ isOpen, onClose, setIsInviteSentOpen }: { isOpen: 
       })
       setInviteEmail('')
       setIsInviteSentOpen(true)
-      setIsInviteModalOpen(false)
+      onClose()
     } catch (err) {
       console.error('Error sending invite:', err)
     }

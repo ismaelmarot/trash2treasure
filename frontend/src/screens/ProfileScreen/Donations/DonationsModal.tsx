@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
-export function DonationsModal() {
+export function DonationsModal({ onClose }: { onClose: () => void }) {
+  const [copyFeedback, setCopyFeedback] = useState(false)
+
   return (
-    <ModalOverlay onClick={() => setIsDonationsOpen(false)}>
+    <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalTitle>Pequeñas acciones, grandes cambios. 🌱</ModalTitle>
         <p style={{ fontSize: '16px', color: '#666', marginBottom: '24px', textAlign: 'center' }}>
@@ -34,7 +36,7 @@ export function DonationsModal() {
           >
             Copiar
           </button>
-          <span style={{ color: '#4CAF50', fontSize: '14px', display: 'none' }}>¡Alias copiado!</span>
+          <span style={{ color: '#4CAF50', fontSize: '14px', display: copyFeedback ? 'block' : 'none' }}>¡Alias copiado!</span>
           <p style={{ fontSize: '14px', color: '#666', marginTop: '8px', textAlign: 'center' }}>
             Transferencia directa a Mercado Pago
           </p>
@@ -55,7 +57,7 @@ export function DonationsModal() {
             Donar
           </button>
         </p>
-        <ModalClose onClick={() => setIsDonationsOpen(false)}>×</ModalClose>
+        <ModalClose onClick={onClose}>×</ModalClose>
       </ModalContent>
     </ModalOverlay>
   )

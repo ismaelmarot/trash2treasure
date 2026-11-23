@@ -409,7 +409,7 @@ export function ProfileScreen() {
 
       <DonationsModal isOpen={isDonationsOpen} onClose={() => setIsDonationsOpen(false)} />
 
-      <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} />
+      <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} setIsDonationsOpen={setIsDonationsOpen} />
 
     </Container>
   )

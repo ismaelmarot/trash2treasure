@@ -3,14 +3,9 @@ import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/Pr
 
 export function Donations() {
   const {
-    isDonationsOpen,
     setIsDonationsOpen,
-    isPromoOpen,
-    setIsPromoOpen,
     copyFeedback,
-    setCopyFeedback,
-    copyAlias,
-    profileData
+    copyAlias
   } = useDonations()
 
   return (
