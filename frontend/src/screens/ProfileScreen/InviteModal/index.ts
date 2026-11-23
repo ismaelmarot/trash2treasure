@@ -1,3 +1,3 @@
-import { InviteModal } from './InviteModal'
-
-export { InviteModal }
+export { InviteModal } from './InviteModal'
+export { InviteModalstyles } from './InviteModal.styles'
+export default InviteModal

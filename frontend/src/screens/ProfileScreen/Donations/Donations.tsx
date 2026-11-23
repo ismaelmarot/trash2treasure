@@ -1,11 +1,17 @@
+import React from 'react'
 import { useDonations } from './useDonations'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
 
 export function Donations() {
   const {
+    isDonationsOpen,
     setIsDonationsOpen,
+    isPromoOpen,
+    setIsPromoOpen,
     copyFeedback,
-    copyAlias
+    setCopyFeedback,
+    copyAlias,
+    profileData
   } = useDonations()
 
   return (

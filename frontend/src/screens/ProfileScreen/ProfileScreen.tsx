@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
-import { DonationsModal } from '@/screens/ProfileScreen/DonationsModal'
-import { PromoModal } from '@/screens/ProfileScreen/PromoModal'
-import { InviteModal } from '@/screens/ProfileScreen/InviteModal'
-import { InviteSentModal } from '@/screens/ProfileScreen/InviteSentModal'
-import { QrModal } from '@/screens/ProfileScreen/QrModal'
+import DonationsModal from '@/screens/ProfileScreen/DonationsModal'
+import PromoModal from '@/screens/ProfileScreen/PromoModal'
+import InviteModal from '@/screens/ProfileScreen/InviteModal'
+import InviteSentModal from '@/screens/ProfileScreen/InviteSentModal'
+import QrModal from '@/screens/ProfileScreen/QrModal'
 import achievement01 from '@/assets/achievements-img/achievement-01.png'
 import achievement02 from '@/assets/achievements-img/achievement-02.png'
 import achievement03 from '@/assets/achievements-img/achievement-03.png'
@@ -93,8 +93,7 @@ export function ProfileScreen() {
   const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [isDonationsOpen, setIsDonationsOpen] = useState(false)
-  const setIsDonationsOpenHandler = () => setIsDonationsOpen(true)
-  // const [inviteEmail, setInviteEmail] = useState('')
+  const [inviteEmail, setInviteEmail] = useState('')
   const [isPromoOpen, setIsPromoOpen] = useState(false)
   const [currentLang, setCurrentLang] = useState(i18n.language)
 
@@ -393,11 +392,11 @@ export function ProfileScreen() {
               gap: '12px',
               padding: '8px 0'
             }}>
-              <img src={achievement01} alt="Achievement 1" style={{ width: '100%', maxWidth: '100%', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
-              <img src={achievement02} alt="Achievement 2" style={{ width: '100%', maxWidth: '100%', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
-              <img src={achievement03} alt="Achievement 3" style={{ width: '100%', maxWidth: '100%', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
-              <img src={achievement04} alt="Achievement 4" style={{ width: '100%', maxWidth: '100%', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
-              <img src={achievement05} alt="Achievement 5" style={{ width: '100%', maxWidth: '100%', margin: '0 auto', borderRadius: '16px', height: 'auto' }} />
+              <img src={achievement01} alt="Achievement 1" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement02} alt="Achievement 2" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement03} alt="Achievement 3" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement04} alt="Achievement 4" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
+              <img src={achievement05} alt="Achievement 5" style={{ width: '80%', margin: '0 auto', borderRadius: '16px' }} />
             </div>
             <ModalClose onClick={() => setIsComingSoonOpen(false)}>×</ModalClose>
           </ModalContent>
@@ -410,7 +409,7 @@ export function ProfileScreen() {
 
       <DonationsModal isOpen={isDonationsOpen} onClose={() => setIsDonationsOpen(false)} />
 
-      <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} setIsDonationsOpen={setIsDonationsOpenHandler} />
+      <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} />
 
     </Container>
   )

@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
+import React, { useState } from 'react'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
 
 export function DonationsModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
-  if (!isOpen) return null
   const [copyFeedback, setCopyFeedback] = useState(false)
 
   const copyAlias = () => {

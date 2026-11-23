@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
+import React, { useState } from 'react'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
 
 export function InviteModal({ isOpen, onClose, setIsInviteSentOpen }: { isOpen: boolean, onClose: () => void, setIsInviteSentOpen: (value: boolean) => void }) {
-  if (!isOpen) return null
   const [inviteEmail, setInviteEmail] = useState('')
 
   const handleSendInvite = async () => {
@@ -17,7 +16,7 @@ export function InviteModal({ isOpen, onClose, setIsInviteSentOpen }: { isOpen: 
       })
       setInviteEmail('')
       setIsInviteSentOpen(true)
-      onClose()
+      setIsInviteModalOpen(false)
     } catch (err) {
       console.error('Error sending invite:', err)
     }
