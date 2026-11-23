@@ -1,3 +1,3 @@
-export { PromoModal } from './PromoModal'
-export { PromoModalstyles } from './PromoModal.styles'
-export default PromoModal
+import { PromoModal } from './PromoModal'
+
+export { PromoModal }

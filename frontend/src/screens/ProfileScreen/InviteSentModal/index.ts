@@ -1,3 +1,3 @@
-export { InviteSentModal } from './InviteSentModal'
-export { InviteSentModalstyles } from './InviteSentModal.styles'
-export default InviteSentModal
+import { InviteSentModal } from './InviteSentModal'
+
+export { InviteSentModal }

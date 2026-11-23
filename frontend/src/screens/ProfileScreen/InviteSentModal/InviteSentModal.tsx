@@ -1,7 +1,7 @@
-import React from 'react'
-import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/components/ProfileScreen/ProfileScreen.styles'
+import { ModalOverlay, ModalContent, ModalTitle, ModalClose } from '@/screens/ProfileScreen/ProfileScreen.style'
 
 export function InviteSentModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+  if (!isOpen) return null
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()} style={{ padding: '40px 24px', textAlign: 'center' }}>

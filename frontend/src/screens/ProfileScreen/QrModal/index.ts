@@ -1,3 +1,3 @@
-export { QrModal } from './QrModal'
-export { QrModalstyles } from './QrModal.styles'
-export default QrModal
+import { QrModal } from './QrModal'
+
+export { QrModal }

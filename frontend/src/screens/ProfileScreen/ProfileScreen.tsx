@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 import { useAuth } from '@/hooks'
 import { API_BASE_URL } from '@/constants'
-import DonationsModal from '@/screens/ProfileScreen/DonationsModal'
-import PromoModal from '@/screens/ProfileScreen/PromoModal'
-import InviteModal from '@/screens/ProfileScreen/InviteModal'
-import InviteSentModal from '@/screens/ProfileScreen/InviteSentModal'
-import QrModal from '@/screens/ProfileScreen/QrModal'
+import { DonationsModal } from '@/screens/ProfileScreen/DonationsModal'
+import { PromoModal } from '@/screens/ProfileScreen/PromoModal'
+import { InviteModal } from '@/screens/ProfileScreen/InviteModal'
+import { InviteSentModal } from '@/screens/ProfileScreen/InviteSentModal'
+import { QrModal } from '@/screens/ProfileScreen/QrModal'
 import achievement01 from '@/assets/achievements-img/achievement-01.png'
 import achievement02 from '@/assets/achievements-img/achievement-02.png'
 import achievement03 from '@/assets/achievements-img/achievement-03.png'
@@ -93,7 +93,6 @@ export function ProfileScreen() {
   const [isInviteSentOpen, setIsInviteSentOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [isDonationsOpen, setIsDonationsOpen] = useState(false)
-  const [inviteEmail, setInviteEmail] = useState('')
   const [isPromoOpen, setIsPromoOpen] = useState(false)
   const [currentLang, setCurrentLang] = useState(i18n.language)
 
